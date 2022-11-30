@@ -1,0 +1,71 @@
+CREATE TABLE artist (
+	artist_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	first_name TEXT NOT NULL CONSTRAINT chk_first_name CHECK (char_length(first_name) <= 25),
+	last_name TEXT NOT NULL CONSTRAINT chk_last_name CHECK (char_length(last_name) <= 25),
+	display_name TEXT NOT NULL CONSTRAINT chk_display_name CHECK (char_length(display_name) <= 50),
+	place_of_birth, TEXT, NULL CONSTRAINT chk_place_of_birth CHECK (char_length(display_name) <= 50),
+	year_of_birth INTEGER NOT NULL,
+	year_of_death INTEGER,
+	modified_at TIMESTAMP without time zone NOT NULL,
+	created_at TIMESTAMP without time zone NOT NULL
+);
+
+CREATE TABLE nation (
+	nation_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	title TEXT NOT NULL CONSTRAINT chk_title CHECK (char_length(title) <= 100),
+	modified_at TIMESTAMP without time zone NOT NULL,
+	created_at TIMESTAMP without time zone NOT NULL
+);
+
+CREATE TABLE artwork (
+	artwork_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	title TEXT NOT NULL CONSTRAINT chk_title CHECK (char_length(title) <= 50),
+	description TEXT NOT NULL CONSTRAINT check_description CHECK (char_length(description) <= 255),
+	media TEXT NOT NULL CONSTRAINT chk_media CHECK (char_length(media) <= 50),
+	primary_image_url TEXT NOT NULL CONSTRAINT chk_primary_image_url CHECK (char_length(primary_image_url) <= 255),
+	secondary_image_url TEXT CONSTRAINT chk_secondary_image_url CHECK (char_length(secondary_image_url) <= 255),
+	year_created INTEGER NOT NULL,
+    nation_id INTEGER NOT NULL,
+	modified_at TIMESTAMP without time zone NOT NULL,
+	created_at TIMESTAMP without time zone NOT NULL,
+    CONSTRAINT fk_nation FOREIGN KEY(nation_id) REFERENCES nation(nation_id)
+);
+
+CREATE TABLE artist_artwork (
+	artist_id int NOT NULL,
+	artwork_id int NOT NULL,
+	modified_at TIMESTAMP without time zone NOT NULL,
+	created_at TIMESTAMP without time zone NOT NULL,
+    CONSTRAINT fk_artist FOREIGN KEY(artist_id) REFERENCES artist(artist_id),
+    CONSTRAINT fk_artwork FOREIGN KEY(artwork_id) REFERENCES artwork(artwork_id)
+);
+
+CREATE TABLE exhibition (
+	exhibition_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	name TEXT NOT NULL CONSTRAINT chk_name CHECK (char_length(name) <= 100),
+	description TEXT NOT NULL CONSTRAINT check_description CHECK (char_length(description) <= 255),
+	background_image_url TEXT NOT NULL CONSTRAINT chk_background_image_url CHECK (char_length(background_image_url) <= 255),
+	modified_at TIMESTAMP without time zone NOT NULL,
+	created_at TIMESTAMP without time zone NOT NULL
+);
+
+CREATE TABLE artwork_exhibition (
+	artwork_id int NOT NULL,
+	exhibition_id int NOT NULL,
+	modified_at TIMESTAMP without time zone NOT NULL,
+	created_at TIMESTAMP without time zone NOT NULL,
+    CONSTRAINT fk_artwork FOREIGN KEY(artwork_id) REFERENCES artwork(artwork_id),
+	CONSTRAINT fk_exhibition FOREIGN KEY(exhibition_id) REFERENCES exhibition(exhibition_id)
+);
+
+CREATE TABLE account(
+	account_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	first_name TEXT NOT NULL CONSTRAINT chk_first_name CHECK (char_length(first_name) <= 25),
+	last_name TEXT NOT NULL CONSTRAINT chk_last_name CHECK (char_length(last_name) <= 25),
+	email TEXT NOT NULL CONSTRAINT chk_email CHECK (char_length(email) <= 512),
+	password_hash TEXT NOT NULL CONSTRAINT chk_password CHECK (char_length(password_hash) <= 50),
+	role TEXT NOT NULL CONSTRAINT chk_role CHECK (char_length(role) <= 50),
+	active_at TIMESTAMP without time zone NOT NULL,
+	modified_at TIMESTAMP without time zone NOT NULL,
+	created_at TIMESTAMP without time zone NOT NULL
+);
