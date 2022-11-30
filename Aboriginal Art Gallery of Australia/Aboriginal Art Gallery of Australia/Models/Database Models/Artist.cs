@@ -1,0 +1,28 @@
+﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
+{
+    public class Artist
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DisplayName { get; set; }
+        public string PlaceOfBirth { get; set; }
+        public int YearOfBirth { get; set; }
+        public int? YearOfDeath { get; set; }
+        public DateTime ModifiedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+
+        public Artist(int id, string firstName, string lastName, string displayName, string placeOfBirth, int yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
+        {
+            Id = id;
+            FirstName = firstName;
+            LastName = lastName;
+            DisplayName = displayName;
+            PlaceOfBirth = placeOfBirth;
+            YearOfBirth = yearOfBirth;
+            YearOfDeath = yearOfDeath;
+            ModifiedAt = modifiedAt;
+            CreatedAt = createdAt;
+        }
+    }
+}
