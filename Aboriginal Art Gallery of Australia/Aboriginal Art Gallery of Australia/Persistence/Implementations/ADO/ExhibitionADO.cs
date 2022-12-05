@@ -114,7 +114,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var description = (string)dr["description"];
                                 var media = (string)dr["media"];
                                 var primaryImageURL = (string)dr["primary_image_url"];
-                                var secondaryImageURL = (string)dr["secondary_image_url"];
+                                var secondaryImageURL = dr["secondary_image_url"] as string;
                                 var createdYear = (int)dr["year_created"];
                                 var nationTitle = (string)dr["nation_title"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
@@ -166,7 +166,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 {
                     cmd.Parameters.AddWithValue("@name", exhibition.Name);
                     cmd.Parameters.AddWithValue("@description", exhibition.Description);
-                    cmd.Parameters.AddWithNullableValue("@backgroundImageUrl", exhibition.BackdropImageURL);
+                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageUrl);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? exhibition : null;
                 }
@@ -179,7 +179,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             {
                 connection.Open();
                 using var cmd = new NpgsqlCommand("UPDATE exhibition " +
-                                                  "SET name = @name " +
+                                                  "SET name = @name, " +
                                                       "description = @description, " +
                                                       "background_image_url = @backgroundImageUrl, " +
                                                       "modified_at = current_timestamp " +
@@ -188,7 +188,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     cmd.Parameters.AddWithValue("@exhibitionId", id);
                     cmd.Parameters.AddWithValue("@name", exhibition.Name);
                     cmd.Parameters.AddWithValue("@description", exhibition.Description);
-                    cmd.Parameters.AddWithNullableValue("@backgroundImageUrl", exhibition.BackdropImageURL);
+                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageUrl);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? exhibition : null;
                 }
@@ -200,7 +200,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("DELETE * FROM exhibition WHERE exhibition_id = @exhibitionId", connection);
+                using var cmd = new NpgsqlCommand("DELETE FROM exhibition WHERE exhibition_id = @exhibitionId", connection);
                 {
                     cmd.Parameters.AddWithValue("@exhibitionId", id);
                     var result = cmd.ExecuteNonQuery();
@@ -224,12 +224,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             }
         }
 
-        public bool DeassignArtwork(int artworkId, int exhibitionId)
+        public bool DeassignArtwork(int exhibitionId, int artworkId)
         {
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("DELETE FROM artwork_exhibition WHERE artwork_id = @artworkId AND exhibition_id = @exhibitonId ", connection);
+                using var cmd = new NpgsqlCommand("DELETE FROM artwork_exhibition WHERE artwork_id = @artworkId AND exhibition_id = @exhibitionId ", connection);
                 {
                     cmd.Parameters.AddWithValue("@artworkId", artworkId);
                     cmd.Parameters.AddWithValue("@exhibitionId", exhibitionId);
