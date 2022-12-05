@@ -166,7 +166,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 {
                     cmd.Parameters.AddWithValue("@name", exhibition.Name);
                     cmd.Parameters.AddWithValue("@description", exhibition.Description);
-                    cmd.Parameters.AddWithNullableValue("@backgroundImageUrl", exhibition.BackdropImageURL);
+                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageUrl);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? exhibition : null;
                 }
@@ -188,7 +188,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     cmd.Parameters.AddWithValue("@exhibitionId", id);
                     cmd.Parameters.AddWithValue("@name", exhibition.Name);
                     cmd.Parameters.AddWithValue("@description", exhibition.Description);
-                    cmd.Parameters.AddWithNullableValue("@backgroundImageUrl", exhibition.BackdropImageURL);
+                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageUrl);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? exhibition : null;
                 }
