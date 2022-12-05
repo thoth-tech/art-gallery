@@ -1,4 +1,6 @@
-﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 {
     public class ArtistInputDto
     {
