@@ -114,7 +114,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var description = (string)dr["description"];
                                 var media = (string)dr["media"];
                                 var primaryImageURL = (string)dr["primary_image_url"];
-                                var secondaryImageURL = (string)dr["secondary_image_url"];
+                                var secondaryImageURL = dr["secondary_image_url"] as string;
                                 var createdYear = (int)dr["year_created"];
                                 var nationTitle = (string)dr["nation_title"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
@@ -224,12 +224,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             }
         }
 
-        public bool DeassignArtwork(int artworkId, int exhibitionId)
+        public bool DeassignArtwork(int exhibitionId, int artworkId)
         {
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("DELETE FROM artwork_exhibition WHERE artwork_id = @artworkId AND exhibition_id = @exhibitonId ", connection);
+                using var cmd = new NpgsqlCommand("DELETE FROM artwork_exhibition WHERE artwork_id = @artworkId AND exhibition_id = @exhibitionId ", connection);
                 {
                     cmd.Parameters.AddWithValue("@artworkId", artworkId);
                     cmd.Parameters.AddWithValue("@exhibitionId", exhibitionId);
