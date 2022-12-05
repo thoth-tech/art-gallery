@@ -123,18 +123,6 @@ app.MapDelete("api/artworks/{artworkId}/deassign/artist/{artistId}", (IArtworkDa
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
 
-app.MapPost("api/artworks/{artworkId}/assign/exhibition/{exhibitionId}", (IArtworkDataAccess _repo, int artworkId, int exhibitionId) =>
-{
-    var result = _repo.AssignExhibition(artworkId, exhibitionId);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
-});
-
-app.MapDelete("api/artworks/{artworkId}/deassign/exhibition/{exhibitionId}", (IArtworkDataAccess _repo, int artworkId, int exhibitionId) =>
-{
-    var result = _repo.DeassignExhibition(artworkId, exhibitionId);
-    return result is true ? Results.NoContent() : Results.BadRequest();
-});
-
 /*
  Map Nation Endpoints
  */
