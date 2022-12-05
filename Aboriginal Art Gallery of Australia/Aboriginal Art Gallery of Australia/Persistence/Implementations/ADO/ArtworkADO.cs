@@ -215,7 +215,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             {
                 connection.Open();
 
-                using var cmd = new NpgsqlCommand("DELETE FROM artist_artwork WHERE artist_id = @artistId, artwork_id = @artworkId, ", connection);
+                using var cmd = new NpgsqlCommand("DELETE FROM artist_artwork WHERE artist_id = @artistId AND artwork_id = @artworkId", connection);
                 {
                     cmd.Parameters.AddWithValue("@artistId", artistId);
                     cmd.Parameters.AddWithValue("@artworkId", artworkId);
