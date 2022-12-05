@@ -81,19 +81,6 @@ app.MapDelete("api/artists/{id}", (IArtistDataAccess _repo, int id) =>
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
 
-app.MapPost("api/artists/{artistId}/assign/artwork/{artworkId}", (IArtistDataAccess _repo, int artistId, int artworkId) =>
-{
-    var result = _repo.AssignArtwork(artistId, artworkId);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
-});
-
-app.MapDelete("api/artists/{artistId}/deassign/artwork/{artworkId}", (IArtistDataAccess _repo, int artistId, int artworkId) =>
-{
-    var result = _repo.DeassignArtwork(artistId, artworkId);
-    return result is true ? Results.NoContent() : Results.BadRequest();
-});
-
-
 /*
  Map Artwork Endpoints
  */
