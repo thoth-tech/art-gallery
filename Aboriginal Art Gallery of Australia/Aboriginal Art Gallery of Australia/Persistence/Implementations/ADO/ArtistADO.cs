@@ -141,36 +141,5 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 }
             }
         }
-
-        public ArtistArtworkDto? AssignArtwork(int artistId, int artworkId)
-        {
-            using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
-            {
-                connection.Open();
-                using var cmd = new NpgsqlCommand("INSERT INTO artist_artwork(artist_id, artwork_id, modified_at, created_at) VALUES (@artistId, @artworkId, current_timestamp, current_timestamp)", connection);
-                {
-                    cmd.Parameters.AddWithValue("@artistId", artistId);
-                    cmd.Parameters.AddWithValue("@artworkId", artworkId);
-                    var result = cmd.ExecuteNonQuery();
-                    return result is 1 ? new ArtistArtworkDto(artistId, artworkId) : null;
-                }
-            }
-        }
-
-        public bool DeassignArtwork(int artistId, int artworkId)
-        {
-            using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
-            {
-                connection.Open();
-
-                using var cmd = new NpgsqlCommand("DELETE FROM artist_artwork WHERE artist_id = @artistId AND artwork_id = @artworkId", connection);
-                {
-                    cmd.Parameters.AddWithValue("@artistId", artistId);
-                    cmd.Parameters.AddWithValue("@artworkId", artworkId);
-                    var result = cmd.ExecuteNonQuery();
-                    return result == 1;
-                }
-            }
-        }
     }
 }
