@@ -1,5 +1,6 @@
 ﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
-using static Aboriginal_Art_Gallery_of_Australia.Models.DTOs.UserDto;
+using static Aboriginal_Art_Gallery_of_Australia.Models.DTOs.UserInputDto;
+using static Aboriginal_Art_Gallery_of_Australia.Models.DTOs.UserOutputDto;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
 {

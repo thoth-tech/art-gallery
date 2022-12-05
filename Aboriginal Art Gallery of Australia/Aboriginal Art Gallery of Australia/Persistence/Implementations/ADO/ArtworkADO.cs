@@ -53,7 +53,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var description = (string)dr["description"];
                                 var media = (string)dr["media"];
                                 var primaryImageURL = (string)dr["primary_image_url"];
-                                var secondaryImageURL = (string)dr["secondary_image_url"];
+                                var secondaryImageURL = dr["secondary_image_url"] as string;
                                 var createdYear = (int)dr["year_created"];
                                 var nationTitle = (string)dr["nation_title"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
@@ -113,7 +113,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var description = (string)dr["description"];
                                 var media = (string)dr["media"];
                                 var primaryImageURL = (string)dr["primary_image_url"];
-                                var secondaryImageURL = (string)dr["secondary_image_url"];
+                                var secondaryImageURL = dr["secondary_image_url"] as string;
                                 var createdYear = (int)dr["year_created"];
                                 var nationTitle = (string)dr["nation_title"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
