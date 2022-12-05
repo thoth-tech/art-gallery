@@ -39,7 +39,5 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
 
         ArtistArtworkDto? AssignArtist(int artistId, int artworkId);
         bool DeassignArtist(int artistId, int artworkId);
-        ArtworkExhibitionDto? AssignExhibition(int artworkId, int exhibitionId);
-        bool DeassignExhibition(int artworkId, int exhibitionId);
     }
 }

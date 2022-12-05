@@ -37,7 +37,5 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <returns>Returns the result of the delete operation as a boolean value.</returns>
         bool DeleteArtist(int id);
 
-        ArtistArtworkDto? AssignArtwork(int artistId, int artworkId);
-        bool DeassignArtwork(int artistId, int artworkId);
     }
 }
