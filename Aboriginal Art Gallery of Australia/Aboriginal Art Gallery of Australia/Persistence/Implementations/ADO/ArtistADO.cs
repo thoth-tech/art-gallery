@@ -33,12 +33,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var firstName = (string)dr["first_name"];
                                 var lastName = (string)dr["last_name"];
                                 var displayName = (string)dr["display_name"];
+                                var profileImageURL = (string)dr["profile_image_url"];
                                 var placeOfBirth = (string)dr["place_of_birth"];
                                 var yearOfBirth = (int)dr["year_of_birth"];
                                 var yearOfDeath = ConvertFromNullableValue<int?>(dr["year_of_death"]);
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
-                                artists.Add(new ArtistOutputDto(artistId, firstName, lastName, displayName, placeOfBirth, yearOfBirth, yearOfDeath, modifiedAt, createdAt));
+                                artists.Add(new ArtistOutputDto(artistId, firstName, lastName, displayName, profileImageURL, placeOfBirth, yearOfBirth, yearOfDeath, modifiedAt, createdAt));
                             }
                         }
                         return artists;
@@ -65,12 +66,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var firstName = (string)dr["first_name"];
                                 var lastName = (string)dr["last_name"];
                                 var displayName = (string)dr["display_name"];
+                                var profileImageURL = (string)dr["profile_image_url"];
                                 var placeOfBirth = (string)dr["place_of_birth"];
                                 var yearOfBirth = (int)dr["year_of_birth"];
                                 var yearOfDeath = ConvertFromNullableValue<int?>(dr["year_of_death"]);
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
-                                return new ArtistOutputDto(artistId, firstName, lastName, displayName, placeOfBirth, yearOfBirth, yearOfDeath, modifiedAt, createdAt);
+                                return new ArtistOutputDto(artistId, firstName, lastName, displayName, profileImageURL, placeOfBirth, yearOfBirth, yearOfDeath, modifiedAt, createdAt);
                             }
                         }
                         return null;
@@ -85,12 +87,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("INSERT INTO artist(first_name, last_name, display_name, place_of_birth, year_of_birth, year_of_death, modified_at, created_at) " +
+                using var cmd = new NpgsqlCommand("INSERT INTO artist(first_name, last_name, display_name, profile_image_url,place_of_birth, year_of_birth, year_of_death, modified_at, created_at) " +
                                                   "VALUES (@firstName, @lastName, @displayName, @placeOfBirth, @yearOfBirth, @yearOfDeath, current_timestamp, current_timestamp);", connection);
                 {
                     cmd.Parameters.AddWithValue("@firstName", artist.FirstName);
                     cmd.Parameters.AddWithValue("@lastName", artist.LastName);
                     cmd.Parameters.AddWithValue("@displayName", artist.DisplayName);
+                    cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageURL);
                     cmd.Parameters.AddWithValue("@placeOfBirth", artist.PlaceOfBirth);
                     cmd.Parameters.AddWithValue("@yearOfBirth", artist.YearOfBirth);
                     cmd.Parameters.AddWithNullableValue("@yearOfDeath", artist.YearOfDeath);
@@ -109,6 +112,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                                   "SET first_name = @firstName, " +
                                                       "last_name = @lastName, " +
                                                       "display_name = @displayName, " +
+                                                      "profile_image_url = @profileImageURL, " +
                                                       "place_of_birth = @placeOfBirth, " +
                                                       "year_of_birth = @yearOfBirth, " +
                                                       "year_of_death = @yearOfDeath, " +
@@ -119,6 +123,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     cmd.Parameters.AddWithValue("@firstName", artist.FirstName);
                     cmd.Parameters.AddWithValue("@lastName", artist.LastName);
                     cmd.Parameters.AddWithValue("@displayName", artist.DisplayName);
+                    cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageURL);
                     cmd.Parameters.AddWithValue("@placeOfBirth", artist.PlaceOfBirth);
                     cmd.Parameters.AddWithValue("@yearOfBirth", artist.YearOfBirth);
                     cmd.Parameters.AddWithNullableValue("@yearOfDeath", artist.YearOfDeath);
