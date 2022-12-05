@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GK9bbOtW66lKPXP3Zqk/cczaaY6bVI0v0QEuyBzojT93IgfciJlXeusGOghpxRkGfQuacfeX5AJtCZj3823HWQ==",
+  "dgSpecHash": "vImxUZJnGbQv8hsLmuZ6Z2uiJE4fG0JPVr7I0E8JM/LXe+sQ0Hx6Q7ZCjrOq5i7UZEE/7Y2cAvniZep04kg1/w==",
   "success": true,
-  "projectFilePath": "D:\\Development\\77x\\AAGoA\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj",
+  "projectFilePath": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Luke Collins\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Luke Collins\\.nuget\\packages\\fastmember\\1.5.0\\fastmember.1.5.0.nupkg.sha512",

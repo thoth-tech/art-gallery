@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Development\\77x\\AAGoA\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj": {}
+    "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj": {}
   },
   "projects": {
-    "D:\\Development\\77x\\AAGoA\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj": {
+    "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Development\\77x\\AAGoA\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj",
+        "projectUniqueName": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj",
         "projectName": "Aboriginal Art Gallery of Australia",
-        "projectPath": "D:\\Development\\77x\\AAGoA\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj",
+        "projectPath": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj",
         "packagesPath": "C:\\Users\\Luke Collins\\.nuget\\packages\\",
-        "outputPath": "D:\\Development\\77x\\AAGoA\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\obj\\",
+        "outputPath": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Luke Collins\\AppData\\Roaming\\NuGet\\NuGet.Config",
