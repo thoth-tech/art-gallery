@@ -179,7 +179,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             {
                 connection.Open();
                 using var cmd = new NpgsqlCommand("UPDATE exhibition " +
-                                                  "SET name = @name " +
+                                                  "SET name = @name, " +
                                                       "description = @description, " +
                                                       "background_image_url = @backgroundImageUrl, " +
                                                       "modified_at = current_timestamp " +
@@ -200,7 +200,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("DELETE * FROM exhibition WHERE exhibition_id = @exhibitionId", connection);
+                using var cmd = new NpgsqlCommand("DELETE FROM exhibition WHERE exhibition_id = @exhibitionId", connection);
                 {
                     cmd.Parameters.AddWithValue("@exhibitionId", id);
                     var result = cmd.ExecuteNonQuery();
