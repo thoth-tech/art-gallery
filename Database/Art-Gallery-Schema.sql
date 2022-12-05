@@ -5,7 +5,7 @@
 -- Dumped from database version 14.4
 -- Dumped by pg_dump version 14.4
 
--- Started on 2022-12-01 01:17:58
+-- Started on 2022-12-05 16:09:15
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -23,7 +23,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 220 (class 1259 OID 58027)
+-- TOC entry 220 (class 1259 OID 65866)
 -- Name: account; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -37,10 +37,10 @@ CREATE TABLE public.account (
     active_at timestamp without time zone NOT NULL,
     modified_at timestamp without time zone NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    CONSTRAINT chk_email CHECK ((char_length(email) <= 512)),
-    CONSTRAINT chk_first_name CHECK ((char_length(first_name) <= 25)),
-    CONSTRAINT chk_last_name CHECK ((char_length(last_name) <= 25)),
-    CONSTRAINT chk_password CHECK ((char_length(password_hash) <= 50)),
+    CONSTRAINT chk_email CHECK ((char_length(email) <= 255)),
+    CONSTRAINT chk_first_name CHECK ((char_length(first_name) <= 100)),
+    CONSTRAINT chk_last_name CHECK ((char_length(last_name) <= 100)),
+    CONSTRAINT chk_password CHECK ((char_length(password_hash) <= 550)),
     CONSTRAINT chk_role CHECK ((char_length(role) <= 50))
 );
 
@@ -48,7 +48,7 @@ CREATE TABLE public.account (
 ALTER TABLE public.account OWNER TO postgres;
 
 --
--- TOC entry 219 (class 1259 OID 58026)
+-- TOC entry 219 (class 1259 OID 65865)
 -- Name: account_account_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -63,7 +63,7 @@ ALTER TABLE public.account ALTER COLUMN account_id ADD GENERATED ALWAYS AS IDENT
 
 
 --
--- TOC entry 210 (class 1259 OID 57951)
+-- TOC entry 210 (class 1259 OID 65789)
 -- Name: artist; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -72,22 +72,24 @@ CREATE TABLE public.artist (
     first_name text NOT NULL,
     last_name text NOT NULL,
     display_name text NOT NULL,
+    profile_image_url text NOT NULL,
     place_of_birth text,
     year_of_birth integer NOT NULL,
     year_of_death integer,
     modified_at timestamp without time zone NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    CONSTRAINT chk_display_name CHECK ((char_length(display_name) <= 50)),
-    CONSTRAINT chk_first_name CHECK ((char_length(first_name) <= 25)),
-    CONSTRAINT chk_last_name CHECK ((char_length(last_name) <= 25)),
-    CONSTRAINT chk_place_of_birth CHECK ((char_length(display_name) <= 50))
+    CONSTRAINT chk_display_name CHECK ((char_length(display_name) <= 255)),
+    CONSTRAINT chk_first_name CHECK ((char_length(first_name) <= 100)),
+    CONSTRAINT chk_last_name CHECK ((char_length(last_name) <= 100)),
+    CONSTRAINT chk_place_of_birth CHECK ((char_length(place_of_birth) <= 50)),
+    CONSTRAINT chk_primary_image_url CHECK ((char_length(profile_image_url) <= 255))
 );
 
 
 ALTER TABLE public.artist OWNER TO postgres;
 
 --
--- TOC entry 209 (class 1259 OID 57950)
+-- TOC entry 209 (class 1259 OID 65788)
 -- Name: artist_artist_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -102,7 +104,7 @@ ALTER TABLE public.artist ALTER COLUMN artist_id ADD GENERATED ALWAYS AS IDENTIT
 
 
 --
--- TOC entry 215 (class 1259 OID 57989)
+-- TOC entry 215 (class 1259 OID 65828)
 -- Name: artist_artwork; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -117,7 +119,7 @@ CREATE TABLE public.artist_artwork (
 ALTER TABLE public.artist_artwork OWNER TO postgres;
 
 --
--- TOC entry 214 (class 1259 OID 57972)
+-- TOC entry 214 (class 1259 OID 65811)
 -- Name: artwork; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -132,18 +134,18 @@ CREATE TABLE public.artwork (
     nation_id integer NOT NULL,
     modified_at timestamp without time zone NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    CONSTRAINT check_description CHECK ((char_length(description) <= 255)),
-    CONSTRAINT chk_media CHECK ((char_length(media) <= 50)),
+    CONSTRAINT check_description CHECK ((char_length(description) <= 2500)),
+    CONSTRAINT chk_media CHECK ((char_length(media) <= 150)),
     CONSTRAINT chk_primary_image_url CHECK ((char_length(primary_image_url) <= 255)),
     CONSTRAINT chk_secondary_image_url CHECK ((char_length(secondary_image_url) <= 255)),
-    CONSTRAINT chk_title CHECK ((char_length(title) <= 50))
+    CONSTRAINT chk_title CHECK ((char_length(title) <= 255))
 );
 
 
 ALTER TABLE public.artwork OWNER TO postgres;
 
 --
--- TOC entry 213 (class 1259 OID 57971)
+-- TOC entry 213 (class 1259 OID 65810)
 -- Name: artwork_artwork_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -158,7 +160,7 @@ ALTER TABLE public.artwork ALTER COLUMN artwork_id ADD GENERATED ALWAYS AS IDENT
 
 
 --
--- TOC entry 218 (class 1259 OID 58013)
+-- TOC entry 218 (class 1259 OID 65852)
 -- Name: artwork_exhibition; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -173,7 +175,7 @@ CREATE TABLE public.artwork_exhibition (
 ALTER TABLE public.artwork_exhibition OWNER TO postgres;
 
 --
--- TOC entry 217 (class 1259 OID 58003)
+-- TOC entry 217 (class 1259 OID 65842)
 -- Name: exhibition; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -184,16 +186,16 @@ CREATE TABLE public.exhibition (
     background_image_url text NOT NULL,
     modified_at timestamp without time zone NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    CONSTRAINT check_description CHECK ((char_length(description) <= 255)),
+    CONSTRAINT check_description CHECK ((char_length(description) <= 2500)),
     CONSTRAINT chk_background_image_url CHECK ((char_length(background_image_url) <= 255)),
-    CONSTRAINT chk_name CHECK ((char_length(name) <= 100))
+    CONSTRAINT chk_name CHECK ((char_length(name) <= 2500))
 );
 
 
 ALTER TABLE public.exhibition OWNER TO postgres;
 
 --
--- TOC entry 216 (class 1259 OID 58002)
+-- TOC entry 216 (class 1259 OID 65841)
 -- Name: exhibition_exhibition_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -208,7 +210,7 @@ ALTER TABLE public.exhibition ALTER COLUMN exhibition_id ADD GENERATED ALWAYS AS
 
 
 --
--- TOC entry 212 (class 1259 OID 57963)
+-- TOC entry 212 (class 1259 OID 65802)
 -- Name: nation; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -224,7 +226,7 @@ CREATE TABLE public.nation (
 ALTER TABLE public.nation OWNER TO postgres;
 
 --
--- TOC entry 211 (class 1259 OID 57962)
+-- TOC entry 211 (class 1259 OID 65801)
 -- Name: nation_nation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -239,7 +241,7 @@ ALTER TABLE public.nation ALTER COLUMN nation_id ADD GENERATED ALWAYS AS IDENTIT
 
 
 --
--- TOC entry 3375 (class 0 OID 58027)
+-- TOC entry 3376 (class 0 OID 65866)
 -- Dependencies: 220
 -- Data for Name: account; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -249,17 +251,17 @@ COPY public.account (account_id, first_name, last_name, email, password_hash, ro
 
 
 --
--- TOC entry 3365 (class 0 OID 57951)
+-- TOC entry 3366 (class 0 OID 65789)
 -- Dependencies: 210
 -- Data for Name: artist; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.artist (artist_id, first_name, last_name, display_name, place_of_birth, year_of_birth, year_of_death, modified_at, created_at) FROM stdin;
+COPY public.artist (artist_id, first_name, last_name, display_name, profile_image_url, place_of_birth, year_of_birth, year_of_death, modified_at, created_at) FROM stdin;
 \.
 
 
 --
--- TOC entry 3370 (class 0 OID 57989)
+-- TOC entry 3371 (class 0 OID 65828)
 -- Dependencies: 215
 -- Data for Name: artist_artwork; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -269,7 +271,7 @@ COPY public.artist_artwork (artist_id, artwork_id, modified_at, created_at) FROM
 
 
 --
--- TOC entry 3369 (class 0 OID 57972)
+-- TOC entry 3370 (class 0 OID 65811)
 -- Dependencies: 214
 -- Data for Name: artwork; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -279,7 +281,7 @@ COPY public.artwork (artwork_id, title, description, media, primary_image_url, s
 
 
 --
--- TOC entry 3373 (class 0 OID 58013)
+-- TOC entry 3374 (class 0 OID 65852)
 -- Dependencies: 218
 -- Data for Name: artwork_exhibition; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -289,7 +291,7 @@ COPY public.artwork_exhibition (artwork_id, exhibition_id, modified_at, created_
 
 
 --
--- TOC entry 3372 (class 0 OID 58003)
+-- TOC entry 3373 (class 0 OID 65842)
 -- Dependencies: 217
 -- Data for Name: exhibition; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -299,7 +301,7 @@ COPY public.exhibition (exhibition_id, name, description, background_image_url, 
 
 
 --
--- TOC entry 3367 (class 0 OID 57963)
+-- TOC entry 3368 (class 0 OID 65802)
 -- Dependencies: 212
 -- Data for Name: nation; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -309,7 +311,7 @@ COPY public.nation (nation_id, title, modified_at, created_at) FROM stdin;
 
 
 --
--- TOC entry 3381 (class 0 OID 0)
+-- TOC entry 3382 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: account_account_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -318,7 +320,7 @@ SELECT pg_catalog.setval('public.account_account_id_seq', 1, false);
 
 
 --
--- TOC entry 3382 (class 0 OID 0)
+-- TOC entry 3383 (class 0 OID 0)
 -- Dependencies: 209
 -- Name: artist_artist_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -327,7 +329,7 @@ SELECT pg_catalog.setval('public.artist_artist_id_seq', 1, false);
 
 
 --
--- TOC entry 3383 (class 0 OID 0)
+-- TOC entry 3384 (class 0 OID 0)
 -- Dependencies: 213
 -- Name: artwork_artwork_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -336,7 +338,7 @@ SELECT pg_catalog.setval('public.artwork_artwork_id_seq', 1, false);
 
 
 --
--- TOC entry 3384 (class 0 OID 0)
+-- TOC entry 3385 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: exhibition_exhibition_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -345,7 +347,7 @@ SELECT pg_catalog.setval('public.exhibition_exhibition_id_seq', 1, false);
 
 
 --
--- TOC entry 3385 (class 0 OID 0)
+-- TOC entry 3386 (class 0 OID 0)
 -- Dependencies: 211
 -- Name: nation_nation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -354,7 +356,7 @@ SELECT pg_catalog.setval('public.nation_nation_id_seq', 1, false);
 
 
 --
--- TOC entry 3219 (class 2606 OID 58038)
+-- TOC entry 3220 (class 2606 OID 65877)
 -- Name: account account_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -363,7 +365,7 @@ ALTER TABLE ONLY public.account
 
 
 --
--- TOC entry 3211 (class 2606 OID 57961)
+-- TOC entry 3212 (class 2606 OID 65800)
 -- Name: artist artist_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -372,7 +374,7 @@ ALTER TABLE ONLY public.artist
 
 
 --
--- TOC entry 3215 (class 2606 OID 57983)
+-- TOC entry 3216 (class 2606 OID 65822)
 -- Name: artwork artwork_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -381,7 +383,7 @@ ALTER TABLE ONLY public.artwork
 
 
 --
--- TOC entry 3217 (class 2606 OID 58012)
+-- TOC entry 3218 (class 2606 OID 65851)
 -- Name: exhibition exhibition_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -390,7 +392,7 @@ ALTER TABLE ONLY public.exhibition
 
 
 --
--- TOC entry 3213 (class 2606 OID 57970)
+-- TOC entry 3214 (class 2606 OID 65809)
 -- Name: nation nation_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -399,7 +401,7 @@ ALTER TABLE ONLY public.nation
 
 
 --
--- TOC entry 3221 (class 2606 OID 57992)
+-- TOC entry 3222 (class 2606 OID 65831)
 -- Name: artist_artwork fk_artist; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -408,7 +410,7 @@ ALTER TABLE ONLY public.artist_artwork
 
 
 --
--- TOC entry 3222 (class 2606 OID 57997)
+-- TOC entry 3223 (class 2606 OID 65836)
 -- Name: artist_artwork fk_artwork; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -417,7 +419,7 @@ ALTER TABLE ONLY public.artist_artwork
 
 
 --
--- TOC entry 3223 (class 2606 OID 58016)
+-- TOC entry 3224 (class 2606 OID 65855)
 -- Name: artwork_exhibition fk_artwork; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -426,7 +428,7 @@ ALTER TABLE ONLY public.artwork_exhibition
 
 
 --
--- TOC entry 3224 (class 2606 OID 58021)
+-- TOC entry 3225 (class 2606 OID 65860)
 -- Name: artwork_exhibition fk_exhibition; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -435,7 +437,7 @@ ALTER TABLE ONLY public.artwork_exhibition
 
 
 --
--- TOC entry 3220 (class 2606 OID 57984)
+-- TOC entry 3221 (class 2606 OID 65823)
 -- Name: artwork fk_nation; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -443,7 +445,7 @@ ALTER TABLE ONLY public.artwork
     ADD CONSTRAINT fk_nation FOREIGN KEY (nation_id) REFERENCES public.nation(nation_id);
 
 
--- Completed on 2022-12-01 01:17:58
+-- Completed on 2022-12-05 16:09:15
 
 --
 -- PostgreSQL database dump complete

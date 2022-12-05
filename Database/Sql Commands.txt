@@ -4,7 +4,7 @@ CREATE TABLE artist (
 	last_name TEXT NOT NULL CONSTRAINT chk_last_name CHECK (char_length(last_name) <= 100),
 	display_name TEXT NOT NULL CONSTRAINT chk_display_name CHECK (char_length(display_name) <= 255),
 	profile_image_url TEXT NOT NULL CONSTRAINT chk_primary_image_url CHECK (char_length(profile_image_url) <= 255),
-	place_of_birth, TEXT, NULL CONSTRAINT chk_place_of_birth CHECK (char_length(place_of_birth) <= 50),
+	place_of_birth TEXT NULL CONSTRAINT chk_place_of_birth CHECK (char_length(place_of_birth) <= 50),
 	year_of_birth INTEGER NOT NULL,
 	year_of_death INTEGER,
 	modified_at TIMESTAMP without time zone NOT NULL,
