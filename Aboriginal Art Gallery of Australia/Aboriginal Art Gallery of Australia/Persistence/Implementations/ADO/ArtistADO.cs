@@ -88,14 +88,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             {
                 connection.Open();
                 using var cmd = new NpgsqlCommand("INSERT INTO artist(first_name, last_name, display_name, profile_image_url,place_of_birth, year_of_birth, year_of_death, modified_at, created_at) " +
-                                                  "VALUES (@firstName, @lastName, @displayName, @placeOfBirth, @yearOfBirth, @yearOfDeath, current_timestamp, current_timestamp);", connection);
+                                                  "VALUES (@firstName, @lastName, @displayName, @profileImageURL, @placeOfBirth, @yearOfBirth, @yearOfDeath, current_timestamp, current_timestamp);", connection);
                 {
                     cmd.Parameters.AddWithValue("@firstName", artist.FirstName);
                     cmd.Parameters.AddWithValue("@lastName", artist.LastName);
                     cmd.Parameters.AddWithValue("@displayName", artist.DisplayName);
                     cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageURL);
                     cmd.Parameters.AddWithValue("@placeOfBirth", artist.PlaceOfBirth);
-                    cmd.Parameters.AddWithValue("@yearOfBirth", artist.YearOfBirth);
+                    cmd.Parameters.AddWithNullableValue("@yearOfBirth", artist.YearOfBirth);
                     cmd.Parameters.AddWithNullableValue("@yearOfDeath", artist.YearOfDeath);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? artist : null;

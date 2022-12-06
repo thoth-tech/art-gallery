@@ -1,10 +1,19 @@
 ﻿using FastMember;
 using Npgsql;
+using System;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence
 {
     public static class ExtensionMethods
     {
+        public static bool ValidateURL(string url)
+        {
+            Uri myUri;
+            if (Uri.TryCreate(url, UriKind.Absolute, out myUri))
+                return true;
+            return false;
+        }
         public static T? ConvertFromNullableValue<T>(object obj)
         {
             if (obj == null || obj == DBNull.Value)
@@ -20,8 +29,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
             else
                 return collection.AddWithValue(parameterName, value);
         }
-
-
 
         public static void MapTo<T>(this NpgsqlDataReader dr, T entity)
         {
@@ -42,5 +49,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
         string.IsNullOrEmpty(str) || str.Length < 2
             ? str.ToLowerInvariant()
             : char.ToLowerInvariant(str[0]) + str.Substring(1);
+
+        public static bool IsValidURL(this string str)
+        {
+            Uri myUri;
+            if (Uri.TryCreate(str, UriKind.Absolute, out myUri))
+                return true;
+            return false;
+        }
     }
 }
