@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 
 using Npgsql;
 using System.Text;
+using System.Security.Claims;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
 {
@@ -113,7 +114,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 if (authenticated)
                                 {
                                     user.PasswordHash = "";
-                                    user.Token = GenerateToken(login);
+                                    user.Token = GenerateToken(user.Role);
                                     return user;
                                 }
                             }
@@ -123,18 +124,31 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 }
             }
         }
-        private string GenerateToken(LoginDto model)
+        private string GenerateToken(String userRole)
         {
+            var issuer = _configuration["Jwt:Issuer"];
+            var audience = _configuration["Jwt:Audience"];
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
 
-            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
-                _configuration["Jwt:Issuer"],
-                null,
-                expires: DateTime.Now.AddMinutes(120),
-                signingCredentials:credentials);
-            Console.WriteLine("GENERATING TOKEN");
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new []
+                {
+                    new Claim("Id", "1"),
+                    new Claim(JwtRegisteredClaimNames.Sub, userRole),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(120),
+                Audience = audience,
+                Issuer = issuer,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
+            };
+            var token = jwtTokenHandler.CreateToken(tokenDescriptor);
+
+            return jwtTokenHandler.WriteToken(token);
         }
 
         public UserInputDto? InsertUser(UserInputDto user)

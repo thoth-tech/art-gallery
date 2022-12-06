@@ -5,11 +5,11 @@ using Aboriginal_Art_Gallery_of_Australia.Persistence;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,9 +37,39 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true
     };
 });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdmin",
+         policy => policy.RequireRole("Administrator"));
+});
 #endregion
 
-builder.Services.AddAuthorization();
+#region Authorisation
+var securityScheme = new OpenApiSecurityScheme()
+{
+    Name = "Authorization",
+    Type = SecuritySchemeType.Http,
+    Scheme = "Bearer",
+    BearerFormat = "JWT",
+    In = ParameterLocation.Header,
+    Description = "JSON Web Token based security",
+};
+
+var securityRequirement = new OpenApiSecurityRequirement()
+{
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
+        },
+        new string[] {}
+    }
+};
+#endregion
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -54,32 +84,8 @@ builder.Services.AddSwaggerGen(options =>
             Email = "jdoe@deakin.edu.au"
         }
     });
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = @"JWT Auth header using the bearer scheme. Enter 'Bearer' [space]
-         and then your token in the text input below. Example: 'Bearer abcd1234'",
-         Name = "Authorisation",
-         In = ParameterLocation.Header,
-         Type = SecuritySchemeType.ApiKey,
-         Scheme = "Bearer"
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header,
-            },
-            new List<string>()
-        }
-    });
+    options.AddSecurityDefinition("Bearer", securityScheme);
+    options.AddSecurityRequirement(securityRequirement);
 });
 
 /*
@@ -97,6 +103,12 @@ builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 
 // Implementation 3 - Entity Framework
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdmin",
+         policy => policy.RequireRole("Administrator"));
+});
 
 var app = builder.Build();
 
@@ -324,7 +336,7 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", (IE
     Map User Endpoints
 */
 
-app.MapGet("api/users/", (IUserDataAccess _repo) => _repo.GetUsers());
+app.MapGet("api/users/", [Authorize] (IUserDataAccess _repo) => _repo.GetUsers());
 
 app.MapPost("api/users/register/", (IUserDataAccess _repo, UserInputDto user) =>
 {
