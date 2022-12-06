@@ -104,11 +104,7 @@ builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 3 - Entity Framework
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("RequireAdmin",
-         policy => policy.RequireRole("Administrator"));
-});
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -141,7 +137,7 @@ app.MapGet("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistI
     return result is not null ? Results.Ok(result) : Results.NotFound();
 });
 
-app.MapPost("api/artists/", (IArtistDataAccess _artistRepo, ArtistInputDto artist) =>
+app.MapPost("api/artists/", [Authorize] (IArtistDataAccess _artistRepo, ArtistInputDto artist) =>
 {
     //Option 1
     if (artist.DisplayName == null || artist.DisplayName == "") artist.DisplayName = $"{artist.FirstName} {artist.LastName}";
@@ -177,7 +173,7 @@ app.MapPost("api/artists/", (IArtistDataAccess _artistRepo, ArtistInputDto artis
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue inserting the artist into the database.");
 });
 
-app.MapPut("api/artists/{artistId}", (IArtistDataAccess _repo, int artistId, ArtistInputDto artist) =>
+app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _repo, int artistId, ArtistInputDto artist) =>
 {
     //Option 2
     if (artist == null)
@@ -203,8 +199,7 @@ app.MapPut("api/artists/{artistId}", (IArtistDataAccess _repo, int artistId, Art
     return result is not null ? Results.NoContent() : Results.NotFound($"No artist can be found with an id of {artistId}");
 });
 
-
-app.MapDelete("api/artists/{artistId}", (IArtistDataAccess _repo, int artistId) =>
+app.MapDelete("api/artists/{artistId}", [Authorize] (IArtistDataAccess _repo, int artistId) =>
 {
     if (artistId <= 0)
         return Results.BadRequest($"Provide a valid {nameof(artistId)}.");
@@ -224,31 +219,31 @@ app.MapGet("api/artworks/{id}", (IArtworkDataAccess _repo, int id) =>
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPost("api/artworks/", (IArtworkDataAccess _repo, ArtworkInputDto artwork) =>
+app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _repo, ArtworkInputDto artwork) =>
 {
     var result = _repo.InsertArtwork(artwork);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPut("api/artworks/{id}", (IArtworkDataAccess _repo, int id, ArtworkInputDto artwork) =>
+app.MapPut("api/artworks/{id}", [Authorize] (IArtworkDataAccess _repo, int id, ArtworkInputDto artwork) =>
 {
     var result = _repo.UpdateArtwork(id, artwork);
     return result is not null ? Results.NoContent() : Results.BadRequest();
 });
 
-app.MapDelete("api/artworks/{id}", (IArtworkDataAccess _repo, int id) =>
+app.MapDelete("api/artworks/{id}", [Authorize] (IArtworkDataAccess _repo, int id) =>
 {
     var result = _repo.DeleteArtwork(id);
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
 
-app.MapPost("api/artworks/{artworkId}/assign/artist/{artistId}", (IArtworkDataAccess _repo, int artistId, int artworkId) =>
+app.MapPost("api/artworks/{artworkId}/assign/artist/{artistId}", [Authorize] (IArtworkDataAccess _repo, int artistId, int artworkId) =>
 {
     var result = _repo.AssignArtist(artistId, artworkId);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapDelete("api/artworks/{artworkId}/deassign/artist/{artistId}", (IArtworkDataAccess _repo, int artistId, int artworkId) =>
+app.MapDelete("api/artworks/{artworkId}/deassign/artist/{artistId}", [Authorize] (IArtworkDataAccess _repo, int artistId, int artworkId) =>
 {
     var result = _repo.DeassignArtist(artistId, artworkId);
     return result is true ? Results.NoContent() : Results.BadRequest();
@@ -266,19 +261,19 @@ app.MapGet("api/nations/{id}", (INationDataAccess _repo, int id) =>
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPost("api/nations/", (INationDataAccess _repo, NationInputDto nation) =>
+app.MapPost("api/nations/", [Authorize] (INationDataAccess _repo, NationInputDto nation) =>
 {
     var result = _repo.InsertNation(nation);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPut("api/nations/{id}", (INationDataAccess _repo, int id, NationInputDto nation) =>
+app.MapPut("api/nations/{id}", [Authorize] (INationDataAccess _repo, int id, NationInputDto nation) =>
 {
     var result = _repo.UpdateNation(id, nation);
     return result is not null ? Results.NoContent() : Results.BadRequest();
 });
 
-app.MapDelete("api/nations/{id}", (INationDataAccess _repo, int id) =>
+app.MapDelete("api/nations/{id}", [Authorize] (INationDataAccess _repo, int id) =>
 {
     var result = _repo.DeleteNation(id);
     return result is true ? Results.NoContent() : Results.BadRequest();
@@ -302,31 +297,31 @@ app.MapGet("api/exhibitions/{id}/artworks", (IExhibitionDataAccess _repo, int id
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPost("api/exhibitions/", (IExhibitionDataAccess _repo, ExhibitionInputDto exhibition) =>
+app.MapPost("api/exhibitions/", [Authorize] (IExhibitionDataAccess _repo, ExhibitionInputDto exhibition) =>
 {
     var result = _repo.InsertExhibition(exhibition);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPut("api/exhibitions/{id}", (IExhibitionDataAccess _repo, int id, ExhibitionInputDto exhibition) =>
+app.MapPut("api/exhibitions/{id}", [Authorize] (IExhibitionDataAccess _repo, int id, ExhibitionInputDto exhibition) =>
 {
     var result = _repo.UpdateExhibition(id, exhibition);
     return result is not null ? Results.NoContent() : Results.BadRequest();
 });
 
-app.MapDelete("api/exhibitions/{id}", (IExhibitionDataAccess _repo, int id) =>
+app.MapDelete("api/exhibitions/{id}", [Authorize] (IExhibitionDataAccess _repo, int id) =>
 {
     var result = _repo.DeleteExhibition(id);
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
 
-app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", (IExhibitionDataAccess _repo, int exhibitionId, int artworkId) =>
+app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", [Authorize] (IExhibitionDataAccess _repo, int exhibitionId, int artworkId) =>
 {
     var result = _repo.AssignArtwork(artworkId, exhibitionId);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", (IExhibitionDataAccess _repo, int exhibitionId, int artworkId) =>
+app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", [Authorize] (IExhibitionDataAccess _repo, int exhibitionId, int artworkId) =>
 {
     var result = _repo.DeassignArtwork(exhibitionId, artworkId);
     return result is true ? Results.NoContent() : Results.BadRequest();
@@ -338,15 +333,16 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", (IE
 
 app.MapGet("api/users/", [Authorize] (IUserDataAccess _repo) => _repo.GetUsers());
 
-app.MapPost("api/users/register/", (IUserDataAccess _repo, UserInputDto user) =>
+app.MapPost("api/users/register/", [AllowAnonymous] (IUserDataAccess _repo, UserInputDto user) =>
 {
     var result = _repo.InsertUser(user);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPost("api/users/login/", (IUserDataAccess _repo, LoginDto login) =>
+app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _repo, LoginDto login) =>
 {
     var result = _repo.AuthenticateUser(login);
+    if (result is not null) { result.PasswordHash = ""; }
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 

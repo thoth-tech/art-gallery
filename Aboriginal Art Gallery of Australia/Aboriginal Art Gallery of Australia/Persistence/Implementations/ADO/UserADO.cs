@@ -164,8 +164,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     cmd.Parameters.AddWithValue("@lastName", user.LastName);
                     cmd.Parameters.AddWithValue("@email", user.Email);
                     cmd.Parameters.AddWithValue("@passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384));
-                    cmd.Parameters.AddWithValue("@role", "Member");
-                    cmd.Parameters.AddWithValue("@activeAt");
+                    cmd.Parameters.AddWithValue("@role", "User");
+                    cmd.Parameters.AddWithValue("@activeAt", DateTime.UtcNow);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? user : null;
                 }
