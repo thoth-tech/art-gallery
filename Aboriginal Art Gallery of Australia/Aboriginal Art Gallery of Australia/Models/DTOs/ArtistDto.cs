@@ -9,10 +9,10 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public string DisplayName { get; set; }
         public string ProfileImageURL { get; set; }
         public string PlaceOfBirth { get; set; }
-        public int YearOfBirth { get; set; }
+        public int? YearOfBirth { get; set; }
         public int? YearOfDeath { get; set; } = null;
 
-        public ArtistInputDto(string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int yearOfBirth, int? yearOfDeath)
+        public ArtistInputDto(string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int? yearOfBirth, int? yearOfDeath)
         {
             FirstName = firstName;
             LastName = lastName;

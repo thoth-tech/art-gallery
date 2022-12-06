@@ -63,7 +63,7 @@ app.MapGet("api/artists/", (IArtistDataAccess _artistRepo) => _artistRepo.GetArt
 
 app.MapGet("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistId) =>
 {
-    if (artistId != default(int))
+    if (artistId <= 0)
         return Results.BadRequest($"Provide a valid {nameof(artistId)}.");
     var result = _artistRepo.GetArtistById(artistId);
     return result is not null ? Results.Ok(result) : Results.NotFound();
@@ -88,18 +88,21 @@ app.MapPost("api/artists/", (IArtistDataAccess _artistRepo, ArtistInputDto artis
                 return Results.BadRequest($"An absolute {property.Name} is required.");
         }
 
-        if (property.PropertyType == typeof(int))
+        if (property.PropertyType == typeof(int?))
         {
-            if (property.Name.Contains("Birth") && propertyValue == null)
-                return Results.BadRequest($"A {property.Name} is required.");
-
             if (propertyValue != null && ((int)propertyValue > DateTime.Today.Year))
                 return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
+
+            if (property.Name.Contains(nameof(artist.YearOfBirth)) && propertyValue == null)
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains(nameof(artist.YearOfDeath)) && propertyValue != null && ((int)propertyValue <= artist.YearOfBirth))
+                return Results.BadRequest($"A {property.Name} can not be before the year of birth.");
         }
     }
 
     var result = _artistRepo.InsertArtist(artist);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue inserting the artist into the database.");
 });
 
 app.MapPut("api/artists/{artistId}", (IArtistDataAccess _repo, int artistId, ArtistInputDto artist) =>
@@ -117,20 +120,21 @@ app.MapPut("api/artists/{artistId}", (IArtistDataAccess _repo, int artistId, Art
         return Results.BadRequest($"An absolute {nameof(artist.ProfileImageURL)} is required.");
     else if (artist.PlaceOfBirth == null || artist.PlaceOfBirth == "")
         return Results.BadRequest($"A {nameof(artist.PlaceOfBirth)} is required.");
-    else if (artist.YearOfBirth != default(int))
+    else if (artist.YearOfBirth == null)
         return Results.BadRequest($"A {nameof(artist.YearOfBirth)} is required.");
     else if (artist.YearOfBirth > DateTime.Today.Year)
         return Results.BadRequest($"{nameof(artist.YearOfBirth)} can not be greater then {DateTime.Today.Year}.");
     else if (artist.YearOfDeath != null && artist.YearOfDeath > DateTime.Today.Year)
         return Results.BadRequest($"{nameof(artist.YearOfDeath)} can not be greater then {DateTime.Today.Year}.");
     var result = _repo.UpdateArtist(artistId, artist);
-    return result is not null ? Results.NoContent() : Results.BadRequest();
+
+    return result is not null ? Results.NoContent() : Results.NotFound($"No artist can be found with an id of {artistId}");
 });
 
 
 app.MapDelete("api/artists/{artistId}", (IArtistDataAccess _repo, int artistId) =>
 {
-    if (artistId != default(int))
+    if (artistId <= 0)
         return Results.BadRequest($"Provide a valid {nameof(artistId)}.");
     var result = _repo.DeleteArtist(artistId);
     return result is true ? Results.NoContent() : Results.NotFound($"No artist can be found with an id of {artistId}");
