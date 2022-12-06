@@ -4,6 +4,7 @@ using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -37,10 +38,11 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true
     };
 });
+// Complete the Claim system later
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdmin",
-         policy => policy.RequireRole("Administrator"));
+    options.AddPolicy("UserOnly", policy => policy.RequireClaim(ClaimTypes.Role, "Admin", "User"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
 });
 #endregion
 
@@ -331,7 +333,13 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", [Au
     Map User Endpoints
 */
 
-app.MapGet("api/users/", [Authorize] (IUserDataAccess _repo) => _repo.GetUsers());
+app.MapGet("api/users/", [Authorize] (IUserDataAccess _repo) => _repo.GetUsers()); // This just has auth for testing the auth system easily
+
+app.MapGet("api/users/{id}", (IUserDataAccess _repo, int id) =>
+{
+    var result = _repo.GetUserById(id);
+    return result is not null ? Results.Ok(result) : Results.BadRequest();
+});
 
 app.MapPost("api/users/register/", [AllowAnonymous] (IUserDataAccess _repo, UserInputDto user) =>
 {
@@ -342,8 +350,19 @@ app.MapPost("api/users/register/", [AllowAnonymous] (IUserDataAccess _repo, User
 app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _repo, LoginDto login) =>
 {
     var result = _repo.AuthenticateUser(login);
-    if (result is not null) { result.PasswordHash = ""; }
     return result is not null ? Results.Ok(result) : Results.BadRequest();
+});
+
+app.MapPut("api/users/{id}", [Authorize] (IUserDataAccess _repo, int id, UserInputDto user) =>
+{
+    var result = _repo.UpdateUser(id, user);
+    return result is not null ? Results.NoContent() : Results.BadRequest();
+});
+
+app.MapDelete("api/users/{id}", [Authorize] (IUserDataAccess _repo, int id) =>
+{
+    var result = _repo.DeleteUser(id);
+    return result is true ? Results.NoContent() : Results.BadRequest();
 });
 
 app.Run();

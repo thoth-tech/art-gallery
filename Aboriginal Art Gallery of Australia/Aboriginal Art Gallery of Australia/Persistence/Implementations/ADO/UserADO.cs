@@ -1,13 +1,10 @@
-﻿using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
-using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
+﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
+using Aboriginal_Art_Gallery_of_Australia.Authentication;
 using BCrypt.Net;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 
 using Npgsql;
-using System.Text;
-using System.Security.Claims;
+
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
 {
@@ -57,7 +54,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("SELECT * FROM account WHERE account_id = @accountId", connection);
+                using var cmd = new NpgsqlCommand("SELECT * FROM account WHERE account_id = @account_id", connection);
                 {
                     cmd.Parameters.AddWithValue("@userId", id);
                     using var dr = cmd.ExecuteReader();
@@ -110,11 +107,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var createdAt = (DateTime)dr["created_at"];
 
                                 UserOutputDto user = new UserOutputDto(userID, firstName, lastName, email, passwordHash, role, activeAt, modifiedAt, createdAt);
+
+                                // Authenticate user with given login information and return an auth token if valid
                                 bool authenticated = BC.EnhancedVerify(login.Password, user.PasswordHash, hashType: HashType.SHA384);
                                 if (authenticated)
                                 {
-                                    user.PasswordHash = "";
-                                    user.Token = GenerateToken(user.Role);
+                                    user.PasswordHash = ""; // Removing password hash
+                                    var handler = new TokenAuthenticationHandler(_configuration);
+                                    user.Token = handler.GenerateToken(user.Role);
                                     return user;
                                 }
                             }
@@ -123,32 +123,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     }
                 }
             }
-        }
-        private string GenerateToken(String userRole)
-        {
-            var issuer = _configuration["Jwt:Issuer"];
-            var audience = _configuration["Jwt:Audience"];
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new []
-                {
-                    new Claim("Id", "1"),
-                    new Claim(JwtRegisteredClaimNames.Sub, userRole),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                }),
-                Expires = DateTime.UtcNow.AddMinutes(120),
-                Audience = audience,
-                Issuer = issuer,
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
-            };
-            var token = jwtTokenHandler.CreateToken(tokenDescriptor);
-
-            return jwtTokenHandler.WriteToken(token);
         }
 
         public UserInputDto? InsertUser(UserInputDto user)
@@ -181,7 +155,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                                   "SET first_name = @firstName, " +
                                                       "last_name = @lastName, " +
                                                       "email = @email, " +
-                                                      "password_hash = @password_hash, " +
+                                                      "password_hash = @passwordHash, " +
                                                       "modified_at = current_timestamp " +
                                                   "WHERE account_id = @accountId", connection);
                 {
