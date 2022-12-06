@@ -1,5 +1,6 @@
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO;
+using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -30,13 +31,19 @@ builder.Services.AddSwaggerGen(options =>
  */
 
 // Implementaion 1 - ADO
-builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
-builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
-builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
-builder.Services.AddScoped<INationDataAccess, NationADO>();
-builder.Services.AddScoped<IUserDataAccess, UserADO>();
+//builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
+//builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
+//builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
+//builder.Services.AddScoped<INationDataAccess, NationADO>();
+//builder.Services.AddScoped<IUserDataAccess, UserADO>();
+
 
 // Implementation 2 - Repository Pattern
+builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
+builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
+builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
+builder.Services.AddScoped<INationDataAccess, NationRepository>();
+builder.Services.AddScoped<IUserDataAccess, UserRepository>();
 
 
 // Implementation 3 - Entity Framework

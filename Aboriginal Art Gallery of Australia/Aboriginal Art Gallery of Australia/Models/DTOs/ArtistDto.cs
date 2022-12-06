@@ -2,12 +2,16 @@
 {
     public class ArtistInputDto
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DisplayName { get; set; }
-        public string PlaceOfBirth { get; set; }
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
+        public string DisplayName { get; set; } = null!;
+        public string PlaceOfBirth { get; set; } = null!;
         public int YearOfBirth { get; set; }
         public int? YearOfDeath { get; set; } = null;
+
+        public ArtistInputDto()
+        {
+        }
 
         public ArtistInputDto(string firstName, string lastName, string displayName, string placeOfBirth, int yearOfBirth, int? yearOfDeath)
         {
@@ -23,14 +27,18 @@
     public class ArtistOutputDto
     {
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DisplayName { get; set; }
-        public string PlaceOfBirth { get; set; }
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
+        public string DisplayName { get; set; } = null!;
+        public string PlaceOfBirth { get; set; } = null!;
         public int YearOfBirth { get; set; }
         public int? YearOfDeath { get; set; } = null;
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public ArtistOutputDto()
+        {
+        }
 
         public ArtistOutputDto(int id, string firstName, string lastName, string displayName, string placeOfBirth, int yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
         {

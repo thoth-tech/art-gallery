@@ -16,7 +16,7 @@
 
   <ItemGroup>
 	<!-- emits global using BcryptNet = global::BCrypt.Net.BCrypt; -->
-	<Using Include="BCrypt.Net.BCrypt" Alias="BC"/>
+	<Using Include="BCrypt.Net.BCrypt" Alias="BC" />
   </ItemGroup>
 	
   <ItemGroup>
