@@ -2,7 +2,11 @@
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using BCrypt.Net;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+
 using Npgsql;
+using System.Text;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
 {
@@ -61,7 +65,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                         {
                             while (dr.Read())
                             {
-                                var userID = (int)dr["accountId"];
+                                var userID = (int)dr["account_id"];
                                 var firstName = (string)dr["first_name"];
                                 var lastName = (string)dr["last_name"];
                                 var email = (string)dr["email"];
@@ -79,6 +83,60 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             }
         }
 
+        public UserOutputDto? AuthenticateUser(LoginDto login)
+        {
+            using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
+            {
+                connection.Open();
+                using var cmd = new NpgsqlCommand("SELECT * FROM account WHERE email = @email", connection);
+                {
+                    cmd.Parameters.AddWithValue("@email", login.Email);
+
+                    using var dr = cmd.ExecuteReader();
+                    {
+                        if (dr != null)
+                        {
+                            while (dr.Read())
+                            {
+                                var userID = (int)dr["account_id"];
+                                var firstName = (string)dr["first_name"];
+                                var lastName = (string)dr["last_name"];
+                                var email = (string)dr["email"];
+                                var passwordHash = (string)dr["password_hash"];
+                                var role = (string)dr["role"];
+                                var activeAt = (DateTime)dr["active_at"];
+                                var modifiedAt = (DateTime)dr["modified_at"];
+                                var createdAt = (DateTime)dr["created_at"];
+
+                                UserOutputDto user = new UserOutputDto(userID, firstName, lastName, email, passwordHash, role, activeAt, modifiedAt, createdAt);
+                                bool authenticated = BC.EnhancedVerify(login.Password, user.PasswordHash, hashType: HashType.SHA384);
+                                if (authenticated)
+                                {
+                                    user.PasswordHash = "";
+                                    user.Token = GenerateToken(login);
+                                    return user;
+                                }
+                            }
+                        }
+                        return null;
+                    }
+                }
+            }
+        }
+        private string GenerateToken(LoginDto model)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+                _configuration["Jwt:Issuer"],
+                null,
+                expires: DateTime.Now.AddMinutes(120),
+                signingCredentials:credentials);
+            Console.WriteLine("GENERATING TOKEN");
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
         public UserInputDto? InsertUser(UserInputDto user)
         {
 
@@ -86,14 +144,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             {
                 connection.Open();
                 using var cmd = new NpgsqlCommand("INSERT INTO account(first_name, last_name, email, password_hash, role, active_at, modified_at, created_at) " +
-                                                  "VALUES (@firstName, @lastName, @email, @passwordHash, @role, @activeAt current_timestamp, current_timestamp);", connection);
+                                                  "VALUES (@firstName, @lastName, @email, @passwordHash, @role, @activeAt, current_timestamp, current_timestamp);", connection);
                 {
                     cmd.Parameters.AddWithValue("@firstName", user.FirstName);
                     cmd.Parameters.AddWithValue("@lastName", user.LastName);
                     cmd.Parameters.AddWithValue("@email", user.Email);
                     cmd.Parameters.AddWithValue("@passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384));
                     cmd.Parameters.AddWithValue("@role", "Member");
-                    cmd.Parameters.AddWithNullableValue("@activeAt", null);
+                    cmd.Parameters.AddWithValue("@activeAt");
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? user : null;
                 }

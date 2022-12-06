@@ -1,6 +1,10 @@
+using System.Text;
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +12,30 @@ var builder = WebApplication.CreateBuilder(args);
 /*
  Register Services to the container below.
  */
+
+#region JWT
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+{
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey
+        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = false,
+        ValidateIssuerSigningKey = true
+    };
+});
+#endregion
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -22,14 +50,39 @@ builder.Services.AddSwaggerGen(options =>
             Email = "jdoe@deakin.edu.au"
         }
     });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Auth header using the bearer scheme. Enter 'Bearer' [space]
+         and then your token in the text input below. Example: 'Bearer abcd1234'",
+         Name = "Authorisation",
+         In = ParameterLocation.Header,
+         Type = SecuritySchemeType.ApiKey,
+         Scheme = "Bearer"
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header,
+            },
+            new List<string>()
+        }
+    });
 });
-
 
 /*
  Swap between implementations using dependency injection, simply uncomment them below;
  */
 
-// Implementaion 1 - ADO
+// Implementation 1 - ADO
 builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
 builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
 builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
@@ -46,10 +99,17 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 /*
  Map Artist Endpoints
@@ -199,6 +259,24 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", (IE
 {
     var result = _repo.DeassignArtwork(exhibitionId, artworkId);
     return result is true ? Results.NoContent() : Results.BadRequest();
+});
+
+/*
+    Map User Endpoints
+*/
+
+app.MapGet("api/users/", (IUserDataAccess _repo) => _repo.GetUsers());
+
+app.MapPost("api/users/register/", (IUserDataAccess _repo, UserInputDto user) =>
+{
+    var result = _repo.InsertUser(user);
+    return result is not null ? Results.Ok(result) : Results.BadRequest();
+});
+
+app.MapPost("api/users/login/", (IUserDataAccess _repo, LoginDto login) =>
+{
+    var result = _repo.AuthenticateUser(login);
+    return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
 app.Run();

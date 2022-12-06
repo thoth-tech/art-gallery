@@ -38,5 +38,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <param name="id">The specified user ID to be matched.</param>
         /// <returns>Returns the result of the delete operation as a boolean value.</returns>
         bool DeleteUser(int id);
+
+        /// <summary>
+        /// Authenticates the user by verifying the submitted login information.
+        /// </summary>
+        /// <param name="login">The user login to be authenticated.</param>
+        /// <returns>Returns the user output with the password hash as a blank string.</returns>
+        UserOutputDto? AuthenticateUser(LoginDto login);
     }
 }
