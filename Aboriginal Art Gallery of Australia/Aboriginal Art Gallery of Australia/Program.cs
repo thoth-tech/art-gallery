@@ -63,6 +63,8 @@ app.MapGet("api/artists/", (IArtistDataAccess _artistRepo) => _artistRepo.GetArt
 
 app.MapGet("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistId) =>
 {
+    if (artistId != default(int))
+        return Results.BadRequest($"Provide a valid {nameof(artistId)}.");
     var result = _artistRepo.GetArtistById(artistId);
     return result is not null ? Results.Ok(result) : Results.NotFound();
 });
@@ -128,8 +130,10 @@ app.MapPut("api/artists/{artistId}", (IArtistDataAccess _repo, int artistId, Art
 
 app.MapDelete("api/artists/{artistId}", (IArtistDataAccess _repo, int artistId) =>
 {
+    if (artistId != default(int))
+        return Results.BadRequest($"Provide a valid {nameof(artistId)}.");
     var result = _repo.DeleteArtist(artistId);
-    return result is true ? Results.NoContent() : Results.BadRequest();
+    return result is true ? Results.NoContent() : Results.NotFound($"No artist can be found with an id of {artistId}");
 });
 
 /*
