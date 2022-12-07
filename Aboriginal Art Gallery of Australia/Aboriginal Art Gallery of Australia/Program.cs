@@ -1,14 +1,20 @@
+using System.Text;
 using Aboriginal_Art_Gallery_of_Australia.Middleware;
 using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Authorization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +22,62 @@ var builder = WebApplication.CreateBuilder(args);
 /*
  Register Services to the container below.
  */
+
+#region JWT
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+{
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey
+        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = false,
+        ValidateIssuerSigningKey = true
+    };
+});
+// Complete the Claim system later
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UserOnly", policy => policy.RequireClaim(ClaimTypes.Role, "Admin", "User"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+});
+#endregion
+
+#region Authorisation
+var securityScheme = new OpenApiSecurityScheme()
+{
+    Name = "Authorization",
+    Type = SecuritySchemeType.Http,
+    Scheme = "Bearer",
+    BearerFormat = "JWT",
+    In = ParameterLocation.Header,
+    Description = "JSON Web Token based security",
+};
+
+var securityRequirement = new OpenApiSecurityRequirement()
+{
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
+        },
+        new string[] {}
+    }
+};
+#endregion
+
 builder.Services.AddDateOnlyTimeOnlyStringConverters();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -31,6 +93,8 @@ builder.Services.AddSwaggerGen(options =>
             Email = "jdoe@deakin.edu.au"
         }
     });
+    options.AddSecurityDefinition("Bearer", securityScheme);
+    options.AddSecurityRequirement(securityRequirement);
 });
 
 // Middleware Services
@@ -43,7 +107,7 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
  Swap between implementations using dependency injection, simply uncomment them below;
  */
 
-// Implementaion 1 - ADO
+// Implementation 1 - ADO
 builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
 builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
 builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
@@ -55,15 +119,24 @@ builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 3 - Entity Framework
 
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 /*
  Map Artist Endpoints
@@ -464,6 +537,42 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", (IE
 
     var result = _exhibitionRepo.DeassignArtwork(exhibitionId, artworkId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
+});
+
+/*
+    Map User Endpoints
+*/
+
+app.MapGet("api/users/", [Authorize] (IUserDataAccess _repo) => _repo.GetUsers()); // This just has auth for testing the auth system easily
+
+app.MapGet("api/users/{id}", (IUserDataAccess _repo, int id) =>
+{
+    var result = _repo.GetUserById(id);
+    return result is not null ? Results.Ok(result) : Results.BadRequest();
+});
+
+app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _repo, UserInputDto user) =>
+{
+    var result = _repo.InsertUser(user);
+    return result is not null ? Results.Ok(result) : Results.BadRequest();
+});
+
+app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _repo, LoginDto login) =>
+{
+    var result = _repo.AuthenticateUser(login);
+    return result is not null ? Results.Ok(result) : Results.BadRequest();
+});
+
+app.MapPut("api/users/{id}", [Authorize] (IUserDataAccess _repo, int id, UserInputDto user) =>
+{
+    var result = _repo.UpdateUser(id, user);
+    return result is not null ? Results.NoContent() : Results.BadRequest();
+});
+
+app.MapDelete("api/users/{id}", [Authorize] (IUserDataAccess _repo, int id) =>
+{
+    var result = _repo.DeleteUser(id);
+    return result is true ? Results.NoContent() : Results.BadRequest();
 });
 
 app.Run();
