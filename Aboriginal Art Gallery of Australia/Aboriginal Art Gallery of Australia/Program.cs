@@ -1,20 +1,16 @@
-using System.Text;
 using Aboriginal_Art_Gallery_of_Australia.Middleware;
-using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using static System.Net.Mime.MediaTypeNames;
-using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);

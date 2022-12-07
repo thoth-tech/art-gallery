@@ -30,7 +30,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
                 else eligibleArtists.RemoveAll(x => previousArtists.Exists(y => y.Id == x.Id));
 
                 if (eligibleArtists.Count is 0) return null;
-                else if (eligibleArtists.Count is 1) previousArtists.Clear();
+                //else if (eligibleArtists.Count is 1) previousArtists.Clear();
 
                 int index = rnd.Next(eligibleArtists.Count);
                 currentArtist = eligibleArtists[index];
@@ -39,7 +39,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
 
 
             // I will leave the below here for debugging purposes, be sure to comment line 33 so you are not clearing the eligible artist list before printing it. :)
-/*            i++;
+            i++;
             Console.WriteLine($"\nIteration: {i}");
             Console.WriteLine($"previousArtists:");
             foreach (ArtistOutputDto x in previousArtists)
@@ -50,7 +50,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
             Console.WriteLine($"currentArtist: {currentArtist.Id}");
             Console.WriteLine($"nextArtistAt: {nextArtistAt}");
             Console.WriteLine($"\n");
-            if (eligibleArtists.Count is 1) previousArtists.Clear();*/
+            if (eligibleArtists.Count is 1) previousArtists.Clear();
             /// End of debug code.
             return currentArtist;
         }
