@@ -44,3 +44,49 @@ D:\Development\DDGCIT-art-gallery\art-gallery-backend\Aboriginal Art Gallery of 
 D:\Development\DDGCIT-art-gallery\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.pdb
 D:\Development\DDGCIT-art-gallery\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.genruntimeconfig.cache
 D:\Development\DDGCIT-art-gallery\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\ref\Aboriginal Art Gallery of Australia.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.csproj.AssemblyReference.cache
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.AssemblyInfoInputs.cache
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.AssemblyInfo.cs
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.csproj.CoreCompileInputs.cache
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\refint\Aboriginal Art Gallery of Australia.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.pdb
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\appsettings.Development.json
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\appsettings.json
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Aboriginal Art Gallery of Australia.exe
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Aboriginal Art Gallery of Australia.deps.json
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Aboriginal Art Gallery of Australia.runtimeconfig.json
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Aboriginal Art Gallery of Australia.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Aboriginal Art Gallery of Australia.pdb
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\BCrypt.Net-Next.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\DateOnlyTimeOnly.AspNet.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\DateOnlyTimeOnly.AspNet.Swashbuckle.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\FastMember.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\IdentityModel.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Microsoft.OpenApi.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Npgsql.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\staticwebassets\msbuild.Aboriginal Art Gallery of Australia.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\staticwebassets\msbuild.build.Aboriginal Art Gallery of Australia.props
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.Aboriginal Art Gallery of Australia.props
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.Aboriginal Art Gallery of Australia.props
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\staticwebassets.pack.json
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\staticwebassets.build.json
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\staticwebassets.development.json
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\scopedcss\bundle\Aboriginal Art Gallery of Australia.styles.css
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.csproj.CopyComplete
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\Aboriginal Art Gallery of Australia.genruntimeconfig.cache
+C:\Users\Hannah\Documents\GitHub\art-gallery-backend\Aboriginal Art Gallery of Australia\Aboriginal Art Gallery of Australia\obj\Debug\net6.0\ref\Aboriginal Art Gallery of Australia.dll

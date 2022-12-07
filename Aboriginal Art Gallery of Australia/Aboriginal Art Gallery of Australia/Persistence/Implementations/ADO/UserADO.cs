@@ -81,7 +81,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             }
         }
 
-        public UserOutputDto? AuthenticateUser(LoginDto login)
+        public (UserOutputDto, string)? AuthenticateUser(LoginDto login)
         {
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
@@ -114,8 +114,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 {
                                     user.PasswordHash = ""; // Removing password hash
                                     var handler = new TokenAuthenticationHandler(_configuration);
-                                    user.Token = handler.GenerateToken(user.Role);
-                                    return user;
+                                    string token = handler.GenerateToken(user);
+                                    return (user, token);
                                 }
                             }
                         }

@@ -1,4 +1,5 @@
 using Microsoft.IdentityModel.Tokens;
+using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Security.Claims;
@@ -14,7 +15,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Authentication
             _configuration = configuration;
         }
 
-        public string GenerateToken(String userRole)
+        public string GenerateToken(UserOutputDto user)
         {
             var issuer = _configuration["Jwt:Issuer"];
             var audience = _configuration["Jwt:Audience"];
@@ -28,7 +29,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Authentication
                 Subject = new ClaimsIdentity(new []
                 {
                     new Claim("Id", "1"),
-                    new Claim(JwtRegisteredClaimNames.Sub, userRole),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                    new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                    new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(120),
