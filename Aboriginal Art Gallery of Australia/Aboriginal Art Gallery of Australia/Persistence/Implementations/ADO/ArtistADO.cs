@@ -125,7 +125,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     cmd.Parameters.AddWithValue("@displayName", artist.DisplayName);
                     cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageURL);
                     cmd.Parameters.AddWithValue("@placeOfBirth", artist.PlaceOfBirth);
-                    cmd.Parameters.AddWithValue("@yearOfBirth", artist.YearOfBirth);
+                    cmd.Parameters.AddWithNullableValue("@yearOfBirth", artist.YearOfBirth);
                     cmd.Parameters.AddWithNullableValue("@yearOfDeath", artist.YearOfDeath);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? artist : null;

@@ -44,6 +44,14 @@
               "target": "Package",
               "version": "[4.0.3, )"
             },
+            "DateOnlyTimeOnly.AspNet": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "DateOnlyTimeOnly.AspNet.Swashbuckle": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
             "FastMember": {
               "target": "Package",
               "version": "[1.5.0, )"

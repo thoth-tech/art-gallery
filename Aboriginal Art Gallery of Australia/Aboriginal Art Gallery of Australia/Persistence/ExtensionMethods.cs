@@ -7,13 +7,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
 {
     public static class ExtensionMethods
     {
-        public static bool ValidateURL(string url)
-        {
-            Uri myUri;
-            if (Uri.TryCreate(url, UriKind.Absolute, out myUri))
-                return true;
-            return false;
-        }
+
+
         public static T? ConvertFromNullableValue<T>(object obj)
         {
             if (obj == null || obj == DBNull.Value)
@@ -52,9 +47,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
 
         public static bool IsValidURL(this string str)
         {
-            Uri myUri;
-            if (Uri.TryCreate(str, UriKind.Absolute, out myUri))
-                return true;
+            if (Uri.TryCreate(str, UriKind.Absolute, out Uri? myUri))
+                if (myUri.AbsolutePath.Contains(".jpg"))
+                    return true;
             return false;
         }
     }

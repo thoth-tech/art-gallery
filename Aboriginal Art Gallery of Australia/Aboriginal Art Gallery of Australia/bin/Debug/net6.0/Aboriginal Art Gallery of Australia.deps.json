@@ -9,6 +9,8 @@
       "Aboriginal Art Gallery of Australia/1.0.0": {
         "dependencies": {
           "BCrypt.Net-Next": "4.0.3",
+          "DateOnlyTimeOnly.AspNet": "2.0.0",
+          "DateOnlyTimeOnly.AspNet.Swashbuckle": "2.0.0",
           "FastMember": "1.5.0",
           "Npgsql": "7.0.0",
           "Swashbuckle.AspNetCore": "6.4.0"
@@ -22,6 +24,26 @@
           "lib/net6.0/BCrypt.Net-Next.dll": {
             "assemblyVersion": "4.0.3.0",
             "fileVersion": "4.0.3.0"
+          }
+        }
+      },
+      "DateOnlyTimeOnly.AspNet/2.0.0": {
+        "runtime": {
+          "lib/net6.0/DateOnlyTimeOnly.AspNet.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
+          }
+        }
+      },
+      "DateOnlyTimeOnly.AspNet.Swashbuckle/2.0.0": {
+        "dependencies": {
+          "DateOnlyTimeOnly.AspNet": "2.0.0",
+          "Swashbuckle.AspNetCore.SwaggerGen": "6.4.0"
+        },
+        "runtime": {
+          "lib/net6.0/DateOnlyTimeOnly.AspNet.Swashbuckle.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.0.0"
           }
         }
       },
@@ -108,6 +130,20 @@
       "sha512": "sha512-W+U9WvmZQgi5cX6FS5GDtDoPzUCV4LkBLkywq/kRZhuDwcbavOzcDAr3LXJFqHUi952Yj3LEYoWW0jbEUQChsA==",
       "path": "bcrypt.net-next/4.0.3",
       "hashPath": "bcrypt.net-next.4.0.3.nupkg.sha512"
+    },
+    "DateOnlyTimeOnly.AspNet/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-N2jKdQlAw3NAzWOduEBXyvXsLGe3+xxcXpYB8gxnrxhB1BMNiYKiCKgfKRjrRc7xY3y7Qz4z+8wF7v/wA6zjyw==",
+      "path": "dateonlytimeonly.aspnet/2.0.0",
+      "hashPath": "dateonlytimeonly.aspnet.2.0.0.nupkg.sha512"
+    },
+    "DateOnlyTimeOnly.AspNet.Swashbuckle/2.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WkpUpLk7Q0SDi7KO3mUA0G3xvtZMGK526NEC0uo1oMwZ/bIT/mPsxYypeJmOyA0vipJO1KmH+b8W19ED6LmZRg==",
+      "path": "dateonlytimeonly.aspnet.swashbuckle/2.0.0",
+      "hashPath": "dateonlytimeonly.aspnet.swashbuckle.2.0.0.nupkg.sha512"
     },
     "FastMember/1.5.0": {
       "type": "package",

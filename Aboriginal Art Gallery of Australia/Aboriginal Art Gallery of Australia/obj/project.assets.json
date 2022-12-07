@@ -15,6 +15,31 @@
           }
         }
       },
+      "DateOnlyTimeOnly.AspNet/2.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/DateOnlyTimeOnly.AspNet.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/DateOnlyTimeOnly.AspNet.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
+      },
+      "DateOnlyTimeOnly.AspNet.Swashbuckle/2.0.0": {
+        "type": "package",
+        "dependencies": {
+          "DateOnlyTimeOnly.AspNet": "2.0.0",
+          "Swashbuckle.AspNetCore.SwaggerGen": "6.2.3"
+        },
+        "compile": {
+          "lib/net6.0/DateOnlyTimeOnly.AspNet.Swashbuckle.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/DateOnlyTimeOnly.AspNet.Swashbuckle.dll": {}
+        }
+      },
       "FastMember/1.5.0": {
         "type": "package",
         "compile": {
@@ -192,6 +217,34 @@
         "lib/netstandard2.1/BCrypt.Net-Next.dll",
         "lib/netstandard2.1/BCrypt.Net-Next.xml",
         "readme.md"
+      ]
+    },
+    "DateOnlyTimeOnly.AspNet/2.0.0": {
+      "sha512": "N2jKdQlAw3NAzWOduEBXyvXsLGe3+xxcXpYB8gxnrxhB1BMNiYKiCKgfKRjrRc7xY3y7Qz4z+8wF7v/wA6zjyw==",
+      "type": "package",
+      "path": "dateonlytimeonly.aspnet/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "dateonlytimeonly.aspnet.2.0.0.nupkg.sha512",
+        "dateonlytimeonly.aspnet.nuspec",
+        "lib/net6.0/DateOnlyTimeOnly.AspNet.dll",
+        "lib/net7.0/DateOnlyTimeOnly.AspNet.dll"
+      ]
+    },
+    "DateOnlyTimeOnly.AspNet.Swashbuckle/2.0.0": {
+      "sha512": "WkpUpLk7Q0SDi7KO3mUA0G3xvtZMGK526NEC0uo1oMwZ/bIT/mPsxYypeJmOyA0vipJO1KmH+b8W19ED6LmZRg==",
+      "type": "package",
+      "path": "dateonlytimeonly.aspnet.swashbuckle/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "dateonlytimeonly.aspnet.swashbuckle.2.0.0.nupkg.sha512",
+        "dateonlytimeonly.aspnet.swashbuckle.nuspec",
+        "lib/net6.0/DateOnlyTimeOnly.AspNet.Swashbuckle.dll",
+        "lib/net7.0/DateOnlyTimeOnly.AspNet.Swashbuckle.dll"
       ]
     },
     "FastMember/1.5.0": {
@@ -643,6 +696,8 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "BCrypt.Net-Next >= 4.0.3",
+      "DateOnlyTimeOnly.AspNet >= 2.0.0",
+      "DateOnlyTimeOnly.AspNet.Swashbuckle >= 2.0.0",
       "FastMember >= 1.5.0",
       "Npgsql >= 7.0.0",
       "Swashbuckle.AspNetCore >= 6.4.0"
@@ -690,6 +745,14 @@
           "BCrypt.Net-Next": {
             "target": "Package",
             "version": "[4.0.3, )"
+          },
+          "DateOnlyTimeOnly.AspNet": {
+            "target": "Package",
+            "version": "[2.0.0, )"
+          },
+          "DateOnlyTimeOnly.AspNet.Swashbuckle": {
+            "target": "Package",
+            "version": "[2.0.0, )"
           },
           "FastMember": {
             "target": "Package",

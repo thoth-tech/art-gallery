@@ -1,21 +1,26 @@
+using Aboriginal_Art_Gallery_of_Australia.Middleware;
 using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using static System.Net.Mime.MediaTypeNames;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 /*
  Register Services to the container below.
  */
-
+builder.Services.AddDateOnlyTimeOnlyStringConverters();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    options.UseDateOnlyTimeOnlyStringConverters();
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Aboriginal Art Gallery API",
@@ -28,6 +33,11 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+// Middleware Services
+builder.Services.AddSingleton<ArtistOfTheDayMiddleware>();
+builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
+
+
 
 /*
  Swap between implementations using dependency injection, simply uncomment them below;
@@ -37,7 +47,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
 builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
 builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
-builder.Services.AddScoped<INationDataAccess, NationADO>();
+builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
 builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
@@ -63,18 +73,18 @@ app.MapGet("api/artists/", (IArtistDataAccess _artistRepo) => _artistRepo.GetArt
 
 app.MapGet("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistId) =>
 {
-    if (artistId <= 0)
-        return Results.BadRequest($"Provide a valid {nameof(artistId)}.");
+    if (_artistRepo.GetArtistById(artistId) == null)
+        return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}");
+
     var result = _artistRepo.GetArtistById(artistId);
-    return result is not null ? Results.Ok(result) : Results.NotFound();
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
+
+app.MapGet("api/artists/of-the-day", ([FromServices] ArtistOfTheDayMiddleware _showcase, IArtistDataAccess _artistRepo) => _showcase.GetArtistOfTheDay(_artistRepo.GetArtists()));
 
 app.MapPost("api/artists/", (IArtistDataAccess _artistRepo, ArtistInputDto artist) =>
 {
-    //Option 1
-    if (artist.DisplayName == null || artist.DisplayName == "") artist.DisplayName = $"{artist.FirstName} {artist.LastName}";
     PropertyInfo[] properties = artist.GetType().GetProperties();
-
     foreach (PropertyInfo property in properties)
     {
         var propertyValue = property.GetValue(artist, null);
@@ -84,8 +94,8 @@ app.MapPost("api/artists/", (IArtistDataAccess _artistRepo, ArtistInputDto artis
             if (propertyValue == null || propertyValue.Equals(""))
                 return Results.BadRequest($"A {property.Name} is required.");
 
-            if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
-                return Results.BadRequest($"An absolute {property.Name} is required.");
+            if (property.Name.Contains(nameof(artist.ProfileImageURL)) && propertyValue.ToString()!.IsValidURL() == false)
+                return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
 
         if (property.PropertyType == typeof(int?))
@@ -97,167 +107,363 @@ app.MapPost("api/artists/", (IArtistDataAccess _artistRepo, ArtistInputDto artis
                 return Results.BadRequest($"A {property.Name} is required.");
 
             if (property.Name.Contains(nameof(artist.YearOfDeath)) && propertyValue != null && ((int)propertyValue <= artist.YearOfBirth))
-                return Results.BadRequest($"A {property.Name} can not be before the year of birth.");
+                return Results.BadRequest($"The {property.Name} can not be before the year of birth.");
         }
     }
 
     var result = _artistRepo.InsertArtist(artist);
-    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue inserting the artist into the database.");
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/artists/{artistId}", (IArtistDataAccess _repo, int artistId, ArtistInputDto artist) =>
+app.MapPut("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistId, ArtistInputDto artist) =>
 {
-    //Option 2
-    if (artist == null)
-        return Results.BadRequest($"Provide a valid {nameof(artist)}.");
-    else if (artist.FirstName == null || artist.FirstName == "")
-        return Results.BadRequest($"A {nameof(artist.FirstName)} is required.");
-    else if (artist.LastName == null || artist.LastName == "")
-        return Results.BadRequest($"A {nameof(artist.LastName)} is required.");
-    else if (artist.DisplayName == null || artist.DisplayName == "")
-        artist.DisplayName = $"{artist.FirstName} {artist.LastName}";
-    else if (artist.ProfileImageURL.IsValidURL() == false)
-        return Results.BadRequest($"An absolute {nameof(artist.ProfileImageURL)} is required.");
-    else if (artist.PlaceOfBirth == null || artist.PlaceOfBirth == "")
-        return Results.BadRequest($"A {nameof(artist.PlaceOfBirth)} is required.");
-    else if (artist.YearOfBirth == null)
-        return Results.BadRequest($"A {nameof(artist.YearOfBirth)} is required.");
-    else if (artist.YearOfBirth > DateTime.Today.Year)
-        return Results.BadRequest($"{nameof(artist.YearOfBirth)} can not be greater then {DateTime.Today.Year}.");
-    else if (artist.YearOfDeath != null && artist.YearOfDeath > DateTime.Today.Year)
-        return Results.BadRequest($"{nameof(artist.YearOfDeath)} can not be greater then {DateTime.Today.Year}.");
-    var result = _repo.UpdateArtist(artistId, artist);
+    if (_artistRepo.GetArtistById(artistId) == null)
+        return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}");
 
-    return result is not null ? Results.NoContent() : Results.NotFound($"No artist can be found with an id of {artistId}");
+    PropertyInfo[] properties = artist.GetType().GetProperties();
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(artist, null);
+
+        if (property.PropertyType == typeof(string))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains(nameof(artist.ProfileImageURL)) && propertyValue.ToString()!.IsValidURL() == false)
+                return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
+        }
+
+        if (property.PropertyType == typeof(int?))
+        {
+            if (propertyValue != null && ((int)propertyValue > DateTime.Today.Year))
+                return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
+
+            if (property.Name.Contains(nameof(artist.YearOfBirth)) && propertyValue == null)
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains(nameof(artist.YearOfDeath)) && propertyValue != null && ((int)propertyValue <= artist.YearOfBirth))
+                return Results.BadRequest($"The {property.Name} can not be before the year of birth.");
+        }
+    }
+
+    var result = _artistRepo.UpdateArtist(artistId, artist);
+    return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-
-app.MapDelete("api/artists/{artistId}", (IArtistDataAccess _repo, int artistId) =>
+app.MapDelete("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistId) =>
 {
-    if (artistId <= 0)
-        return Results.BadRequest($"Provide a valid {nameof(artistId)}.");
-    var result = _repo.DeleteArtist(artistId);
-    return result is true ? Results.NoContent() : Results.NotFound($"No artist can be found with an id of {artistId}");
+    if (_artistRepo.GetArtistById(artistId) == null)
+        return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}");
+
+    var result = _artistRepo.DeleteArtist(artistId);
+    return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
 /*
  Map Artwork Endpoints
  */
 
-app.MapGet("api/artworks/", (IArtworkDataAccess _repo) => _repo.GetArtworks());
+app.MapGet("api/artworks/", (IArtworkDataAccess _artworkRepo) => _artworkRepo.GetArtworks());
 
-app.MapGet("api/artworks/{id}", (IArtworkDataAccess _repo, int id) =>
+
+app.MapGet("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, int artworkId) =>
 {
-    var result = _repo.GetArtworkById(id);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+    if (_artworkRepo.GetArtworkById(artworkId) == null)
+        return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}");
+
+    var result = _artworkRepo.GetArtworkById(artworkId);
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
 
-app.MapPost("api/artworks/", (IArtworkDataAccess _repo, ArtworkInputDto artwork) =>
+app.MapGet("api/artwork/of-the-day", ([FromServices] ArtworkOfTheDayMiddleware _showcase, IArtworkDataAccess _artworkRepo) => _showcase.GetArtworkOfTheDay(_artworkRepo.GetArtworks()));
+
+app.MapPost("api/artworks/", (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, ArtworkInputDto artwork) =>
 {
-    var result = _repo.InsertArtwork(artwork);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+    PropertyInfo[] properties = artwork.GetType().GetProperties();
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(artwork, null);
+
+        if (property.PropertyType == typeof(string))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
+                return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
+        }
+
+        if (property.PropertyType == typeof(int?))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains(nameof(artwork.YearCreated)) && ((int)propertyValue > DateTime.Today.Year))
+                return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
+
+            if (property.Name.Contains(nameof(artwork.MediaId)) && (_mediaRepo.GetMediaTypeById((int)propertyValue) == null))
+                return Results.BadRequest($"No mediatype can be found with an {property.Name} of {propertyValue}");
+        }
+    }
+    var result = _artworkRepo.InsertArtwork(artwork);
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/artworks/{id}", (IArtworkDataAccess _repo, int id, ArtworkInputDto artwork) =>
+app.MapPut("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, int artworkId, ArtworkInputDto artwork) =>
 {
-    var result = _repo.UpdateArtwork(id, artwork);
-    return result is not null ? Results.NoContent() : Results.BadRequest();
+    if (_artworkRepo.GetArtworkById(artworkId) == null)
+        return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}");
+
+    PropertyInfo[] properties = artwork.GetType().GetProperties();
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(artwork, null);
+
+        if (property.PropertyType == typeof(string))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
+                return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
+        }
+
+        if (property.PropertyType == typeof(int?))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains(nameof(artwork.YearCreated)) && ((int)propertyValue > DateTime.Today.Year))
+                return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
+
+            if (property.Name.Contains(nameof(artwork.MediaId)) && (_mediaRepo.GetMediaTypeById((int)propertyValue) == null))
+                return Results.NotFound($"No mediatype can be found with an {property.Name} of {propertyValue}");
+        }
+    }
+
+    var result = _artworkRepo.UpdateArtwork(artworkId, artwork);
+    return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/artworks/{id}", (IArtworkDataAccess _repo, int id) =>
+app.MapDelete("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, int artworkId) =>
 {
-    var result = _repo.DeleteArtwork(id);
-    return result is true ? Results.NoContent() : Results.BadRequest();
+    if (_artworkRepo.GetArtworkById(artworkId) == null)
+        Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
+
+    var result = _artworkRepo.DeleteArtwork(artworkId);
+    return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-app.MapPost("api/artworks/{artworkId}/assign/artist/{artistId}", (IArtworkDataAccess _repo, int artistId, int artworkId) =>
+app.MapPost("api/artworks/{artworkId}/assign/artist/{artistId}", (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
 {
-    var result = _repo.AssignArtist(artistId, artworkId);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+    if (_artworkRepo.GetArtworkById(artworkId) == null)
+        return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
+    else if (_artistRepo.GetArtistById(artistId) == null)
+        return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}.");
+
+    var result = _artworkRepo.AssignArtist(artistId, artworkId);
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-app.MapDelete("api/artworks/{artworkId}/deassign/artist/{artistId}", (IArtworkDataAccess _repo, int artistId, int artworkId) =>
+app.MapDelete("api/artworks/{artworkId}/deassign/artist/{artistId}", (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
 {
-    var result = _repo.DeassignArtist(artistId, artworkId);
-    return result is true ? Results.NoContent() : Results.BadRequest();
+    if (_artworkRepo.GetArtworkById(artworkId) == null)
+        return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
+    else if (_artistRepo.GetArtistById(artistId) == null)
+        return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}.");
+
+    var result = _artworkRepo.DeassignArtist(artistId, artworkId);
+    return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
 /*
- Map Nation Endpoints
+ Map Media Endpoints
  */
 
-app.MapGet("api/nations/", (INationDataAccess _repo) => _repo.GetNations());
+app.MapGet("api/media/", (IMediaDataAccess _mediaRepo) => _mediaRepo.GetMediaTypes());
 
-app.MapGet("api/nations/{id}", (INationDataAccess _repo, int id) =>
+app.MapGet("api/media/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
 {
-    var result = _repo.GetNationById(id);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+    if (_mediaRepo.GetMediaTypeById(mediaId) == null)
+        Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
+
+    var result = _mediaRepo.GetMediaTypeById(mediaId);
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
 
-app.MapPost("api/nations/", (INationDataAccess _repo, NationInputDto nation) =>
+app.MapPost("api/medias/", (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
 {
-    var result = _repo.InsertNation(nation);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+    PropertyInfo[] properties = media.GetType().GetProperties();
+    List<MediaOutputDto> mediaTypes = _mediaRepo.GetMediaTypes();
+
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(media, null);
+
+        if (property.PropertyType == typeof(string))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains(nameof(media.MediaType)) && (_mediaRepo.GetMediaTypes().Exists(x => x.MediaType == media.MediaType) == true))
+                return Results.Conflict($"A {nameof(media.MediaType)} matching this type already exists.");
+        }
+    }
+
+    var result = _mediaRepo.InsertMediaType(media);
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/nations/{id}", (INationDataAccess _repo, int id, NationInputDto nation) =>
+app.MapPut("api/medias/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId, MediaInputDto media) =>
 {
-    var result = _repo.UpdateNation(id, nation);
-    return result is not null ? Results.NoContent() : Results.BadRequest();
+    if (_mediaRepo.GetMediaTypeById(mediaId) == null)
+        Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
+
+    PropertyInfo[] properties = media.GetType().GetProperties();
+    List<MediaOutputDto> mediaTypes = _mediaRepo.GetMediaTypes();
+
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(media, null);
+
+        if (property.PropertyType == typeof(string))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains(nameof(media.MediaType)) && (_mediaRepo.GetMediaTypes().Exists(x => x.MediaType == media.MediaType) == true))
+                return Results.Conflict($"A {nameof(media.MediaType)} matching this type already exists.");
+        }
+    }
+    var result = _mediaRepo.UpdateMediaType(mediaId, media);
+    return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/nations/{id}", (INationDataAccess _repo, int id) =>
+app.MapDelete("api/medias/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
 {
-    var result = _repo.DeleteNation(id);
-    return result is true ? Results.NoContent() : Results.BadRequest();
+    if (_mediaRepo.GetMediaTypeById(mediaId) == null)
+        Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
+
+    var result = _mediaRepo.DeleteMediaType(mediaId);
+    return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
+
+
 
 /*
  Map Exhibition Endpoints
  */
 
-app.MapGet("api/exhibitions/", (IExhibitionDataAccess _repo) => _repo.GetExhibitions());
+app.MapGet("api/exhibitions/", (IExhibitionDataAccess _exhibitionRepo) => _exhibitionRepo.GetExhibitions());
 
-app.MapGet("api/exhibitions/{id}", (IExhibitionDataAccess _repo, int id) =>
+app.MapGet("api/exhibitions/{exhibitionId}", (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
 {
-    var result = _repo.GetExhibitionById(id);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+    var result = _exhibitionRepo.GetExhibitionById(exhibitionId);
+    return result is not null ? Results.Ok(result) : Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}");
 });
 
-app.MapGet("api/exhibitions/{id}/artworks", (IExhibitionDataAccess _repo, int id) =>
+app.MapGet("api/exhibitions/{exhibitionId}/artworks", (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
 {
-    var result = _repo.GetExhibitionArtworksById(id);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+    var result = _exhibitionRepo.GetExhibitionArtworksById(exhibitionId);
+    return result is not null ? Results.Ok(result) : Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}");
 });
 
-app.MapPost("api/exhibitions/", (IExhibitionDataAccess _repo, ExhibitionInputDto exhibition) =>
+app.MapPost("api/exhibitions/", (IExhibitionDataAccess _exhibitionRepo, ExhibitionInputDto exhibition) =>
 {
-    var result = _repo.InsertExhibition(exhibition);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+
+    PropertyInfo[] properties = exhibition.GetType().GetProperties();
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(exhibition, null);
+
+        if (property.PropertyType == typeof(string))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
+                return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
+        }
+
+        if (property.PropertyType == typeof(DateOnly))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains(nameof(exhibition.StartDate)) && ((DateOnly)propertyValue >= exhibition.EndDate))
+                return Results.BadRequest($"{property.Name} can not be greater then {exhibition.EndDate} (The end date).");
+        }
+    }
+
+    var result = _exhibitionRepo.InsertExhibition(exhibition);
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/exhibitions/{id}", (IExhibitionDataAccess _repo, int id, ExhibitionInputDto exhibition) =>
+app.MapPut("api/exhibitions/{id}", (IExhibitionDataAccess _exhibitionRepo, int exhibitionId, ExhibitionInputDto exhibition) =>
 {
-    var result = _repo.UpdateExhibition(id, exhibition);
-    return result is not null ? Results.NoContent() : Results.BadRequest();
+    if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
+        return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
+
+    PropertyInfo[] properties = exhibition.GetType().GetProperties();
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(exhibition, null);
+
+        if (property.PropertyType == typeof(string))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
+                return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
+        }
+
+        if (property.PropertyType == typeof(DateOnly))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+
+            if (property.Name.Contains(nameof(exhibition.StartDate)) && ((DateOnly)propertyValue >= exhibition.EndDate))
+                return Results.BadRequest($"{property.Name} can not be greater then {exhibition.EndDate}.");
+        }
+    }
+
+    var result = _exhibitionRepo.InsertExhibition(exhibition);
+    return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/exhibitions/{id}", (IExhibitionDataAccess _repo, int id) =>
+app.MapDelete("api/exhibitions/{exhibitionId}", (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
 {
-    var result = _repo.DeleteExhibition(id);
-    return result is true ? Results.NoContent() : Results.BadRequest();
+    if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
+        return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
+
+    var result = _exhibitionRepo.DeleteExhibition(exhibitionId);
+    return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", (IExhibitionDataAccess _repo, int exhibitionId, int artworkId) =>
+app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
 {
-    var result = _repo.AssignArtwork(artworkId, exhibitionId);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+    if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
+        return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
+
+    if (_artworkRepo.GetArtworkById(artworkId) == null)
+        return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}");
+
+    var result = _exhibitionRepo.AssignArtwork(artworkId, exhibitionId);
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", (IExhibitionDataAccess _repo, int exhibitionId, int artworkId) =>
+app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
 {
-    var result = _repo.DeassignArtwork(exhibitionId, artworkId);
-    return result is true ? Results.NoContent() : Results.BadRequest();
+    if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
+        return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
+
+    if (_artworkRepo.GetArtworkById(artworkId) == null)
+        return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}");
+
+    var result = _exhibitionRepo.DeassignArtwork(exhibitionId, artworkId);
+    return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
 app.Run();

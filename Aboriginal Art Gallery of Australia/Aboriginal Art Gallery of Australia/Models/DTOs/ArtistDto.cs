@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 {
@@ -12,8 +13,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public int? YearOfBirth { get; set; }
         public int? YearOfDeath { get; set; } = null;
 
-        public ArtistInputDto(string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int? yearOfBirth, int? yearOfDeath)
+        public ArtistInputDto(string firstName, string lastName, string? displayName, string profileImageURL, string placeOfBirth, int? yearOfBirth, int? yearOfDeath)
         {
+            if (displayName == null || displayName == "") 
+                displayName = $"{firstName} {lastName}";
+
             FirstName = firstName;
             LastName = lastName;
             DisplayName = displayName;

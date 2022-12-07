@@ -31,9 +31,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var name = (string)dr["name"];
                                 var description = (string)dr["description"];
                                 var backgroundImageUrl = (string)dr["background_image_url"];
+                                var startDate = (DateTime)dr["start_date"];
+                                var endDate = (DateTime)dr["start_date"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
-                                exhibitions.Add(new ExhibitionOutputDto(exhibitionId, name, description, backgroundImageUrl, modifiedAt, createdAt));
+
+                                exhibitions.Add(new ExhibitionOutputDto(exhibitionId, name, description, backgroundImageUrl, DateOnly.FromDateTime(startDate), DateOnly.FromDateTime(endDate), modifiedAt, createdAt));
                             }
                         }
                         return exhibitions;
@@ -60,9 +63,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var name = (string)dr["name"];
                                 var description = (string)dr["description"];
                                 var backgroundImageUrl = (string)dr["background_image_url"];
+                                var startDate = (DateTime)dr["start_date"];
+                                var endDate = (DateTime)dr["start_date"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
-                                return new ExhibitionOutputDto(exhibitionId, name, description, backgroundImageUrl, modifiedAt, createdAt);
+
+                                return new ExhibitionOutputDto(exhibitionId, name, description, backgroundImageUrl, DateOnly.FromDateTime(startDate), DateOnly.FromDateTime(endDate), modifiedAt, createdAt);
                             }
                         }
                         return null;
@@ -94,12 +100,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     }
                 }
 
-                using var cmd2 = new NpgsqlCommand("SELECT artwork_exhibition.exhibition_id, artwork_exhibition.artwork_id, artwork.title, description, media, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, nation.title as nation_title " +
+                using var cmd2 = new NpgsqlCommand("SELECT artwork_exhibition.exhibition_id, artwork_exhibition.artwork_id, artwork.title, artwork.description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, media.media_type " +
                                                    "FROM artwork " +
                                                    "INNER JOIN artwork_exhibition " +
                                                    "ON artwork_exhibition.artwork_id = artwork.artwork_id " +
-                                                   "INNER JOIN nation " +
-                                                   "ON nation.nation_id = artwork.nation_id " +
+                                                   "INNER JOIN media " +
+                                                   "ON media.media_id = artwork.media_id " +
                                                    "WHERE exhibition_id = @ExhibitionId", connection);
                 {
                     cmd2.Parameters.AddWithValue("@ExhibitionId", id);
@@ -112,11 +118,10 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var artworkId = (int)dr["artwork_id"];
                                 var title = (string)dr["title"];
                                 var description = (string)dr["description"];
-                                var media = (string)dr["media"];
                                 var primaryImageURL = (string)dr["primary_image_url"];
                                 var secondaryImageURL = dr["secondary_image_url"] as string;
                                 var createdYear = (int)dr["year_created"];
-                                var nationTitle = (string)dr["nation_title"];
+                                var mediaType = (string)dr["media_type"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
 
@@ -125,7 +130,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 foreach (string artist in lookup[artworkId])
                                     artworkArtists.Add(artist);
 
-                                artworks.Add(new ArtworkOutputDto(artworkId, title, description, media, primaryImageURL, secondaryImageURL, createdYear, nationTitle, modifiedAt, createdAt, artworkArtists));
+                                artworks.Add(new ArtworkOutputDto(artworkId, title, description, primaryImageURL, secondaryImageURL, createdYear, mediaType, modifiedAt, createdAt, artworkArtists));
                             }
                         }
                     }
@@ -144,10 +149,15 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var name = (string)dr["name"];
                                 var description = (string)dr["description"];
                                 var backgroundImageUrl = (string)dr["background_image_url"];
+                                var startDate = (DateTime)dr["start_date"];
+                                var endDate = (DateTime)dr["start_date"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
 
-                                return new ExhibitionArtworkOutputDto(exhibitionId, name, description, backgroundImageUrl, modifiedAt, createdAt, artworks);
+                                DateOnly startDateOnly = new DateOnly(startDate.Year, startDate.Month, startDate.Day);
+                                DateOnly endDateOnly = new DateOnly(endDate.Year, endDate.Month, endDate.Day);
+
+                                return new ExhibitionArtworkOutputDto(exhibitionId, name, description, backgroundImageUrl, startDateOnly, endDateOnly, modifiedAt, createdAt, artworks);
                             }
                         }
                         return null;
@@ -161,12 +171,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("INSERT INTO exhibition(name, description, background_image_url, modified_at, created_at) " +
-                                                  "VALUES (@name, @description, @backgroundImageUrl, current_timestamp, current_timestamp);", connection);
+                using var cmd = new NpgsqlCommand("INSERT INTO exhibition(name, description, background_image_url, start_date, end_date, modified_at, created_at) " +
+                                                  "VALUES (@name, @description, @backgroundImageUrl, @startDate, @endDate, current_timestamp, current_timestamp);", connection);
                 {
                     cmd.Parameters.AddWithValue("@name", exhibition.Name);
                     cmd.Parameters.AddWithValue("@description", exhibition.Description);
-                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageUrl);
+                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageURL);
+                    cmd.Parameters.AddWithValue("@startDate", exhibition.StartDate);
+                    cmd.Parameters.AddWithValue("@endDate", exhibition.EndDate);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? exhibition : null;
                 }
@@ -182,13 +194,17 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                                   "SET name = @name, " +
                                                       "description = @description, " +
                                                       "background_image_url = @backgroundImageUrl, " +
+                                                      "start_date = @startDate, " +
+                                                      "end_date = @endDate, " +
                                                       "modified_at = current_timestamp " +
                                                   "WHERE exhibition_id = @exhibitionId", connection);
                 {
                     cmd.Parameters.AddWithValue("@exhibitionId", id);
                     cmd.Parameters.AddWithValue("@name", exhibition.Name);
                     cmd.Parameters.AddWithValue("@description", exhibition.Description);
-                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageUrl);
+                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageURL);
+                    cmd.Parameters.AddWithValue("@startDate", exhibition.StartDate);
+                    cmd.Parameters.AddWithValue("@endDate", exhibition.EndDate);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? exhibition : null;
                 }

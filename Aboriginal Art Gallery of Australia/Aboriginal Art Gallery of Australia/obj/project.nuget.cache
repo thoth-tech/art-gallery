@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "vImxUZJnGbQv8hsLmuZ6Z2uiJE4fG0JPVr7I0E8JM/LXe+sQ0Hx6Q7ZCjrOq5i7UZEE/7Y2cAvniZep04kg1/w==",
+  "dgSpecHash": "GwM1hRWFxXfgmzJBoVLG0w2iC+vjEJUY6Am/uM+8saA6F6LrpL/upMp62ZITl/y0Bz66utAAjOxkbxBiHwjBcQ==",
   "success": true,
   "projectFilePath": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia\\Aboriginal Art Gallery of Australia.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Luke Collins\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
+    "C:\\Users\\Luke Collins\\.nuget\\packages\\dateonlytimeonly.aspnet\\2.0.0\\dateonlytimeonly.aspnet.2.0.0.nupkg.sha512",
+    "C:\\Users\\Luke Collins\\.nuget\\packages\\dateonlytimeonly.aspnet.swashbuckle\\2.0.0\\dateonlytimeonly.aspnet.swashbuckle.2.0.0.nupkg.sha512",
     "C:\\Users\\Luke Collins\\.nuget\\packages\\fastmember\\1.5.0\\fastmember.1.5.0.nupkg.sha512",
     "C:\\Users\\Luke Collins\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "C:\\Users\\Luke Collins\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.0\\microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
