@@ -341,7 +341,7 @@ app.MapGet("api/users/{id}", (IUserDataAccess _repo, int id) =>
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPost("api/users/register/", [AllowAnonymous] (IUserDataAccess _repo, UserInputDto user) =>
+app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _repo, UserInputDto user) =>
 {
     var result = _repo.InsertUser(user);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
