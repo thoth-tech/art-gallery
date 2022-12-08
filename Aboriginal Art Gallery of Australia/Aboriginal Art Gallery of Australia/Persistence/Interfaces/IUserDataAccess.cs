@@ -44,6 +44,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// </summary>
         /// <param name="login">The user login to be authenticated.</param>
         /// <returns>Returns the user output with the password hash as a blank string.</returns>
-        (UserOutputDto, string)? AuthenticateUser(LoginDto login);
+        UserOutputDto? AuthenticateUser(LoginDto login);
     }
 }
