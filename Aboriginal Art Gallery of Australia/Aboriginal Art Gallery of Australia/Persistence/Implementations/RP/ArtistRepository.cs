@@ -32,6 +32,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
             var artist = _repo.ExecuteReader<ArtistOutputDto>("SELECT * FROM artist WHERE artist_id=@artistId", sqlParams)
                 .SingleOrDefault();
+
             return artist;
         }
 
@@ -53,7 +54,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 "last_name, display_name, place_of_birth, year_of_birth, year_of_death, " +
                 "modified_at, created_at) VALUES (@firstName, @lastName, @displayName, @placeOfBirth, " +
                 "@yearOfBirth, @yearOfDeath, @modifieddate, @createddate);", sqlParams)
-                .Single();
+                .SingleOrDefault();
 
             return result;
         }
@@ -105,7 +106,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
             var result = _repo.ExecuteReader<ArtistArtworkDto>("INSERT INTO artist_artwork(artist_id, artwork_id, " +
                 "modified_at, created_at) VALUES (@artistId, @artworkId, @modifieddate, @createddate)", sqlParams)
-                .Single();
+                .SingleOrDefault();
 
             return result;
         }
@@ -115,9 +116,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var sqlParams = new NpgsqlParameter[]
             {
                 new("artistId", artistId),
-                new("artworkId", artworkId),
-                new("modifieddate", DateTime.Now),
-                new("createddate", DateTime.Now)
+                new("artworkId", artworkId)
             };
 
             _repo.ExecuteReader<ArtistArtworkDto>("DELETE FROM artist_artwork WHERE artist_id = @artistId " +
