@@ -125,11 +125,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-/*    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-        options.RoutePrefix = string.Empty;
-    });*/
+    // app.UseSwaggerUI(options =>
+    // {
+    //     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    //     options.RoutePrefix = string.Empty;
+    // });
 }
 
 app.UseHttpsRedirection();
@@ -154,7 +154,7 @@ app.MapGet("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistI
 
 app.MapGet("api/artists/of-the-day", ([FromServices] ArtistOfTheDayMiddleware _showcase, IArtistDataAccess _artistRepo) => _showcase.GetArtistOfTheDay(_artistRepo.GetArtists()));
 
-app.MapPost("api/artists/", (IArtistDataAccess _artistRepo, ArtistInputDto artist) =>
+app.MapPost("api/artists/", [Authorize] (IArtistDataAccess _artistRepo, ArtistInputDto artist) =>
 {
     PropertyInfo[] properties = artist.GetType().GetProperties();
     foreach (PropertyInfo property in properties)
@@ -187,7 +187,7 @@ app.MapPost("api/artists/", (IArtistDataAccess _artistRepo, ArtistInputDto artis
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistId, ArtistInputDto artist) =>
+app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo, int artistId, ArtistInputDto artist) =>
 {
     if (_artistRepo.GetArtistById(artistId) == null)
         return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}");
@@ -223,7 +223,7 @@ app.MapPut("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistI
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistId) =>
+app.MapDelete("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo, int artistId) =>
 {
     if (_artistRepo.GetArtistById(artistId) == null)
         return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}");
@@ -250,7 +250,7 @@ app.MapGet("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, int art
 
 app.MapGet("api/artwork/of-the-day", ([FromServices] ArtworkOfTheDayMiddleware _showcase, IArtworkDataAccess _artworkRepo) => _showcase.GetArtworkOfTheDay(_artworkRepo.GetArtworks()));
 
-app.MapPost("api/artworks/", (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, ArtworkInputDto artwork) =>
+app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, ArtworkInputDto artwork) =>
 {
     PropertyInfo[] properties = artwork.GetType().GetProperties();
     foreach (PropertyInfo property in properties)
@@ -282,7 +282,7 @@ app.MapPost("api/artworks/", (IArtworkDataAccess _artworkRepo, IMediaDataAccess 
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, int artworkId, ArtworkInputDto artwork) =>
+app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, int artworkId, ArtworkInputDto artwork) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}");
@@ -318,7 +318,7 @@ app.MapPut("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, IMediaD
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, int artworkId) =>
+app.MapDelete("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkRepo, int artworkId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
         Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
@@ -327,7 +327,7 @@ app.MapDelete("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, int 
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-app.MapPost("api/artworks/{artworkId}/assign/artist/{artistId}", (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
+app.MapPost("api/artworks/{artworkId}/assign/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
@@ -338,7 +338,7 @@ app.MapPost("api/artworks/{artworkId}/assign/artist/{artistId}", (IArtworkDataAc
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-app.MapDelete("api/artworks/{artworkId}/deassign/artist/{artistId}", (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
+app.MapDelete("api/artworks/{artworkId}/deassign/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
@@ -364,7 +364,7 @@ app.MapGet("api/media/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
 
-app.MapPost("api/medias/", (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
+app.MapPost("api/medias/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
 {
     PropertyInfo[] properties = media.GetType().GetProperties();
     List<MediaOutputDto> mediaTypes = _mediaRepo.GetMediaTypes();
@@ -387,7 +387,7 @@ app.MapPost("api/medias/", (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/medias/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId, MediaInputDto media) =>
+app.MapPut("api/medias/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId, MediaInputDto media) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
         Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
@@ -412,7 +412,7 @@ app.MapPut("api/medias/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId, Me
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/medias/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
+app.MapDelete("api/medias/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
         Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
@@ -441,7 +441,7 @@ app.MapGet("api/exhibitions/{exhibitionId}/artworks", (IExhibitionDataAccess _ex
     return result is not null ? Results.Ok(result) : Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}");
 });
 
-app.MapPost("api/exhibitions/", (IExhibitionDataAccess _exhibitionRepo, ExhibitionInputDto exhibition) =>
+app.MapPost("api/exhibitions/", [Authorize] (IExhibitionDataAccess _exhibitionRepo, ExhibitionInputDto exhibition) =>
 {
 
     PropertyInfo[] properties = exhibition.GetType().GetProperties();
@@ -472,7 +472,7 @@ app.MapPost("api/exhibitions/", (IExhibitionDataAccess _exhibitionRepo, Exhibiti
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/exhibitions/{id}", (IExhibitionDataAccess _exhibitionRepo, int exhibitionId, ExhibitionInputDto exhibition) =>
+app.MapPut("api/exhibitions/{id}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId, ExhibitionInputDto exhibition) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
@@ -505,7 +505,7 @@ app.MapPut("api/exhibitions/{id}", (IExhibitionDataAccess _exhibitionRepo, int e
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/exhibitions/{exhibitionId}", (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
+app.MapDelete("api/exhibitions/{exhibitionId}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
@@ -514,7 +514,7 @@ app.MapDelete("api/exhibitions/{exhibitionId}", (IExhibitionDataAccess _exhibiti
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
+app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
@@ -526,7 +526,7 @@ app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", (IExhib
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
+app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
