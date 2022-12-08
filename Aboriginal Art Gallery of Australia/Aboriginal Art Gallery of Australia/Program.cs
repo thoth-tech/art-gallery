@@ -74,6 +74,7 @@ var securityRequirement = new OpenApiSecurityRequirement()
 };
 #endregion
 
+#region Swagger UI
 builder.Services.AddDateOnlyTimeOnlyStringConverters();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -92,6 +93,7 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition("Bearer", securityScheme);
     options.AddSecurityRequirement(securityRequirement);
 });
+#endregion
 
 // Middleware Services
 builder.Services.AddSingleton<ArtistOfTheDayMiddleware>();
@@ -122,11 +124,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
+    app.UseSwaggerUI();
+/*    app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
         options.RoutePrefix = string.Empty;
-    });
+    });*/
 }
 
 app.UseHttpsRedirection();

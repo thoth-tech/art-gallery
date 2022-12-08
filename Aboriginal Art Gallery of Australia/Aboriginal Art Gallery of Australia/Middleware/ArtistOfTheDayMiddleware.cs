@@ -34,7 +34,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
 
                 int index = rnd.Next(eligibleArtists.Count);
                 currentArtist = eligibleArtists[index];
-                nextArtistAt = nextArtistAt.AddMinutes(10);
+                nextArtistAt = nextArtistAt.AddMinutes(1);
             }
 
 
