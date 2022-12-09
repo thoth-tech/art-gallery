@@ -154,10 +154,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
 
-                                DateOnly startDateOnly = new DateOnly(startDate.Year, startDate.Month, startDate.Day);
-                                DateOnly endDateOnly = new DateOnly(endDate.Year, endDate.Month, endDate.Day);
-
-                                return new ExhibitionArtworkOutputDto(exhibitionId, name, description, backgroundImageUrl, startDateOnly, endDateOnly, modifiedAt, createdAt, artworks);
+                                return new ExhibitionArtworkOutputDto(exhibitionId, name, description, backgroundImageUrl, DateOnly.FromDateTime(startDate), DateOnly.FromDateTime(endDate), modifiedAt, createdAt, artworks);
                             }
                         }
                         return null;
