@@ -45,15 +45,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("displayName", artist.DisplayName),
                 new("placeOfBirth", artist.PlaceOfBirth),
                 new("yearOfBirth", artist.YearOfBirth),
-                new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value),
-                new("modifieddate", DateTime.Now),
-                new("createddate", DateTime.Now)
+                new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value)
             };
 
             var result = _repo.ExecuteReader<ArtistInputDto>("INSERT INTO artist(first_name, " +
                 "last_name, display_name, place_of_birth, year_of_birth, year_of_death, " +
                 "modified_at, created_at) VALUES (@firstName, @lastName, @displayName, @placeOfBirth, " +
-                "@yearOfBirth, @yearOfDeath, @modifieddate, @createddate);", sqlParams)
+                "@yearOfBirth, @yearOfDeath, current_timestamp, current_timestamp);", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -69,13 +67,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("displayName", artist.DisplayName),
                 new("placeOfBirth", artist.PlaceOfBirth),
                 new("yearOfBirth", artist.YearOfBirth),
-                new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value),
-                new("modifieddate", DateTime.Now)
+                new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value)
             };
 
             var result = _repo.ExecuteReader<ArtistInputDto>("UPDATE artist SET first_name = @firstName, " +
                 "last_name = @lastName, display_name = @displayName, place_of_birth = @placeOfBirth, " +
-                "year_of_birth = @yearOfBirth, year_of_death = @yearOfDeath, modified_at = @modifieddate " +
+                "year_of_birth = @yearOfBirth, year_of_death = @yearOfDeath, modified_at = current_timestamp " +
                 "WHERE artist_id = @artistId", sqlParams)
                 .SingleOrDefault();
 
@@ -99,13 +96,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var sqlParams = new NpgsqlParameter[]
             {
                 new("artistId", artistId),
-                new("artworkId", artworkId),
-                new("modifieddate", DateTime.Now),
-                new("createddate", DateTime.Now)
+                new("artworkId", artworkId)
             };
 
             var result = _repo.ExecuteReader<ArtistArtworkDto>("INSERT INTO artist_artwork(artist_id, artwork_id, " +
-                "modified_at, created_at) VALUES (@artistId, @artworkId, @modifieddate, @createddate)", sqlParams)
+                "modified_at, created_at) VALUES (@artistId, @artworkId, current_timestamp, current_timestamp)", sqlParams)
                 .SingleOrDefault();
 
             return result;

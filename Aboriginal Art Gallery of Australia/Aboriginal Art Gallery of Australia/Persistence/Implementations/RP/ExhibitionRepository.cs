@@ -51,15 +51,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var sqlParams = new NpgsqlParameter[]
             {
                 new("name", exhibition.Name),
-                new("description", exhibition.Description,
-                new("backgroundImageUrl", exhibition.BackgroundImageUrl),
-                new("modifieddate", DateTime.Now),
-                new("createddate", DateTime.Now)
+                new("description", exhibition.Description),
+                new("backgroundImageUrl", exhibition.BackgroundImageUrl)
             };
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("INSERT INTO exhibition(name, description, " +
                 "background_image_url, modified_at, created_at) VALUES (@name, @description, @backgroundImageUrl, " +
-                "@modifieddate, @createddate);", sqlParams)
+                "current_timestamp, current_timestamp);", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -72,13 +70,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("exhibitionId", id),
                 new("name", exhibition.Name),
                 new("description", exhibition.Description),
-                new("backgroundImageUrl", exhibition.BackgroundImageUrl),
-                new("modifieddate", DateTime.Now)
+                new("backgroundImageUrl", exhibition.BackgroundImageUrl)
             };
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("UPDATE exhibition SET name = @name, " +
                 "description = @description, background_image_url = @backgroundImageUrl, " +
-                "modified_at = @modifieddate WHERE exhibition_id = @exhibitionId", sqlParams)
+                "modified_at = current_timestamp WHERE exhibition_id = @exhibitionId", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -102,14 +99,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var sqlParams = new NpgsqlParameter[]
             {
                 new("artworkId", artworkId),
-                new("exhibitionId", exhibitionId),
-                new("modifieddate", DateTime.Now),
-                new("createddate", DateTime.Now)
+                new("exhibitionId", exhibitionId)
             };
 
             var result = _repo.ExecuteReader<ArtworkExhibitionDto>("INSERT INTO artwork_exhibition(artwork_id, " +
                 "exhibition_id, modified_at, created_at) VALUES (@artworkId, @exhibitionId, " +
-                "@modifieddate, @createddate)", sqlParams)
+                "current_timestamp, current_timestamp)", sqlParams)
                 .SingleOrDefault();
 
             return result;

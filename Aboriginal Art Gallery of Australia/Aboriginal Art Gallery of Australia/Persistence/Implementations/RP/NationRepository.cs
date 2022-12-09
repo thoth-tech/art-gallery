@@ -13,29 +13,64 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
         private IRepository _repo => this;
 
-        public bool DeleteNation(int id)
+        public List<NationOutputDto> GetNations()
         {
-            throw new NotImplementedException();
+            var nations = _repo.ExecuteReader<NationOutputDto>("SELECT * FROM nation");
+            return nations;
         }
 
         public NationOutputDto? GetNationById(int id)
         {
-            throw new NotImplementedException();
-        }
+            var sqlParams = new NpgsqlParameter[]
+            {
+                new("nationId", id)
+            };
 
-        public List<NationOutputDto> GetNations()
-        {
-            throw new NotImplementedException();
+            var nation = _repo.ExecuteReader<NationOutputDto>("SELECT * FROM nation WHERE nation_id = @nationId", sqlParams)
+                .SingleOrDefault();
+
+            return nation;
         }
 
         public NationInputDto? InsertNation(NationInputDto nation)
         {
-            throw new NotImplementedException();
+            var sqlParams = new NpgsqlParameter[]
+            {
+                new("title", nation.Title)
+            };
+
+            var result = _repo.ExecuteReader<NationInputDto>("INSERT INTO nation(title, modified_at, created_at) " +
+                "VALUES (@title, current_timestamp, current_timestamp)", sqlParams)
+                .SingleOrDefault();
+
+            return result;
         }
 
         public NationInputDto? UpdateNation(int id, NationInputDto nation)
         {
-            throw new NotImplementedException();
+            var sqlParams = new NpgsqlParameter[]
+            {
+                new("nationId", id),
+                new("title", nation.Title)
+            };
+
+            var result = _repo.ExecuteReader<NationInputDto>("UPDATE nation SET title = @title, " +
+                "modified_at = current_timestamp WHERE nation_id = @nationId", sqlParams)
+                .SingleOrDefault();
+
+            return result;
+        }
+
+        public bool DeleteNation(int id)
+        {
+            var sqlParams = new NpgsqlParameter[]
+            {
+                new("nationId", id)
+            };
+
+            _repo.ExecuteReader<NationOutputDto>("DELETE FROM nation WHERE nation_id = @nationId", sqlParams);
+
+            return true;
         }
     }
 }

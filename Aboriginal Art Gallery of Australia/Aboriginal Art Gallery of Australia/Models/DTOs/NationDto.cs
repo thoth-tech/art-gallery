@@ -2,7 +2,11 @@
 {
     public class NationInputDto
     {
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
+
+        public NationInputDto()
+        {
+        }
 
         public NationInputDto(string title)
         {
@@ -13,9 +17,13 @@
     public class NationOutputDto
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public NationOutputDto()
+        {
+        }
 
         public NationOutputDto(int id, string title, DateTime modifiedAt, DateTime createdAt)
         {
