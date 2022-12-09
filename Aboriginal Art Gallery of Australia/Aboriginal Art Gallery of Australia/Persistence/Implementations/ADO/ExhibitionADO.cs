@@ -32,7 +32,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var description = (string)dr["description"];
                                 var backgroundImageUrl = (string)dr["background_image_url"];
                                 var startDate = (DateTime)dr["start_date"];
-                                var endDate = (DateTime)dr["start_date"];
+                                var endDate = (DateTime)dr["end_date"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
 
@@ -64,7 +64,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var description = (string)dr["description"];
                                 var backgroundImageUrl = (string)dr["background_image_url"];
                                 var startDate = (DateTime)dr["start_date"];
-                                var endDate = (DateTime)dr["start_date"];
+                                var endDate = (DateTime)dr["end_date"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
 
@@ -150,7 +150,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 var description = (string)dr["description"];
                                 var backgroundImageUrl = (string)dr["background_image_url"];
                                 var startDate = (DateTime)dr["start_date"];
-                                var endDate = (DateTime)dr["start_date"];
+                                var endDate = (DateTime)dr["end_date"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
 
