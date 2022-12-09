@@ -27,7 +27,6 @@
         public DateTime? ActiveAt { get; set; }
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string? Token { get; set;} // Filled by the Authentication method GenerateToken() but no corresponding column in database
 
         public UserOutputDto(int id, string firstName, string lastName, string email, string passwordHash, string role, DateTime? activeAt, DateTime modifiedAt, DateTime createdAt)
         {
