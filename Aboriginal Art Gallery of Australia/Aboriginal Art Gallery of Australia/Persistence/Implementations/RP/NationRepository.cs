@@ -7,6 +7,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
     public class NationRepository : IRepository, INationDataAccess
     {
+
+        //TODO: Add data to database and test each of the following methods
+
         public NationRepository(IConfiguration configuration) : base(configuration)
         {
         }
