@@ -36,15 +36,57 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return exhibition;
         }
 
-
-        //TODO: Complete method
-
+        //TODO: Find a way to write lines 45 and 48 in a single SQL statement + check over logic
         public ExhibitionArtworkOutputDto? GetExhibitionArtworksById(int id)
         {
-            throw new NotImplementedException();
+            var allArtworks = new List<ArtworkOutputDto>();
+            var allArtworkArtists = new List<KeyValuePair<int, String>>();
+
+            var artworks = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id " +
+                "FROM artist_artwork INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id");
+
+            var artists = _repo.ExecuteReader<ArtistOutputDto>("SELECT display_name FROM artist_artwork " +
+                "INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id");
+
+            int i = 0;
+            foreach (ArtworkOutputDto artwork in artworks)
+            {
+                allArtworkArtists.Add(new KeyValuePair<int, String>(artwork.Id, artists[i].DisplayName));
+                i++;
+            }
+
+            var lookup = allArtworkArtists.ToLookup(kvp => kvp.Key, kvp => kvp.Value);
+
+            var sqlParams = new NpgsqlParameter[]
+            {
+                new("exhibitionId", id)
+            };
+
+            var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_exhibition.artwork_id, " +
+                "artwork.title, description, media, primary_image_url, secondary_image_url, year_created, " +
+                "artwork.modified_at, artwork.created_at, nation.title as nation_title FROM artwork INNER JOIN " +
+                "artwork_exhibition ON artwork_exhibition.artwork_id = artwork.artwork_id INNER JOIN nation ON " +
+                "nation.nation_id = artwork.nation_id WHERE exhibition_id = @exhibitionId", sqlParams);
+
+            foreach (ArtworkOutputDto artwork in artworksOutput)
+            {
+                var artworkArtists = new List<String>();
+                foreach (string artist in lookup[artwork.Id])
+                {
+                    artworkArtists.Add(artist);
+                }
+
+                artwork.ContributingArtists = artworkArtists;
+            }
+
+            var exhibition = _repo.ExecuteReader<ExhibitionArtworkOutputDto>("SELECT * FROM exhibition " +
+                "WHERE exhibition_id = @exhibitionId", sqlParams)
+                .SingleOrDefault();
+
+            if (exhibition is not null) exhibition.ExhibitionArtworks = artworksOutput;
+
+            return exhibition;
         }
-
-
 
         public ExhibitionInputDto? InsertExhibition(ExhibitionInputDto exhibition)
         {

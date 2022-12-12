@@ -16,39 +16,74 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
         private IRepository _repo => this;
 
-        //TODO: Complete method
+        //TODO: Find a way to write lines 25 and 28 in a single SQL statement + check over logic
         public List<ArtworkOutputDto> GetArtworks()
         {
-            var artworks = new List<ArtworkOutputDto>();
+            var allArtworks = new List<ArtworkOutputDto>();
             var allArtworkArtists = new List<KeyValuePair<int, String>>();
 
-            var artwork = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id " +
-                "FROM artist_artwork INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id")
-                .Single();
+            var artworks = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id " +
+                "FROM artist_artwork INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id");
 
-            var artist = _repo.ExecuteReader<ArtistOutputDto>("SELECT display_name as contributing_artist " +
-                "FROM artist_artwork INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id")
-                .Single();
+            var artists = _repo.ExecuteReader<ArtistOutputDto>("SELECT display_name FROM artist_artwork " +
+                "INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id");
 
-            allArtworkArtists.Add(new KeyValuePair<int, String>(artwork.Id, artist.DisplayName));
+            int i = 0;
+            foreach (ArtworkOutputDto artwork in artworks)
+            {
+                allArtworkArtists.Add(new KeyValuePair<int, String>(artwork.Id, artists[i].DisplayName));
+                i++;
+            }
 
-            //var artwork;
+            var lookup = allArtworkArtists.ToLookup(kvp => kvp.Key, kvp => kvp.Value);
 
-            //var nation;
+            var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id, artwork.title, " +
+                "description, media, primary_image_url, secondary_image_url, year_created, artwork.modified_at, " +
+                "artwork.created_at, nation.title as nation_title FROM artwork INNER JOIN nation ON " +
+                "nation.nation_id = artwork.nation_id");
 
+            foreach (ArtworkOutputDto artwork in artworksOutput)
+            {
+                var artworkArtists = new List<String>();
+                foreach (string artist in lookup[artwork.Id])
+                {
+                    artworkArtists.Add(artist);
+                }
 
-            //etc...
+                artwork.ContributingArtists = artworkArtists;
+            }
 
-            throw new NotImplementedException();
+            return artworksOutput;
         }
 
-        //TODO: Complete method
+        //TODO: Find a way to write lines 68 and 72 in a single SQL statement + check over logic
         public ArtworkOutputDto? GetArtworkById(int id)
         {
-            throw new NotImplementedException();
+            var artworkArtists = new List<String>();
+            var sqlParams = new NpgsqlParameter[]
+            {
+                new("artworkId", id)
+            };
+
+            var artists = _repo.ExecuteReader<ArtistOutputDto>("SELECT display_name FROM artist_artwork " +
+                "INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id " +
+                "WHERE artwork_id = @artworkId", sqlParams);
+
+            var artworkOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id, artwork.title, " +
+                "description, media, primary_image_url, secondary_image_url, year_created, artwork.modified_at, " +
+                "artwork.created_at, nation.title as nation_title FROM artwork INNER JOIN nation " +
+                "ON nation.nation_id = artwork.nation_id WHERE artwork_id = @artwork_id", sqlParams)
+                .SingleOrDefault();
+
+            foreach (ArtistOutputDto artist in artists)
+            {
+                artworkArtists.Add(artist.DisplayName);
+            }
+
+            if (artworkOutput is not null) artworkOutput.ContributingArtists = artworkArtists;
+
+            return artworkOutput;
         }
-
-
 
         public ArtworkInputDto? InsertArtwork(ArtworkInputDto artwork)
         {
@@ -94,7 +129,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
             return result;
         }
-
 
         public bool DeleteArtwork(int id)
         {
