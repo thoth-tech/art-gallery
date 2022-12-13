@@ -72,6 +72,7 @@ app.MapGet("api/artists/{id}", (IArtistDataAccess _repo, int id) =>
 
 app.MapPost("api/artists/", (IArtistDataAccess _repo, ArtistInputDto artist) =>
 {
+    // TODO: add null check to artist variable
     var result = _repo.InsertArtist(artist);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });

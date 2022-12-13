@@ -7,14 +7,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
     public class NationRepository : IRepository, INationDataAccess
     {
+        private IRepository _repo => this;
 
-        //TODO: Add data to database and test each of the following methods
+        private readonly IConfiguration _configuration;
 
         public NationRepository(IConfiguration configuration) : base(configuration)
         {
+            _configuration = configuration;
         }
-
-        private IRepository _repo => this;
 
         public List<NationOutputDto> GetNations()
         {
@@ -42,8 +42,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("title", nation.Title)
             };
 
-            var result = _repo.ExecuteReader<NationInputDto>("INSERT INTO nation(title, modified_at, created_at) " +
-                "VALUES (@title, current_timestamp, current_timestamp)", sqlParams)
+            var result = _repo.ExecuteReader<NationInputDto>("INSERT INTO nation VALUES " +
+                "(DEFAULT, @title, current_timestamp, current_timestamp) RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -58,7 +58,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             };
 
             var result = _repo.ExecuteReader<NationInputDto>("UPDATE nation SET title = @title, " +
-                "modified_at = current_timestamp WHERE nation_id = @nationId", sqlParams)
+                "modified_at = current_timestamp WHERE nation_id = @nationId RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;

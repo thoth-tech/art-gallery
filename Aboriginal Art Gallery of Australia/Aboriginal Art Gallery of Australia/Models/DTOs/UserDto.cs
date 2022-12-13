@@ -22,7 +22,7 @@
 
     public class UserOutputDto
     {
-        public int Id { get; set; }
+        public int AccountId { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string Email { get; set; } = null!;
@@ -38,7 +38,7 @@
 
         public UserOutputDto(int id, string firstName, string lastName, string email, string passwordHash, string? role, DateTime? activeAt, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
+            AccountId = id;
             FirstName = firstName;
             LastName = lastName;
             Email = email;

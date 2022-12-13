@@ -26,7 +26,7 @@
 
     public class ArtistOutputDto
     {
-        public int Id { get; set; }
+        public int ArtistId { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string DisplayName { get; set; } = null!;
@@ -42,7 +42,7 @@
 
         public ArtistOutputDto(int id, string firstName, string lastName, string displayName, string placeOfBirth, int yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
+            ArtistId = id;
             FirstName = firstName;
             LastName = lastName;
             DisplayName = displayName;

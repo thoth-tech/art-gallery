@@ -11,11 +11,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
         //TODO: Add data to database and test each of the following methods
 
+        private IRepository _repo => this;
+
+        private readonly IConfiguration _configuration;
+
         public UserRepository(IConfiguration configuration) : base(configuration)
         {
+            _configuration = configuration;
         }
-
-        private IRepository _repo => this;
 
         public List<UserOutputDto> GetUsers()
         {
@@ -48,9 +51,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("activeAt", (object)DBNull.Value)
             };
 
-            var result = _repo.ExecuteReader<UserInputDto>("INSERT INTO account(first_name, last_name, email, " +
-                "password_hash, role, active_at, modified_at, created_at) VALUES (@firstName, @lastName, @email, " +
-                "@passwordHash, @role, @activeAt current_timestamp, current_timestamp);", sqlParams)
+            var result = _repo.ExecuteReader<UserInputDto>("INSERT INTO account VALUES (DEFAULT, @firstName, " +
+                "@lastName, @email, @passwordHash, @role, @activeAt current_timestamp, current_timestamp) " +
+                "RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -67,9 +70,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("password_hash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384))
             };
 
-            var result = _repo.ExecuteReader<UserInputDto>("UPDATE account SET first_name = @firstName, last_name = @lastName, " +
-                "email = @email, password_hash = @password_hash, modified_at = current_timestamp WHERE account_id = " +
-                "@accountId", sqlParams)
+            var result = _repo.ExecuteReader<UserInputDto>("UPDATE account SET first_name = @firstName, " +
+                "last_name = @lastName, email = @email, password_hash = @password_hash, " +
+                "modified_at = current_timestamp WHERE account_id = @accountId RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
