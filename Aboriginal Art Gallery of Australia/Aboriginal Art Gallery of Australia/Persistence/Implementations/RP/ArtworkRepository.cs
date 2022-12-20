@@ -8,15 +8,18 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
     public class ArtworkRepository : IRepository, IArtworkDataAccess
     {
 
-        //TODO: Add data to database and test each of the following methods
-
-        public ArtworkRepository(IConfiguration configuration) : base(configuration)
-        {
-        }
+        //TODO: Test last 4 methods and fix GetById
 
         private IRepository _repo => this;
 
-        //TODO: Find a way to write lines 25 and 28 in a single SQL statement + check over logic
+        private readonly IConfiguration _configuration;
+
+        public ArtworkRepository(IConfiguration configuration) : base(configuration)
+        {
+            _configuration = configuration;
+        }
+
+        //TODO: Find a way to write lines 25 and 28 in a single SQL statement + double check logic
         public List<ArtworkOutputDto> GetArtworks()
         {
             var allArtworks = new List<ArtworkOutputDto>();
@@ -31,7 +34,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             int i = 0;
             foreach (ArtworkOutputDto artwork in artworks)
             {
-                allArtworkArtists.Add(new KeyValuePair<int, String>(artwork.Id, artists[i].DisplayName));
+                allArtworkArtists.Add(new KeyValuePair<int, String>(artwork.ArtworkId, artists[i].DisplayName));
                 i++;
             }
 
@@ -45,7 +48,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             foreach (ArtworkOutputDto artwork in artworksOutput)
             {
                 var artworkArtists = new List<String>();
-                foreach (string artist in lookup[artwork.Id])
+                foreach (string artist in lookup[artwork.ArtworkId])
                 {
                     artworkArtists.Add(artist);
                 }
@@ -56,7 +59,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return artworksOutput;
         }
 
-        //TODO: Find a way to write lines 68 and 72 in a single SQL statement + check over logic
+        //TODO: Find a way to write lines 68 and 72 in a single SQL statement + fix function
         public ArtworkOutputDto? GetArtworkById(int id)
         {
             var artworkArtists = new List<String>();
@@ -69,10 +72,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 "INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id " +
                 "WHERE artwork_id = @artworkId", sqlParams);
 
+
+            // This query is throwing InvalidOperation exception: 'the parameter already belongs to a collection'
             var artworkOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id, artwork.title, " +
                 "description, media, primary_image_url, secondary_image_url, year_created, artwork.modified_at, " +
                 "artwork.created_at, nation.title as nation_title FROM artwork INNER JOIN nation " +
-                "ON nation.nation_id = artwork.nation_id WHERE artwork_id = @artwork_id", sqlParams)
+                "ON nation.nation_id = artwork.nation_id WHERE artwork_id = @artworkId", sqlParams)
                 .SingleOrDefault();
 
             foreach (ArtistOutputDto artist in artists)
@@ -92,16 +97,15 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("title", artwork.Title),
                 new("description", artwork.Description),
                 new("media", artwork.Media),
-                new("primary_image_url", artwork.PrimaryImageURL),
-                new("secondary_image_url", artwork.SecondaryImageURL ?? (object)DBNull.Value),
+                new("primary_image_url", artwork.PrimaryImageUrl),
+                new("secondary_image_url", artwork.SecondaryImageUrl ?? (object)DBNull.Value),
                 new("year_created", artwork.YearCreated),
                 new("nation_id", artwork.NationId)
             };
 
-            var result = _repo.ExecuteReader<ArtworkInputDto>("INSERT INTO artwork(title, description, media, " +
-                "primary_image_url, secondary_image_url, year_created, nation_id, modified_at, created_at) " +
-                "VALUES (@title, @description, @media, @primaryImageURL, @secondaryImageURL, @yearCreated, " +
-                "@nationId, current_timestamp, current_timestamp)", sqlParams)
+            var result = _repo.ExecuteReader<ArtworkInputDto>("INSERT INTO artwork VALUES (DEFAULT, " +
+                "@title, @description, @media, @primary_image_url, @secondary_image_url, @year_created, " +
+                "@nation_id, current_timestamp, current_timestamp) RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -115,8 +119,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("title", artwork.Title),
                 new("description", artwork.Description),
                 new("media", artwork.Media),
-                new("primaryImageURL", artwork.PrimaryImageURL),
-                new("secondaryImageURL", artwork.SecondaryImageURL ?? (object)DBNull.Value),
+                new("primaryImageURL", artwork.PrimaryImageUrl),
+                new("secondaryImageURL", artwork.SecondaryImageUrl ?? (object)DBNull.Value),
                 new("yearCreated", artwork.YearCreated),
                 new("nationId", artwork.NationId)
             };
@@ -124,7 +128,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var result = _repo.ExecuteReader<ArtworkInputDto>("UPDATE artwork SET title = @title, description = @description, " +
                 "media = @media, primary_image_url = @primaryImageURL, secondary_image_url = @secondaryImageURL, " +
                 "year_created = @yearCreated, nation_id = @nationId, modified_at = current_timestamp " +
-                "WHERE artwork_id = @artwork_id", sqlParams)
+                "WHERE artwork_id = @artwork_id RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -151,7 +155,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             };
 
             var result = _repo.ExecuteReader<ArtistArtworkDto>("INSERT INTO artist_artwork(artist_id, artwork_id, " +
-                "modified_at, created_at) VALUES (@artistId, @artworkId, current_timestamp, current_timestamp)", sqlParams)
+                "modified_at, created_at) VALUES (@artistId, @artworkId, current_timestamp, current_timestamp) " +
+                "RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -180,7 +185,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             };
 
             var result = _repo.ExecuteReader<ArtworkExhibitionDto>("INSERT INTO artwork_exhibition(artwork_id, exhibition_id, " +
-                "modified_at, created_at) VALUES (@artworkId, @exhibitionId, current_timestamp, current_timestamp)", sqlParams)
+                "modified_at, created_at) VALUES (@artworkId, @exhibitionId, current_timestamp, current_timestamp) " +
+                "RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;

@@ -1,10 +1,16 @@
 ﻿<Properties StartupConfiguration="{6BDF709B-8686-488A-AB57-B89135AA9711}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Aboriginal Art Gallery of Australia/Persistence/Implementations/RP/ArtworkRepository.cs">
+  <MonoDevelop.Ide.ItemProperties.Aboriginal_220Art_220Gallery_220of_220Australia PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Aboriginal Art Gallery of Australia/Persistence/Implementations/RP/UserRepository.cs">
     <Files>
-      <File FileName="Aboriginal Art Gallery of Australia/Persistence/Implementations/RP/ArtworkRepository.cs" Line="132" Column="1" />
-      <File FileName="Aboriginal Art Gallery of Australia/Persistence/Implementations/RP/ExhibitionRepository.cs" Line="63" Column="15" />
-      <File FileName="Aboriginal Art Gallery of Australia/Persistence/Implementations/RP/IRepository.cs" Line="1" Column="1" />
-      <File FileName="Aboriginal Art Gallery of Australia/Models/DTOs/ArtworkDto.cs" Line="1" Column="1" />
+      <File FileName="Aboriginal Art Gallery of Australia/Program.cs" Line="91" Column="1" />
+      <File FileName="Aboriginal Art Gallery of Australia/Models/DTOs/UserDto.cs" Line="41" Column="22" />
+      <File FileName="Aboriginal Art Gallery of Australia/Persistence/Implementations/RP/UserRepository.cs" Line="13" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -16,6 +22,7 @@
               </Node>
               <Node name="Persistence" expanded="True">
                 <Node name="Implementations" expanded="True">
+                  <Node name="ADO" expanded="True" />
                   <Node name="RP" expanded="True" />
                 </Node>
               </Node>
@@ -23,13 +30,9 @@
           </Node>
         </State>
       </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.Aboriginal_220Art_220Gallery_220of_220Australia PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
-  </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MultiItemStartupConfigurations />
 </Properties>

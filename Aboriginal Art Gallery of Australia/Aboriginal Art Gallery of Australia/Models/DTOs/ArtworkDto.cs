@@ -5,8 +5,8 @@
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
         public string Media { get; set; } = null!;
-        public string PrimaryImageURL { get; set; } = null!;
-        public string? SecondaryImageURL { get; set; } = null;
+        public string PrimaryImageUrl { get; set; } = null!;
+        public string? SecondaryImageUrl { get; set; } = null;
         public int YearCreated { get; set; }
         public int NationId { get; set; }
 
@@ -19,8 +19,8 @@
             Title = title;
             Description = description;
             Media = media;
-            PrimaryImageURL = primaryImageURL;
-            SecondaryImageURL = secondaryImageURL;
+            PrimaryImageUrl = primaryImageURL;
+            SecondaryImageUrl = secondaryImageURL;
             YearCreated = yearCreated;
             NationId = nationId;
         }
@@ -28,12 +28,12 @@
 
     public class ArtworkOutputDto
     {
-        public int Id { get; set; }
+        public int ArtworkId { get; set; }
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
         public string Media { get; set; } = null!;
-        public string PrimaryImageURL { get; set; } = null!;
-        public string? SecondaryImageURL { get; set; } = null;
+        public string PrimaryImageUrl { get; set; } = null!;
+        public string? SecondaryImageUrl { get; set; } = null;
         public int YearCreated { get; set; }
         public string Nation { get; set; } = null!;
         public DateTime ModifiedAt { get; set; }
@@ -46,12 +46,12 @@
 
         public ArtworkOutputDto(int id, string title, string description, string media, string primaryImageURL, string? secondaryImageURL, int yearCreated, string nation, DateTime modifiedAt, DateTime createdAt, List<string> contributingArtists)
         {
-            Id = id;
+            ArtworkId = id;
             Title = title;
             Description = description;
             Media = media;
-            PrimaryImageURL = primaryImageURL;
-            SecondaryImageURL = secondaryImageURL;
+            PrimaryImageUrl = primaryImageURL;
+            SecondaryImageUrl = secondaryImageURL;
             YearCreated = yearCreated;
             Nation = nation;
             ModifiedAt = modifiedAt;

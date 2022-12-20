@@ -20,7 +20,7 @@
 
     public class ExhibitionOutputDto
     {
-        public int Id { get; set; }
+        public int ExhibitionId { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
         public string BackgroundImageUrl { get; set; } = null!;
@@ -33,7 +33,7 @@
 
         public ExhibitionOutputDto(int id, string name, string description, string backgroundImageUrl, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
+            ExhibitionId = id;
             Name = name;
             Description = description;
             BackgroundImageUrl = backgroundImageUrl;
@@ -44,7 +44,7 @@
 
     public class ExhibitionArtworkOutputDto
     {
-        public int Id { get; set; }
+        public int ExhibitionId { get; set; }
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;
         public string? BackgroundImageUrl { get; set; } = null;
@@ -58,7 +58,7 @@
 
         public ExhibitionArtworkOutputDto(int id, string name, string description, string? backgroundImageUrl, DateTime modifiedAt, DateTime createdAt, List<ArtworkOutputDto> exhibitionArtworks)
         {
-            Id = id;
+            ExhibitionId = id;
             Name = name;
             Description = description;
             BackgroundImageUrl = backgroundImageUrl;

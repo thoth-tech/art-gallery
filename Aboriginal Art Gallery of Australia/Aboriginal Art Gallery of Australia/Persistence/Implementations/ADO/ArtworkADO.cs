@@ -140,8 +140,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     cmd.Parameters.AddWithValue("@title", artwork.Title);
                     cmd.Parameters.AddWithValue("@description", artwork.Description);
                     cmd.Parameters.AddWithValue("@media", artwork.Media);
-                    cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageURL);
-                    cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageURL);
+                    cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
+                    cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
                     cmd.Parameters.AddWithValue("@yearCreated", artwork.YearCreated);
                     cmd.Parameters.AddWithValue("@nationId", artwork.NationId);
                     var result = cmd.ExecuteNonQuery();
@@ -170,8 +170,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     cmd.Parameters.AddWithValue("@title", artwork.Title);
                     cmd.Parameters.AddWithValue("@description", artwork.Description);
                     cmd.Parameters.AddWithValue("@media", artwork.Media);
-                    cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageURL);
-                    cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageURL);
+                    cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
+                    cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
                     cmd.Parameters.AddWithValue("@yearCreated", artwork.YearCreated);
                     cmd.Parameters.AddWithValue("@nationId", artwork.NationId);
                     var result = cmd.ExecuteNonQuery();

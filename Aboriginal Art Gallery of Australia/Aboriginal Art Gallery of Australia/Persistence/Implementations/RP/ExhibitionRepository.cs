@@ -8,13 +8,16 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
     public class ExhibitionRepository : IRepository, IExhibitionDataAccess
     {
 
-        //TODO: Add data to database and test each of the following methods
+        //TODO: Test last three methods and ExhibitionArtworksById
+
+        private IRepository _repo => this;
+
+        private readonly IConfiguration _configuration;
 
         public ExhibitionRepository(IConfiguration configuration) : base(configuration)
         {
+            _configuration = configuration;
         }
-
-        private IRepository _repo => this;
 
         public List<ExhibitionOutputDto> GetExhibitions()
         {
@@ -51,7 +54,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             int i = 0;
             foreach (ArtworkOutputDto artwork in artworks)
             {
-                allArtworkArtists.Add(new KeyValuePair<int, String>(artwork.Id, artists[i].DisplayName));
+                allArtworkArtists.Add(new KeyValuePair<int, String>(artwork.ArtworkId, artists[i].DisplayName));
                 i++;
             }
 
@@ -62,6 +65,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("exhibitionId", id)
             };
 
+            // This query is throwing InvalidOperation exception: 'the parameter already belongs to a collection'
             var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_exhibition.artwork_id, " +
                 "artwork.title, description, media, primary_image_url, secondary_image_url, year_created, " +
                 "artwork.modified_at, artwork.created_at, nation.title as nation_title FROM artwork INNER JOIN " +
@@ -71,7 +75,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             foreach (ArtworkOutputDto artwork in artworksOutput)
             {
                 var artworkArtists = new List<String>();
-                foreach (string artist in lookup[artwork.Id])
+                foreach (string artist in lookup[artwork.ArtworkId])
                 {
                     artworkArtists.Add(artist);
                 }
@@ -99,7 +103,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("INSERT INTO exhibition(name, description, " +
                 "background_image_url, modified_at, created_at) VALUES (@name, @description, @backgroundImageUrl, " +
-                "current_timestamp, current_timestamp);", sqlParams)
+                "current_timestamp, current_timestamp) RETURNING *;", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -117,7 +121,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("UPDATE exhibition SET name = @name, " +
                 "description = @description, background_image_url = @backgroundImageUrl, " +
-                "modified_at = current_timestamp WHERE exhibition_id = @exhibitionId", sqlParams)
+                "modified_at = current_timestamp WHERE exhibition_id = @exhibitionId RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -146,7 +150,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
             var result = _repo.ExecuteReader<ArtworkExhibitionDto>("INSERT INTO artwork_exhibition(artwork_id, " +
                 "exhibition_id, modified_at, created_at) VALUES (@artworkId, @exhibitionId, " +
-                "current_timestamp, current_timestamp)", sqlParams)
+                "current_timestamp, current_timestamp) RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
