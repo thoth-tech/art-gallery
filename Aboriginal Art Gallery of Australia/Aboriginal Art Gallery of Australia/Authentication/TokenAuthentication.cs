@@ -30,11 +30,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Authentication
                 {
                     new Claim("Id", "1"),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
-                    new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Role, user.Role)
+
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(120),
+
+                Expires = DateTime.UtcNow.AddMinutes(2),
                 Audience = audience,
                 Issuer = issuer,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)

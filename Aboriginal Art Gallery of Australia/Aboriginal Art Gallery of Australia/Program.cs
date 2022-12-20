@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
  Register Services to the container below.
  */
 
-#region JWT
+#region JWT Token authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -39,12 +39,6 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true
     };
 });
-// Complete the Claim system later
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("UserOnly", policy => policy.RequireClaim(ClaimTypes.Role, "Admin", "User"));
-    options.AddPolicy("AdminOnly", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
-});
 #endregion
 
 #region Authorisation
@@ -57,6 +51,12 @@ var securityScheme = new OpenApiSecurityScheme()
     In = ParameterLocation.Header,
     Description = "JSON Web Token based security",
 };
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UserOnly", policy => policy.RequireClaim(ClaimTypes.Role, "Admin", "User"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+});
 
 var securityRequirement = new OpenApiSecurityRequirement()
 {
@@ -99,8 +99,6 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSingleton<ArtistOfTheDayMiddleware>();
 builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
 
-
-
 /*
  Swap between implementations using dependency injection, simply uncomment them below;
  */
@@ -125,11 +123,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    // app.UseSwaggerUI(options =>
-    // {
-    //     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    //     options.RoutePrefix = string.Empty;
-    // });
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();
@@ -137,9 +135,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-/*
- Map Artist Endpoints
- */
+#region Map Artist Endpoints
 
 app.MapGet("api/artists/", (IArtistDataAccess _artistRepo) => _artistRepo.GetArtists());
 
@@ -232,9 +228,9 @@ app.MapDelete("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRe
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-/*
- Map Artwork Endpoints
- */
+#endregion
+
+#region Map Artwork Endpoints
 
 app.MapGet("api/artworks/", (IArtworkDataAccess _artworkRepo) => _artworkRepo.GetArtworks());
 
@@ -348,10 +344,9 @@ app.MapDelete("api/artworks/{artworkId}/deassign/artist/{artistId}", [Authorize]
     var result = _artworkRepo.DeassignArtist(artistId, artworkId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
+#endregion
 
-/*
- Map Media Endpoints
- */
+#region Map Media Endpoints
 
 app.MapGet("api/media/", (IMediaDataAccess _mediaRepo) => _mediaRepo.GetMediaTypes());
 
@@ -421,27 +416,25 @@ app.MapDelete("api/medias/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, 
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
+#endregion
 
+#region Map Exhibition Endpoints
 
-/*
- Map Exhibition Endpoints
- */
+app.MapGet("api/exhibitions/", [AllowAnonymous] (IExhibitionDataAccess _exhibitionRepo) => _exhibitionRepo.GetExhibitions());
 
-app.MapGet("api/exhibitions/", (IExhibitionDataAccess _exhibitionRepo) => _exhibitionRepo.GetExhibitions());
-
-app.MapGet("api/exhibitions/{exhibitionId}", (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
+app.MapGet("api/exhibitions/{exhibitionId}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
 {
     var result = _exhibitionRepo.GetExhibitionById(exhibitionId);
     return result is not null ? Results.Ok(result) : Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}");
 });
 
-app.MapGet("api/exhibitions/{exhibitionId}/artworks", (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
+app.MapGet("api/exhibitions/{exhibitionId}/artworks", [AllowAnonymous] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
 {
     var result = _exhibitionRepo.GetExhibitionArtworksById(exhibitionId);
     return result is not null ? Results.Ok(result) : Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}");
 });
 
-app.MapPost("api/exhibitions/", [Authorize] (IExhibitionDataAccess _exhibitionRepo, ExhibitionInputDto exhibition) =>
+app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, ExhibitionInputDto exhibition) =>
 {
 
     PropertyInfo[] properties = exhibition.GetType().GetProperties();
@@ -472,7 +465,7 @@ app.MapPost("api/exhibitions/", [Authorize] (IExhibitionDataAccess _exhibitionRe
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/exhibitions/{id}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId, ExhibitionInputDto exhibition) =>
+app.MapPut("api/exhibitions/{id}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId, ExhibitionInputDto exhibition) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
@@ -505,7 +498,7 @@ app.MapPut("api/exhibitions/{id}", [Authorize] (IExhibitionDataAccess _exhibitio
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/exhibitions/{exhibitionId}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
+app.MapDelete("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
@@ -514,7 +507,7 @@ app.MapDelete("api/exhibitions/{exhibitionId}", [Authorize] (IExhibitionDataAcce
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
+app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
@@ -526,7 +519,7 @@ app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", [Author
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
+app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
@@ -538,13 +531,13 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", [Au
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-/*
-    Map User Endpoints
-*/
+#endregion
 
-app.MapGet("api/users/", [Authorize] (IUserDataAccess _repo) => _repo.GetUsers()); // This just has auth for testing the auth system easily
+#region Map User Endpoints
 
-app.MapGet("api/users/{id}", (IUserDataAccess _repo, int id) =>
+app.MapGet("api/users/", [Authorize] (IUserDataAccess _repo) => _repo.GetUsers());
+
+app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _repo, int id) =>
 {
     var result = _repo.GetUserById(id);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
@@ -562,16 +555,18 @@ app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _repo, LoginDt
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPut("api/users/{id}", [Authorize] (IUserDataAccess _repo, int id, UserInputDto user) =>
+app.MapPut("api/users/{id}", [Authorize(Policy = "AdminOnly")] (IUserDataAccess _repo, int id, UserInputDto user) =>
 {
     var result = _repo.UpdateUser(id, user);
     return result is not null ? Results.NoContent() : Results.BadRequest();
 });
 
-app.MapDelete("api/users/{id}", [Authorize] (IUserDataAccess _repo, int id) =>
+app.MapDelete("api/users/{id}", [Authorize(Policy = "AdminOnly")](IUserDataAccess _repo, int id) =>
 {
     var result = _repo.DeleteUser(id);
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
+
+#endregion
 
 app.Run();
