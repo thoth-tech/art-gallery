@@ -7,8 +7,13 @@
 
         public MediaInputDto(string mediaType, string description)
         {
-            MediaType = mediaType;
-            Description = description;
+            this.MediaType = mediaType;
+            this.Description = description;
+        }
+
+        public MediaInputDto(){
+            this.MediaType = "";
+            this.Description = "";
         }
     }
 
@@ -22,11 +27,16 @@
 
         public MediaOutputDto(int id, string mediaType, string description, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
-            MediaType = mediaType;
-            Description = description;
-            ModifiedAt = modifiedAt;
-            CreatedAt = createdAt;
+            this.Id = id;
+            this.MediaType = mediaType;
+            this.Description = description;
+            this.ModifiedAt = modifiedAt;
+            this.CreatedAt = createdAt;
+        }
+
+        public MediaOutputDto(){
+            this.MediaType = "";
+            this.Description = "";
         }
     }
 }

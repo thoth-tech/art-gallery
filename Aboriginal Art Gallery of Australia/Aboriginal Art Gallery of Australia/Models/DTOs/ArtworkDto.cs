@@ -11,12 +11,20 @@
 
         public ArtworkInputDto(string title, string description, string primaryImageURL, string secondaryImageURL, int? yearCreated, int? mediaId)
         {
-            Title = title;
-            Description = description;
-            PrimaryImageURL = primaryImageURL;
-            SecondaryImageURL = secondaryImageURL;
-            YearCreated = yearCreated;
-            MediaId = mediaId;
+            this.Title = title;
+            this.Description = description;
+            this.PrimaryImageURL = primaryImageURL;
+            this.SecondaryImageURL = secondaryImageURL;
+            this.YearCreated = yearCreated;
+            this.MediaId = mediaId;
+        }
+
+        public ArtworkInputDto()
+        {
+            this.Title = "";
+            this.Description = "";
+            this.PrimaryImageURL = "";
+            this.SecondaryImageURL = "";
         }
     }
 
@@ -33,18 +41,28 @@
         public DateTime CreatedAt { get; set; }
         public List<String> ContributingArtists { get; set; }
 
+        public ArtworkOutputDto()
+        {
+            this.Title = "";
+            this.Description = "";
+            this.PrimaryImageURL = "";
+            this.SecondaryImageURL = "";
+            this.MediaType = "";
+            this.ContributingArtists = new List<String>();
+        }
+
         public ArtworkOutputDto(int id, string title, string description, string primaryImageURL, string? secondaryImageURL, int yearCreated, string mediaType, DateTime modifiedAt, DateTime createdAt, List<string> contributingArtists)
         {
-            Id = id;
-            Title = title;
-            Description = description;
-            PrimaryImageURL = primaryImageURL;
-            SecondaryImageURL = secondaryImageURL;
-            YearCreated = yearCreated;
-            MediaType = mediaType;
-            ModifiedAt = modifiedAt;
-            CreatedAt = createdAt;
-            ContributingArtists = contributingArtists;
+            this.Id = id;
+            this.Title = title;
+            this.Description = description;
+            this.PrimaryImageURL = primaryImageURL;
+            this.SecondaryImageURL = secondaryImageURL;
+            this.YearCreated = yearCreated;
+            this.MediaType = mediaType;
+            this.ModifiedAt = modifiedAt;
+            this.CreatedAt = createdAt;
+            this.ContributingArtists = contributingArtists;
         }
     }
 }

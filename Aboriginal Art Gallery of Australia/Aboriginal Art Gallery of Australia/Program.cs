@@ -2,6 +2,7 @@ using Aboriginal_Art_Gallery_of_Australia.Middleware;
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO;
+using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -111,6 +112,11 @@ builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
 builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
+// builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
+// builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
+// builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
+// builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
+// builder.Services.AddScoped<IUserDataAccess, UserRepository>();
 
 
 // Implementation 3 - Entity Framework
@@ -359,7 +365,7 @@ app.MapGet("api/media/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
 
-app.MapPost("api/medias/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
+app.MapPost("api/media/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
 {
     PropertyInfo[] properties = media.GetType().GetProperties();
     List<MediaOutputDto> mediaTypes = _mediaRepo.GetMediaTypes();
@@ -382,7 +388,7 @@ app.MapPost("api/medias/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputD
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/medias/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId, MediaInputDto media) =>
+app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId, MediaInputDto media) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
         Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
@@ -407,7 +413,7 @@ app.MapPut("api/medias/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/medias/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId) =>
+app.MapDelete("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
         Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");

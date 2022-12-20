@@ -9,10 +9,17 @@
 
         public UserInputDto(string firstName, string lastName, string email, string password)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            Email = email;
-            Password = password;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Email = email;
+            this.Password = password;
+        }
+
+        public UserInputDto(){
+            this.FirstName = "";
+            this.LastName = "";
+            this.Email = "";
+            this.Password = "";
         }
     }
 
@@ -30,15 +37,23 @@
 
         public UserOutputDto(int id, string firstName, string lastName, string email, string passwordHash, string role, DateTime? activeAt, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
-            FirstName = firstName;
-            LastName = lastName;
-            Email = email;
-            PasswordHash = passwordHash;
-            Role = role;
-            ActiveAt = activeAt;
-            ModifiedAt = modifiedAt;
-            CreatedAt = createdAt;
+            this.Id = id;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Email = email;
+            this.PasswordHash = passwordHash;
+            this.Role = role;
+            this.ActiveAt = activeAt;
+            this.ModifiedAt = modifiedAt;
+            this.CreatedAt = createdAt;
+        }
+
+        public UserOutputDto(){
+            this.FirstName = "";
+            this.LastName = "";
+            this.Email = "";
+            this.PasswordHash = "";
+            this.Role = "";
         }
     }
 }

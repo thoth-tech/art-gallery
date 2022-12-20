@@ -13,18 +13,26 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public int? YearOfBirth { get; set; }
         public int? YearOfDeath { get; set; } = null;
 
+        public ArtistInputDto(){
+            this.FirstName = "";
+            this.LastName = "";
+            this.DisplayName = "";
+            this.ProfileImageURL = "";
+            this.PlaceOfBirth = "";
+        }
+
         public ArtistInputDto(string firstName, string lastName, string? displayName, string profileImageURL, string placeOfBirth, int? yearOfBirth, int? yearOfDeath)
         {
-            if (displayName == null || displayName == "") 
+            if (displayName == null || displayName == "")
                 displayName = $"{firstName} {lastName}";
 
-            FirstName = firstName;
-            LastName = lastName;
-            DisplayName = displayName;
-            ProfileImageURL = profileImageURL;
-            PlaceOfBirth = placeOfBirth;
-            YearOfBirth = yearOfBirth;
-            YearOfDeath = yearOfDeath;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.DisplayName = displayName;
+            this.ProfileImageURL = profileImageURL;
+            this.PlaceOfBirth = placeOfBirth;
+            this.YearOfBirth = yearOfBirth;
+            this.YearOfDeath = yearOfDeath;
         }
     }
 
@@ -41,18 +49,26 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        public ArtistOutputDto(){
+            this.FirstName = "";
+            this.LastName = "";
+            this.DisplayName = "";
+            this.ProfileImageURL = "";
+            this.PlaceOfBirth = "";
+        }
+
         public ArtistOutputDto(int id, string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
-            FirstName = firstName;
-            LastName = lastName;
-            DisplayName = displayName;
-            ProfileImageURL = profileImageURL;
-            PlaceOfBirth = placeOfBirth;
-            YearOfBirth = yearOfBirth;
-            YearOfDeath = yearOfDeath;
-            ModifiedAt = modifiedAt;
-            CreatedAt = createdAt;
+            this.Id = id;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.DisplayName = displayName;
+            this.ProfileImageURL = profileImageURL;
+            this.PlaceOfBirth = placeOfBirth;
+            this.YearOfBirth = yearOfBirth;
+            this.YearOfDeath = yearOfDeath;
+            this.ModifiedAt = modifiedAt;
+            this.CreatedAt = createdAt;
         }
     }
 }

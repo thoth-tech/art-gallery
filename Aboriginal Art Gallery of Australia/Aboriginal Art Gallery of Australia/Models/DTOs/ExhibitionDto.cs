@@ -12,11 +12,17 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 
         public ExhibitionInputDto(string name, string description, string backgroundImageURL, DateOnly startDate, DateOnly endDate)
         {
-            Name = name;
-            Description = description;
-            BackgroundImageURL = backgroundImageURL;
-            StartDate = startDate;
-            EndDate = endDate;
+            this.Name = name;
+            this.Description = description;
+            this.BackgroundImageURL = backgroundImageURL;
+            this.StartDate = startDate;
+            this.EndDate = endDate;
+        }
+
+        public ExhibitionInputDto(){
+            this.Name = "";
+            this.Description = "";
+            this.BackgroundImageURL = "";
         }
     }
 
@@ -33,14 +39,20 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 
         public ExhibitionOutputDto(int id, string name, string description, string backgroundImageURL, DateOnly startDate, DateOnly endDate, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            BackgroundImageURL = backgroundImageURL;
-            StartDate = startDate;
-            EndDate = endDate;
-            ModifiedAt = modifiedAt;
-            CreatedAt = createdAt;
+            this.Id = id;
+            this.Name = name;
+            this.Description = description;
+            this.BackgroundImageURL = backgroundImageURL;
+            this.StartDate = startDate;
+            this.EndDate = endDate;
+            this.ModifiedAt = modifiedAt;
+            this.CreatedAt = createdAt;
+        }
+
+        public ExhibitionOutputDto(){
+            this.Name = "";
+            this.Description = "";
+            this.BackgroundImageURL = "";
         }
     }
 
@@ -58,15 +70,22 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 
         public ExhibitionArtworkOutputDto(int id, string name, string description, string? backgroundImageURL, DateOnly startDate, DateOnly endDate, DateTime modifiedAt, DateTime createdAt, List<ArtworkOutputDto> exhibitionArtworks)
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            BackgroundImageURL = backgroundImageURL;
-            StartDate = startDate;
-            EndDate = endDate;
-            ModifiedAt = modifiedAt;
-            CreatedAt = createdAt;
-            ExhibitionArtworks = exhibitionArtworks;
+            this.Id = id;
+            this.Name = name;
+            this.Description = description;
+            this.BackgroundImageURL = backgroundImageURL;
+            this.StartDate = startDate;
+            this.EndDate = endDate;
+            this.ModifiedAt = modifiedAt;
+            this.CreatedAt = createdAt;
+            this.ExhibitionArtworks = exhibitionArtworks;
+        }
+
+        public ExhibitionArtworkOutputDto(){
+            this.Name = "";
+            this.Description = "";
+            this.BackgroundImageURL = "";
+            this.ExhibitionArtworks = new List<ArtworkOutputDto>();
         }
     }
 }

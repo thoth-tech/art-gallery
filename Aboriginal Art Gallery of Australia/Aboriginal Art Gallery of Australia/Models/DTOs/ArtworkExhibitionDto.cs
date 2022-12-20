@@ -7,8 +7,12 @@
 
         public ArtworkExhibitionDto(int artworkId, int exhibitionName)
         {
-            ArtworkId = artworkId;
-            ExhibitionName = exhibitionName;
+            this.ArtworkId = artworkId;
+            this.ExhibitionName = exhibitionName;
+        }
+
+        public ArtworkExhibitionDto()
+        {
         }
     }
 }
