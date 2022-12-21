@@ -202,11 +202,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 {
                     cmdString += "background_image_url = @backgroundImageUrl, ";
                 }
-                if (exhibition.StartDate == default(DateOnly))
+                if (exhibition.StartDate != default(DateOnly))
                 {
                     cmdString += "start_date = @startDate, ";
                 }
-                if (exhibition.EndDate == default(DateOnly))
+                if (exhibition.EndDate != default(DateOnly))
                 {
                     cmdString += "end_date = @endDate, ";
                 }
@@ -228,11 +228,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     {
                         cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageURL);
                     }
-                    if (exhibition.StartDate == default(DateOnly))
+                    if (exhibition.StartDate != default(DateOnly))
                     {
                         cmd.Parameters.AddWithValue("@startDate", exhibition.StartDate);
                     }
-                    if (exhibition.EndDate == default(DateOnly))
+                    if (exhibition.EndDate != default(DateOnly))
                     {
                         cmd.Parameters.AddWithValue("@endDate", exhibition.EndDate);
                     }
