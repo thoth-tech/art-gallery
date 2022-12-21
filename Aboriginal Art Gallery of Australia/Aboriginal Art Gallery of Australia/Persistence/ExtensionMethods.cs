@@ -56,7 +56,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
         public static bool IsValidURL(this string str)
         {
             if (Uri.TryCreate(str, UriKind.Absolute, out Uri? myUri))
-                if (myUri.AbsolutePath.Contains(".jpg"))
+                if (
+                    myUri.AbsolutePath.Contains(".jpg") ||
+                    myUri.AbsolutePath.Contains(".jpeg") ||
+                    myUri.AbsolutePath.Contains(".png") ||
+                    myUri.AbsolutePath.Contains(".wemp") ||
+                    myUri.AbsolutePath.Contains(".gif") 
+                    )
                     return true;
             return false;
         }

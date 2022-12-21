@@ -187,21 +187,55 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("UPDATE exhibition " +
-                                                  "SET name = @name, " +
-                                                      "description = @description, " +
-                                                      "background_image_url = @backgroundImageUrl, " +
-                                                      "start_date = @startDate, " +
-                                                      "end_date = @endDate, " +
-                                                      "modified_at = current_timestamp " +
-                                                  "WHERE exhibition_id = @exhibitionId", connection);
+
+                String cmdString = "UPDATE exhibition SET ";
+
+                if (exhibition.Name is not null && exhibition.Name != "" && exhibition.Name != "string")
+                {
+                    cmdString += "name = @name, ";
+                }
+                if (exhibition.Description is not null && exhibition.Description != "" && exhibition.Description != "string")
+                {
+                    cmdString += "description = @description, ";
+                }
+                if (exhibition.BackgroundImageURL is not null && exhibition.BackgroundImageURL != "" && exhibition.BackgroundImageURL != "string")
+                {
+                    cmdString += "background_image_url = @backgroundImageUrl, ";
+                }
+                if (exhibition.StartDate == default(DateOnly))
+                {
+                    cmdString += "start_date = @startDate, ";
+                }
+                if (exhibition.EndDate == default(DateOnly))
+                {
+                    cmdString += "end_date = @endDate, ";
+                }
+
+                cmdString += "modified_at = current_timestamp WHERE exhibition_id = @exhibitionId";
+
+                using var cmd = new NpgsqlCommand(cmdString, connection);
                 {
                     cmd.Parameters.AddWithValue("@exhibitionId", id);
-                    cmd.Parameters.AddWithValue("@name", exhibition.Name);
-                    cmd.Parameters.AddWithValue("@description", exhibition.Description);
-                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageURL);
-                    cmd.Parameters.AddWithValue("@startDate", exhibition.StartDate);
-                    cmd.Parameters.AddWithValue("@endDate", exhibition.EndDate);
+                    if (exhibition.Name is not null && exhibition.Name != "" && exhibition.Name != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@name", exhibition.Name);
+                    }
+                    if (exhibition.Description is not null && exhibition.Description != "" && exhibition.Description != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@description", exhibition.Description);
+                    }
+                    if (exhibition.BackgroundImageURL is not null && exhibition.BackgroundImageURL != "" && exhibition.BackgroundImageURL != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageURL);
+                    }
+                    if (exhibition.StartDate == default(DateOnly))
+                    {
+                        cmd.Parameters.AddWithValue("@startDate", exhibition.StartDate);
+                    }
+                    if (exhibition.EndDate == default(DateOnly))
+                    {
+                        cmd.Parameters.AddWithValue("@endDate", exhibition.EndDate);
+                    }
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? exhibition : null;
                 }

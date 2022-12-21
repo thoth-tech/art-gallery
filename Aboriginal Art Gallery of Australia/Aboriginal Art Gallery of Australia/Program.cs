@@ -199,11 +199,8 @@ app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo,
     {
         var propertyValue = property.GetValue(artist, null);
 
-        if (property.PropertyType == typeof(string))
+        if (property.PropertyType == typeof(string) && propertyValue != null && !propertyValue.Equals(""))
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
-
             if (property.Name.Contains(nameof(artist.ProfileImageURL)) && propertyValue.ToString()!.IsValidURL() == false)
                 return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
@@ -212,9 +209,6 @@ app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo,
         {
             if (propertyValue != null && ((int)propertyValue > DateTime.Today.Year))
                 return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
-
-            if (property.Name.Contains(nameof(artist.YearOfBirth)) && propertyValue == null)
-                return Results.BadRequest($"A {property.Name} is required.");
 
             if (property.Name.Contains(nameof(artist.YearOfDeath)) && propertyValue != null && ((int)propertyValue <= artist.YearOfBirth))
                 return Results.BadRequest($"The {property.Name} can not be before the year of birth.");
@@ -239,7 +233,6 @@ app.MapDelete("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRe
 #region Map Artwork Endpoints
 
 app.MapGet("api/artworks/", (IArtworkDataAccess _artworkRepo) => _artworkRepo.GetArtworks());
-
 
 app.MapGet("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, int artworkId) =>
 {
@@ -294,19 +287,15 @@ app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkR
     {
         var propertyValue = property.GetValue(artwork, null);
 
-        if (property.PropertyType == typeof(string))
+        if (property.PropertyType == typeof(string) && propertyValue != null)
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
 
             if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
                 return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
 
-        if (property.PropertyType == typeof(int?))
+        if (property.PropertyType == typeof(int?) && propertyValue != null)
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
 
             if (property.Name.Contains(nameof(artwork.YearCreated)) && ((int)propertyValue > DateTime.Today.Year))
                 return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
@@ -402,9 +391,6 @@ app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int 
 
         if (property.PropertyType == typeof(string))
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
-
             if (property.Name.Contains(nameof(media.MediaType)) && (_mediaRepo.GetMediaTypes().Exists(x => x.MediaType == media.MediaType) == true))
                 return Results.Conflict($"A {nameof(media.MediaType)} matching this type already exists.");
         }
@@ -481,26 +467,20 @@ app.MapPut("api/exhibitions/{id}", [Authorize(Policy = "AdminOnly")] (IExhibitio
     {
         var propertyValue = property.GetValue(exhibition, null);
 
-        if (property.PropertyType == typeof(string))
+        if (property.PropertyType == typeof(string) && propertyValue != null)
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
-
-            if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
+            if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false && propertyValue.ToString() != "")
                 return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
 
         if (property.PropertyType == typeof(DateOnly))
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
-
-            if (property.Name.Contains(nameof(exhibition.StartDate)) && ((DateOnly)propertyValue >= exhibition.EndDate))
+            if (property.Name.Contains(nameof(exhibition.StartDate)) && (DateOnly)propertyValue != default(DateOnly) && ((DateOnly)propertyValue >= exhibition.EndDate))
                 return Results.BadRequest($"{property.Name} can not be greater then {exhibition.EndDate}.");
         }
     }
 
-    var result = _exhibitionRepo.InsertExhibition(exhibition);
+    var result = _exhibitionRepo.UpdateExhibition(exhibitionId, exhibition);
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
@@ -561,7 +541,7 @@ app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _repo, LoginDt
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPut("api/users/{id}", [Authorize(Policy = "AdminOnly")] (IUserDataAccess _repo, int id, UserInputDto user) =>
+app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _repo, int id, UserInputDto user) =>
 {
     var result = _repo.UpdateUser(id, user);
     return result is not null ? Results.NoContent() : Results.BadRequest();

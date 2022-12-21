@@ -89,11 +89,31 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("UPDATE media SET media_type = @mediaType, description = @description, modified_at = current_timestamp WHERE media_id = @mediaId", connection);
+
+                String cmdString = "UPDATE media SET ";
+
+                if (media.MediaType is not null && media.MediaType != "" && media.MediaType != "string")
+                {
+                    cmdString += "media_type = @mediaType, ";
+                }
+                if (media.Description is not null && media.Description != "" && media.Description != "string")
+                {
+                    cmdString += "description = @description, ";
+                }
+
+                cmdString += "modified_at = current_timestamp WHERE media_id = @mediaId";
+
+                using var cmd = new NpgsqlCommand(cmdString, connection);
                 {
                     cmd.Parameters.AddWithValue("@mediaId", mediaId);
-                    cmd.Parameters.AddWithValue("@mediaType", media.MediaType);
-                    cmd.Parameters.AddWithValue("@description", media.Description);
+                    if (media.MediaType is not null && media.MediaType != "" && media.MediaType != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@mediaType", media.MediaType);
+                    }
+                    if (media.Description is not null && media.Description != "" && media.Description != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@description", media.Description);
+                    }
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? media : null;
                 }
