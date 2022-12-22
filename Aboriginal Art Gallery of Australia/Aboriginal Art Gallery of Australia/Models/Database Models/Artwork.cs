@@ -2,7 +2,7 @@
 {
     public class Artwork
     {
-        public int Id { get; set; }
+        public int ArtworkId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string PrimaryImageURL { get; set; }
@@ -12,9 +12,9 @@
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public Artwork(int id, string title, string description, string primaryImageURL, string secondaryImageURL, int yearCreated, int mediaId, DateTime modifiedAt, DateTime createdAt)
+        public Artwork(int artworkId, string title, string description, string primaryImageURL, string secondaryImageURL, int yearCreated, int mediaId, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
+            ArtworkId = artworkId;
             Title = title;
             Description = description;
             PrimaryImageURL = primaryImageURL;

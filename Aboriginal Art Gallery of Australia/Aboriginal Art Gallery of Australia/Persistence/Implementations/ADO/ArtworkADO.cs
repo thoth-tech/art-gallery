@@ -129,7 +129,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
 
         public ArtworkOutputDto? GetArtworkOfTheDay()
         {
-            // Ultra hacky to just get somthing working for you guys. Will swap between artwork 1 and artwork 2 each minute.
+            // Ultra hacky to just get something working for you guys. Will swap between artwork 1 and artwork 2 each minute.
             if (DateTime.Now.Minute % 2 == 0)
                 return GetArtworkById(1);
             else return GetArtworkById(2);

@@ -9,6 +9,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
     {
 
         //TODO: Test last three methods and ExhibitionArtworksById
+        // These endpoints have all broken because the startdate and enddate are now DateOnly and that isn't mapping properly
+        // I tried to fix in the MapTo extension method but no luck so far
 
         private IRepository _repo => this;
 
@@ -98,7 +100,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             {
                 new("name", exhibition.Name),
                 new("description", exhibition.Description),
-                new("backgroundImageUrl", exhibition.BackgroundImageUrl)
+                new("backgroundImageUrl", exhibition.BackgroundImageURL)
             };
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("INSERT INTO exhibition(name, description, " +
@@ -116,7 +118,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("exhibitionId", id),
                 new("name", exhibition.Name),
                 new("description", exhibition.Description),
-                new("backgroundImageUrl", exhibition.BackgroundImageUrl)
+                new("backgroundImageUrl", exhibition.BackgroundImageURL)
             };
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("UPDATE exhibition SET name = @name, " +

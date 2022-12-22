@@ -14,9 +14,5 @@
             this.ArtworkId = artworkId;
             this.ExhibitionName = exhibitionName;
         }
-
-        public ArtworkExhibitionDto()
-        {
-        }
     }
 }

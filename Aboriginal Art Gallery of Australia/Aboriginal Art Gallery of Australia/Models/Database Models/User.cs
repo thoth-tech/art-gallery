@@ -2,7 +2,7 @@
 {
     public class User
     {
-        public int Id { get; set; }
+        public int AccountId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -12,9 +12,9 @@
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public User(int id, string firstName, string lastName, string email, string passwordHash, string? role, DateTime? activeAt, DateTime modifiedAt, DateTime createdAt)
+        public User(int accountId, string firstName, string lastName, string email, string passwordHash, string? role, DateTime? activeAt, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
+            AccountId = accountId;
             FirstName = firstName;
             LastName = lastName;
             Email = email;

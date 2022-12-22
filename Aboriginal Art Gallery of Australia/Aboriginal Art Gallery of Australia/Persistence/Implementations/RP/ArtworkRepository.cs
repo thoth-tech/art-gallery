@@ -20,6 +20,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
         }
 
         //TODO: Find a way to write lines 25 and 28 in a single SQL statement + double check logic
+        // The repo is not collecting the url information for some reason? Other artwork details are all loading fine
         public List<ArtworkOutputDto> GetArtworks()
         {
             var allArtworks = new List<ArtworkOutputDto>();
@@ -41,9 +42,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var lookup = allArtworkArtists.ToLookup(kvp => kvp.Key, kvp => kvp.Value);
 
             var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id, artwork.title, " +
-                "description, media, primary_image_url, secondary_image_url, year_created, artwork.modified_at, " +
-                "artwork.created_at, nation.title as nation_title FROM artwork INNER JOIN nation ON " +
-                "nation.nation_id = artwork.nation_id");
+                "artwork.description, primary_image_url, secondary_image_url, artwork.year_created, artwork.modified_at, " +
+                "artwork.created_at, media_type, media.description as media_description FROM artwork INNER JOIN media ON " +
+                "media.media_id = artwork.media_id");
 
             foreach (ArtworkOutputDto artwork in artworksOutput)
             {
@@ -90,22 +91,29 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return artworkOutput;
         }
 
+        public ArtworkOutputDto? GetArtworkOfTheDay()
+        {
+            // Ultra hacky to just get something working for you guys. Will swap between artwork 1 and artwork 2 each minute.
+            if (DateTime.Now.Minute % 2 == 0)
+                return GetArtworkById(1);
+            else return GetArtworkById(2);
+        }
+
         public ArtworkInputDto? InsertArtwork(ArtworkInputDto artwork)
         {
             var sqlParams = new NpgsqlParameter[]
             {
                 new("title", artwork.Title),
                 new("description", artwork.Description),
-                new("media", artwork.Media),
-                new("primary_image_url", artwork.PrimaryImageUrl),
-                new("secondary_image_url", artwork.SecondaryImageUrl ?? (object)DBNull.Value),
-                new("year_created", artwork.YearCreated),
-                new("nation_id", artwork.NationId)
+                new("mediaId", artwork.MediaId),
+                new("primary_image_url", artwork.PrimaryImageURL),
+                new("secondary_image_url", artwork.SecondaryImageURL ?? (object)DBNull.Value),
+                new("year_created", artwork.YearCreated)
             };
 
             var result = _repo.ExecuteReader<ArtworkInputDto>("INSERT INTO artwork VALUES (DEFAULT, " +
-                "@title, @description, @media, @primary_image_url, @secondary_image_url, @year_created, " +
-                "@nation_id, current_timestamp, current_timestamp) RETURNING *", sqlParams)
+                "@title, @description, @mediaId, @primary_image_url, @secondary_image_url, @year_created, " +
+                "current_timestamp, current_timestamp) RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -118,16 +126,15 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("artwork_id", id),
                 new("title", artwork.Title),
                 new("description", artwork.Description),
-                new("media", artwork.Media),
-                new("primaryImageURL", artwork.PrimaryImageUrl),
-                new("secondaryImageURL", artwork.SecondaryImageUrl ?? (object)DBNull.Value),
-                new("yearCreated", artwork.YearCreated),
-                new("nationId", artwork.NationId)
+                new("mediaId", artwork.MediaId),
+                new("primaryImageURL", artwork.PrimaryImageURL),
+                new("secondaryImageURL", artwork.SecondaryImageURL ?? (object)DBNull.Value),
+                new("yearCreated", artwork.YearCreated)
             };
 
             var result = _repo.ExecuteReader<ArtworkInputDto>("UPDATE artwork SET title = @title, description = @description, " +
-                "media = @media, primary_image_url = @primaryImageURL, secondary_image_url = @secondaryImageURL, " +
-                "year_created = @yearCreated, nation_id = @nationId, modified_at = current_timestamp " +
+                "media = @mediaId, primary_image_url = @primaryImageURL, secondary_image_url = @secondaryImageURL, " +
+                "year_created = @yearCreated, modified_at = current_timestamp " +
                 "WHERE artwork_id = @artwork_id RETURNING *", sqlParams)
                 .SingleOrDefault();
 
@@ -146,6 +153,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return true;
         }
 
+
+        // The assign and deassign method is also giving the "The parameter already belongs to a collection" error
         public ArtistArtworkDto? AssignArtist(int artistId, int artworkId)
         {
             var sqlParams = new NpgsqlParameter[]

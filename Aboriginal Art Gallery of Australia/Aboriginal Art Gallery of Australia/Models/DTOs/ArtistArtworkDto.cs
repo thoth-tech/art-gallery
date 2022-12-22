@@ -14,9 +14,5 @@
             this.ArtistId = artistId;
             this.ArtworkId = artworkId;
         }
-
-        public ArtistArtworkDto()
-        {
-        }
     }
 }

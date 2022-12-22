@@ -1,6 +1,7 @@
 ﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using static Aboriginal_Art_Gallery_of_Australia.Persistence.ExtensionMethods;
+using Aboriginal_Art_Gallery_of_Australia.Authentication;
 using Npgsql;
 using BCrypt.Net;
 
@@ -47,12 +48,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("lastName", user.LastName),
                 new("email", user.Email),
                 new("passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384)),
-                new("role", "Member"),
-                new("activeAt", (object)DBNull.Value)
+                new("role", "User"),
+                new("activeAt", DateTime.UtcNow)
             };
 
             var result = _repo.ExecuteReader<UserInputDto>("INSERT INTO account VALUES (DEFAULT, @firstName, " +
-                "@lastName, @email, @passwordHash, @role, @activeAt current_timestamp, current_timestamp) " +
+                "@lastName, @email, @passwordHash, @role, @activeAt, current_timestamp, current_timestamp) " +
                 "RETURNING *", sqlParams)
                 .SingleOrDefault();
 
@@ -67,13 +68,36 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("firstName", user.FirstName),
                 new("lastName", user.LastName),
                 new("email", user.Email),
-                new("password_hash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384))
+                new("password_hash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384)),
+                new("role", user.Role)
             };
 
-            var result = _repo.ExecuteReader<UserInputDto>("UPDATE account SET first_name = @firstName, " +
-                "last_name = @lastName, email = @email, password_hash = @password_hash, " +
-                "modified_at = current_timestamp WHERE account_id = @accountId RETURNING *", sqlParams)
-                .SingleOrDefault();
+            String cmdString = "UPDATE account SET ";
+
+            if (user.FirstName is not null && user.FirstName != "" && user.FirstName != "string")
+            {
+                cmdString += "first_name = @firstName, ";
+            }
+            if (user.LastName is not null && user.LastName != "" && user.LastName != "string")
+            {
+                cmdString += "last_name = @lastName, ";
+            }
+            if (user.Email is not null && user.Email != "" && user.Email != "string")
+            {
+                cmdString += "email = @email, ";
+            }
+            if (user.Password is not null && user.Password != "" && user.Password != "string")
+            {
+                cmdString += "password_hash = @passwordHash, ";
+            }
+            if (user.Role is not null && user.Role != "" && user.Password != "string")
+            {
+                cmdString += "role = @role, ";
+            }
+
+            cmdString += "modified_at = current_timestamp WHERE account_id = @accountId RETURNING *";
+
+            var result = _repo.ExecuteReader<UserInputDto>(cmdString, sqlParams).SingleOrDefault();
 
             return result;
         }
@@ -88,6 +112,28 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             _repo.ExecuteReader<UserOutputDto>("DELETE FROM account WHERE account_id = @accountId", sqlParams);
 
             return true;
+        }
+
+        public Tuple<UserOutputDto, string>? AuthenticateUser(LoginDto login)
+        {
+           var sqlParams = new NpgsqlParameter[]
+            {
+                new("email", login.Email)
+            };
+
+            var user = _repo.ExecuteReader<UserOutputDto>("SELECT * FROM account WHERE email = @email", sqlParams).SingleOrDefault();
+
+            // Authenticate user with given login information and return an auth token if valid
+            bool authenticated = BC.EnhancedVerify(login.Password, user.PasswordHash, hashType: HashType.SHA384);
+            if (authenticated)
+            {
+                user.PasswordHash = ""; // Removing password hash
+                var handler = new TokenAuthenticationHandler(_configuration);
+                string token = handler.GenerateToken(user);
+                return new Tuple<UserOutputDto, string>(user, token);
+            }
+
+            return null;
         }
     }
 }

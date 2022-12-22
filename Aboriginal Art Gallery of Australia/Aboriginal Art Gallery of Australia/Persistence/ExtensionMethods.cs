@@ -1,11 +1,10 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using FastMember;
 using Npgsql;
-using System.Globalization;
-using System.Text;
-using System;
-using System.Reflection.Metadata.Ecma335;
+
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence
 {
@@ -62,8 +61,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
                     myUri.AbsolutePath.Contains(".jpg") ||
                     myUri.AbsolutePath.Contains(".jpeg") ||
                     myUri.AbsolutePath.Contains(".png") ||
-                    myUri.AbsolutePath.Contains(".wemp") ||
-                    myUri.AbsolutePath.Contains(".gif") 
+                    myUri.AbsolutePath.Contains(".webp") ||
+                    myUri.AbsolutePath.Contains(".gif")
                     )
                     return true;
             return false;
