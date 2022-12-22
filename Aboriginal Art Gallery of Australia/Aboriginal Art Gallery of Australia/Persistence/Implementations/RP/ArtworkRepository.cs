@@ -9,6 +9,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
     {
 
         //TODO: Test last 4 methods and fix GetById
+        //Urls not reading from database
+        //Need to switch nation/nation_id for media/media_id
 
         private IRepository _repo => this;
 
