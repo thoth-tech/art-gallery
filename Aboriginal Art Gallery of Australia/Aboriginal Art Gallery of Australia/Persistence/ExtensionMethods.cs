@@ -2,6 +2,10 @@
 using System.Text;
 using FastMember;
 using Npgsql;
+using System.Globalization;
+using System.Text;
+using System;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence
 {
@@ -50,5 +54,19 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
         string.IsNullOrEmpty(str) || str.Length < 2
             ? str.ToLowerInvariant()
             : char.ToLowerInvariant(str[0]) + str.Substring(1);
+
+        public static bool IsValidURL(this string str)
+        {
+            if (Uri.TryCreate(str, UriKind.Absolute, out Uri? myUri))
+                if (
+                    myUri.AbsolutePath.Contains(".jpg") ||
+                    myUri.AbsolutePath.Contains(".jpeg") ||
+                    myUri.AbsolutePath.Contains(".png") ||
+                    myUri.AbsolutePath.Contains(".wemp") ||
+                    myUri.AbsolutePath.Contains(".gif") 
+                    )
+                    return true;
+            return false;
+        }
     }
 }

@@ -13,40 +13,51 @@
 
         public UserInputDto(string firstName, string lastName, string email, string password)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            Email = email;
-            Password = password;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Email = email;
+            this.Password = password;
+        }
+
+        public UserInputDto(){
+            this.FirstName = "";
+            this.LastName = "";
+            this.Email = "";
+            this.Password = "";
         }
     }
 
     public class UserOutputDto
     {
-        public int AccountId { get; set; }
-        public string FirstName { get; set; } = null!;
-        public string LastName { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string PasswordHash { get; set; } = null!;
-        public string? Role { get; set; } = null;
-        public DateTime? ActiveAt { get; set; } = null;
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string PasswordHash { get; set; }
+        public string Role { get; set; }
+        public DateTime? ActiveAt { get; set; }
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public UserOutputDto()
+        public UserOutputDto(int id, string firstName, string lastName, string email, string passwordHash, string role, DateTime? activeAt, DateTime modifiedAt, DateTime createdAt)
         {
+            this.Id = id;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Email = email;
+            this.PasswordHash = passwordHash;
+            this.Role = role;
+            this.ActiveAt = activeAt;
+            this.ModifiedAt = modifiedAt;
+            this.CreatedAt = createdAt;
         }
 
-        public UserOutputDto(int id, string firstName, string lastName, string email, string passwordHash, string? role, DateTime? activeAt, DateTime modifiedAt, DateTime createdAt)
-        {
-            AccountId = id;
-            FirstName = firstName;
-            LastName = lastName;
-            Email = email;
-            PasswordHash = passwordHash;
-            Role = role;
-            ActiveAt = activeAt;
-            ModifiedAt = modifiedAt;
-            CreatedAt = createdAt;
+        public UserOutputDto(){
+            this.FirstName = "";
+            this.LastName = "";
+            this.Email = "";
+            this.PasswordHash = "";
+            this.Role = "";
         }
     }
 }

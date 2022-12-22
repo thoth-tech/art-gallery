@@ -17,6 +17,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         ArtworkOutputDto? GetArtworkById(int id);
 
         /// <summary>
+        /// Retrieves the artwork of the day from the database/repository.
+        /// </summary>
+        /// <returns>Returns the matching artwork if successful or null if unsuccessful.</returns>
+        ArtworkOutputDto? GetArtworkOfTheDay();
+
+        /// <summary>
         /// Inserts an artwork into the database/repository.
         /// </summary>
         /// <param name="artwork">The new artwork to be inserted.</param>
@@ -39,7 +45,5 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
 
         ArtistArtworkDto? AssignArtist(int artistId, int artworkId);
         bool DeassignArtist(int artistId, int artworkId);
-        ArtworkExhibitionDto? AssignExhibition(int artworkId, int exhibitionId);
-        bool DeassignExhibition(int artworkId, int exhibitionId);
     }
 }

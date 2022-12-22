@@ -39,8 +39,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 }
 
                 connection.Open();
-                using var cmd2 = new NpgsqlCommand("SELECT artwork_id, artwork.title, description, media, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, nation.title as nation_title " +
-                                                   "FROM artwork INNER JOIN nation ON nation.nation_id = artwork.nation_id", connection);
+                using var cmd2 = new NpgsqlCommand("SELECT artwork_id, artwork.title, artwork.description as artwork_description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, media_type, media.description as media_description " +
+                                                   "FROM artwork INNER JOIN media ON media.media_id = artwork.media_id", connection);
                 {
                     using var dr = cmd2.ExecuteReader();
                     {
@@ -50,12 +50,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                             {
                                 var artworkId = (int)dr["artwork_id"];
                                 var title = (string)dr["title"];
-                                var description = (string)dr["description"];
-                                var media = (string)dr["media"];
+                                var description = (string)dr["artwork_description"];
                                 var primaryImageURL = (string)dr["primary_image_url"];
                                 var secondaryImageURL = dr["secondary_image_url"] as string;
                                 var createdYear = (int)dr["year_created"];
-                                var nationTitle = (string)dr["nation_title"];
+                                var mediaType = (string)dr["media_type"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
 
@@ -64,7 +63,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 foreach (string artist in lookup[artworkId])
                                     artworkArtists.Add(artist);
 
-                                artworks.Add(new ArtworkOutputDto(artworkId, title, description, media, primaryImageURL, secondaryImageURL, createdYear, nationTitle, modifiedAt, createdAt, artworkArtists));
+                                artworks.Add(new ArtworkOutputDto(artworkId, title, description, primaryImageURL, secondaryImageURL, createdYear, mediaType, modifiedAt, createdAt, artworkArtists));
                             }
                         }
                         return artworks;
@@ -98,8 +97,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 }
 
                 connection.Open();
-                using var cmd2 = new NpgsqlCommand("SELECT artwork_id, artwork.title, description, media, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, nation.title as nation_title " +
-                                                   "FROM artwork INNER JOIN nation ON nation.nation_id = artwork.nation_id WHERE artwork_id = @artwork_id", connection);
+                using var cmd2 = new NpgsqlCommand("SELECT artwork_id, artwork.title, artwork.description as artwork_description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, media_type, media.description as media_description " +
+                                                   "FROM artwork INNER JOIN media ON media.media_id = artwork.media_id where artwork_id = @artwork_id", connection);
                 {
                     cmd2.Parameters.AddWithValue("@artwork_id", id);
                     using var dr = cmd2.ExecuteReader();
@@ -110,16 +109,15 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                             {
                                 var artworkId = (int)dr["artwork_id"];
                                 var title = (string)dr["title"];
-                                var description = (string)dr["description"];
-                                var media = (string)dr["media"];
+                                var description = (string)dr["artwork_description"];
                                 var primaryImageURL = (string)dr["primary_image_url"];
                                 var secondaryImageURL = dr["secondary_image_url"] as string;
                                 var createdYear = (int)dr["year_created"];
-                                var nationTitle = (string)dr["nation_title"];
+                                var mediaType = (string)dr["media_type"];
                                 var modifiedAt = (DateTime)dr["modified_at"];
                                 var createdAt = (DateTime)dr["created_at"];
 
-                                return new ArtworkOutputDto(artworkId, title, description, media, primaryImageURL, secondaryImageURL, createdYear, nationTitle, modifiedAt, createdAt, artworkArtists);
+                                return new ArtworkOutputDto(artworkId, title, description, primaryImageURL, secondaryImageURL, createdYear, mediaType, modifiedAt, createdAt, artworkArtists);
                             }
                         }
                         return null;
@@ -129,21 +127,28 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
         }
 
 
+        public ArtworkOutputDto? GetArtworkOfTheDay()
+        {
+            // Ultra hacky to just get somthing working for you guys. Will swap between artwork 1 and artwork 2 each minute.
+            if (DateTime.Now.Minute % 2 == 0)
+                return GetArtworkById(1);
+            else return GetArtworkById(2);
+        }
+
         public ArtworkInputDto? InsertArtwork(ArtworkInputDto artwork)
         {
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("INSERT INTO artwork(title, description, media, primary_image_url, secondary_image_url, year_created, nation_id, modified_at, created_at) " +
-                                                  "VALUES (@title, @description, @media, @primaryImageURL, @secondaryImageURL, @yearCreated, @nationId, current_timestamp, current_timestamp)", connection);
+                using var cmd = new NpgsqlCommand("INSERT INTO artwork(title, description, primary_image_url, secondary_image_url, year_created, media_id, modified_at, created_at) " +
+                                                  "VALUES (@title, @description, @primaryImageURL, @secondaryImageURL, @yearCreated, @mediaId, current_timestamp, current_timestamp)", connection);
                 {
                     cmd.Parameters.AddWithValue("@title", artwork.Title);
                     cmd.Parameters.AddWithValue("@description", artwork.Description);
-                    cmd.Parameters.AddWithValue("@media", artwork.Media);
-                    cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
-                    cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
-                    cmd.Parameters.AddWithValue("@yearCreated", artwork.YearCreated);
-                    cmd.Parameters.AddWithValue("@nationId", artwork.NationId);
+                    cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageURL);
+                    cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageURL);
+                    cmd.Parameters.AddWithNullableValue("@yearCreated", artwork.YearCreated);
+                    cmd.Parameters.AddWithNullableValue("@mediaId", artwork.MediaId);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? artwork : null;
                 }
@@ -155,25 +160,63 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("UPDATE artwork " +
-                                                  "SET title = @title, " +
-                                                       "description = @description, " +
-                                                       "media = @media, " +
-                                                       "primary_image_url = @primaryImageURL, " +
-                                                       "secondary_image_url = @secondaryImageURL, " +
-                                                       "year_created = @yearCreated, " +
-                                                       "nation_id = @nationId, " +
-                                                       "modified_at=current_timestamp " +
-                                                  "WHERE artwork_id = @artwork_id", connection);
+
+                String cmdString = "UPDATE artwork SET ";
+
+                if (artwork.Title is not null && artwork.Title != "" && artwork.Title != "string")
+                {
+                    cmdString += "title = @title, ";
+                }
+                if (artwork.Description is not null && artwork.Description != "" && artwork.Description != "string")
+                {
+                    cmdString += "description = @description, ";
+                }
+                if (artwork.PrimaryImageURL is not null && artwork.PrimaryImageURL != "" && artwork.PrimaryImageURL != "string")
+                {
+                    cmdString += "primary_image_url = @primaryImageURL, ";
+                }
+                if (artwork.SecondaryImageURL is not null && artwork.SecondaryImageURL != "" && artwork.SecondaryImageURL != "string")
+                {
+                    cmdString += "secondary_image_url = @secondaryImageURL, ";
+                }
+                if (artwork.YearCreated is not null && artwork.YearCreated != 0)
+                {
+                    cmdString += "year_created = @yearCreated, ";
+                }
+                if (artwork.MediaId is not null && artwork.MediaId != 0)
+                {
+                    cmdString += "media_id = @mediaId, ";
+                }
+
+                cmdString += "modified_at = current_timestamp WHERE artwork_id = @artwork_id";
+
+                using var cmd = new NpgsqlCommand(cmdString, connection);
                 {
                     cmd.Parameters.AddWithValue("@artwork_id", id);
-                    cmd.Parameters.AddWithValue("@title", artwork.Title);
-                    cmd.Parameters.AddWithValue("@description", artwork.Description);
-                    cmd.Parameters.AddWithValue("@media", artwork.Media);
-                    cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
-                    cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
-                    cmd.Parameters.AddWithValue("@yearCreated", artwork.YearCreated);
-                    cmd.Parameters.AddWithValue("@nationId", artwork.NationId);
+                    if (artwork.Title is not null && artwork.Title != "" && artwork.Title != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@title", artwork.Title);
+                    }
+                    if (artwork.Description is not null && artwork.Description != "" && artwork.Description != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@description", artwork.Description);
+                    }
+                    if (artwork.PrimaryImageURL is not null && artwork.PrimaryImageURL != "" && artwork.PrimaryImageURL != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageURL);
+                    }
+                    if (artwork.SecondaryImageURL is not null && artwork.SecondaryImageURL != "" && artwork.SecondaryImageURL != "string")
+                    {
+                        cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageURL);
+                    }
+                    if (artwork.YearCreated is not null && artwork.YearCreated != 0)
+                    {
+                        cmd.Parameters.AddWithNullableValue("@yearCreated", artwork.YearCreated);
+                    }
+                    if (artwork.MediaId is not null && artwork.MediaId != 0)
+                    {
+                        cmd.Parameters.AddWithNullableValue("@mediaId", artwork.MediaId);
+                    }
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? artwork : null;
                 }
@@ -225,35 +268,5 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             }
         }
 
-        public ArtworkExhibitionDto? AssignExhibition(int artworkId, int exhibitionId)
-        {
-            using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
-            {
-                connection.Open();
-
-                using var cmd = new NpgsqlCommand("INSERT INTO artwork_exhibition(artwork_id, exhibition_id, modified_at, created_at) VALUES (@artworkId, @exhibitionId, current_timestamp, current_timestamp)", connection);
-                {
-                    cmd.Parameters.AddWithValue("@artworkId", artworkId);
-                    cmd.Parameters.AddWithValue("@exhibitionId", exhibitionId);
-                    var result = cmd.ExecuteNonQuery();
-                    return result is 1 ? new ArtworkExhibitionDto(artworkId, exhibitionId) : null;
-                }
-            }
-        }
-
-        public bool DeassignExhibition(int artworkId, int exhibitionId)
-        {
-            using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
-            {
-                connection.Open();
-                using var cmd = new NpgsqlCommand("DELETE FROM artwork_exhibition WHERE artwork_id = @artworkId AND exhibition_id = @exhibitionId ", connection);
-                {
-                    cmd.Parameters.AddWithValue("@artworkId", artworkId);
-                    cmd.Parameters.AddWithValue("@exhibitionId", exhibitionId);
-                    var result = cmd.ExecuteNonQuery();
-                    return result == 1;
-                }
-            }
-        }
     }
 }

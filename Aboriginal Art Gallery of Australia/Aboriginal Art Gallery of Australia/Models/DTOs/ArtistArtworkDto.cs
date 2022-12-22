@@ -11,8 +11,12 @@
 
         public ArtistArtworkDto(int artistId, int artworkId)
         {
-            ArtistId = artistId;
-            ArtworkId = artworkId;
+            this.ArtistId = artistId;
+            this.ArtworkId = artworkId;
+        }
+
+        public ArtistArtworkDto()
+        {
         }
     }
 }
