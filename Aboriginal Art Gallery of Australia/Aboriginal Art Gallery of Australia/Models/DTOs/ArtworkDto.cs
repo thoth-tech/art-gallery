@@ -30,7 +30,7 @@
 
     public class ArtworkOutputDto
     {
-        public int Id { get; set; }
+        public int ArtworkId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string PrimaryImageURL { get; set; }
@@ -43,10 +43,6 @@
 
         public ArtworkOutputDto()
         {
-        }
-
-        public ArtworkOutputDto()
-        {
             this.Title = "";
             this.Description = "";
             this.PrimaryImageURL = "";
@@ -55,9 +51,9 @@
             this.ContributingArtists = new List<String>();
         }
 
-        public ArtworkOutputDto(int id, string title, string description, string primaryImageURL, string? secondaryImageURL, int yearCreated, string mediaType, DateTime modifiedAt, DateTime createdAt, List<string> contributingArtists)
+        public ArtworkOutputDto(int artworkId, string title, string description, string primaryImageURL, string? secondaryImageURL, int yearCreated, string mediaType, DateTime modifiedAt, DateTime createdAt, List<string> contributingArtists)
         {
-            this.Id = id;
+            this.ArtworkId = artworkId;
             this.Title = title;
             this.Description = description;
             this.PrimaryImageURL = primaryImageURL;

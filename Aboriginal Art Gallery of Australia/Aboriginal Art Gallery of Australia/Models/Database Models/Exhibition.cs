@@ -2,7 +2,7 @@
 {
     public class Exhibition
     {
-        public int Id { get; set; }
+        public int ExhibitionId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string BackgroundImageURL { get; set; }
@@ -11,9 +11,9 @@
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public Exhibition(int id, string name, string description, string backgroundImageURL, DateOnly startDate, DateOnly endDate, DateTime modifiedAt, DateTime createdAt)
+        public Exhibition(int exhibitionId, string name, string description, string backgroundImageURL, DateOnly startDate, DateOnly endDate, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
+            ExhibitionId = exhibitionId;
             Name = name;
             Description = description;
             BackgroundImageURL = backgroundImageURL;

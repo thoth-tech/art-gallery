@@ -171,6 +171,10 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 {
                     cmdString += "password_hash = @passwordHash, ";
                 }
+                if (user.Role is not null && user.Role != "" && user.Password != "string")
+                {
+                    cmdString += "role = @role, ";
+                }
 
                 cmdString += "modified_at = current_timestamp WHERE account_id = @accountId";
 
@@ -192,6 +196,10 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     if (user.Password is not null && user.Password != "" && user.Password != "string")
                     {
                         cmd.Parameters.AddWithValue("@passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384));
+                    }
+                    if (user.Role is not null && user.Role != "" && user.Password != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@role", user.Role);
                     }
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? user : null;

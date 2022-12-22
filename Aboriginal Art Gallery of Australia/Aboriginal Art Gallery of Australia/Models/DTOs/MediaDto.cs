@@ -19,15 +19,15 @@
 
     public class MediaOutputDto
     {
-        public int Id { get; set; }
+        public int MediaId { get; set; }
         public string MediaType { get; set; }
         public string Description { get; set; }
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public MediaOutputDto(int id, string mediaType, string description, DateTime modifiedAt, DateTime createdAt)
+        public MediaOutputDto(int mediaId, string mediaType, string description, DateTime modifiedAt, DateTime createdAt)
         {
-            this.Id = id;
+            this.MediaId = mediaId;
             this.MediaType = mediaType;
             this.Description = description;
             this.ModifiedAt = modifiedAt;

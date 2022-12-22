@@ -105,23 +105,21 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
  */
 
 // Implementation 1 - ADO
-builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
-builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
-builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
-builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
-builder.Services.AddScoped<IUserDataAccess, UserADO>();
+// builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
+// builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
+// builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
+// builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
+// builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
-// builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
-// builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
-// builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
-// builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
-// builder.Services.AddScoped<IUserDataAccess, UserRepository>();
+builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
+builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
+builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
+builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
+builder.Services.AddScoped<IUserDataAccess, UserRepository>();
 
 
-// Implementation 3 - Entity Framework
-
-builder.Services.AddAuthorization();
+// builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -428,7 +426,6 @@ app.MapGet("api/exhibitions/{exhibitionId}/artworks", [AllowAnonymous] (IExhibit
 
 app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, ExhibitionInputDto exhibition) =>
 {
-
     PropertyInfo[] properties = exhibition.GetType().GetProperties();
     foreach (PropertyInfo property in properties)
     {
@@ -448,8 +445,8 @@ app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDa
             if (propertyValue == null || propertyValue.Equals(""))
                 return Results.BadRequest($"A {property.Name} is required.");
 
-            if (property.Name.Contains(nameof(exhibition.StartDate)) && ((DateOnly)propertyValue >= exhibition.EndDate))
-                return Results.BadRequest($"{property.Name} can not be greater then {exhibition.EndDate} (The end date).");
+            if (property.Name.Contains(nameof(exhibition.StartDate)) && ((DateOnly)propertyValue > exhibition.EndDate))
+                return Results.BadRequest($"{property.Name} can not be after {exhibition.EndDate} (The end date).");
         }
     }
 
@@ -520,36 +517,52 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", [Au
 #endregion
 
 #region Map User Endpoints
+//TODO: add input validation for these endponts
+app.MapGet("api/users/", [Authorize] (IUserDataAccess _accountRepo) => _accountRepo.GetUsers());
 
-app.MapGet("api/users/", [Authorize] (IUserDataAccess _repo) => _repo.GetUsers());
-
-app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _repo, int id) =>
+app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int id) =>
 {
-    var result = _repo.GetUserById(id);
+    var result = _accountRepo.GetUserById(id);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _repo, UserInputDto user) =>
+app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo, UserInputDto user) =>
 {
-    var result = _repo.InsertUser(user);
+    var result = _accountRepo.InsertUser(user);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _repo, LoginDto login) =>
+app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, LoginDto login) =>
 {
-    var result = _repo.AuthenticateUser(login);
+    var result = _accountRepo.AuthenticateUser(login);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _repo, int id, UserInputDto user) =>
+app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int accountId, UserInputDto user) =>
 {
-    var result = _repo.UpdateUser(id, user);
-    return result is not null ? Results.NoContent() : Results.BadRequest();
+    if (_accountRepo.GetUserById(accountId) == null)
+        return Results.NotFound($"No user can be found with an {nameof(accountId)} of {accountId}");
+
+    PropertyInfo[] properties = user.GetType().GetProperties();
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(user, null);
+
+        if (property.PropertyType == typeof(string) && propertyValue != null && !propertyValue.Equals(""))
+        {
+            Console.WriteLine(propertyValue.ToString() != "Admin");
+            Console.WriteLine((propertyValue.ToString() != "User" && propertyValue.ToString() != "Admin"));
+            if (property.Name.Contains(nameof(user.Role)) && (propertyValue.ToString() != "User" && propertyValue.ToString() != "Admin"))
+                return Results.BadRequest($"A {property.Name} is required to be either User or Admin");
+        }
+    }
+    var result = _accountRepo.UpdateUser(accountId, user);
+    return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/users/{id}", [Authorize(Policy = "AdminOnly")](IUserDataAccess _repo, int id) =>
+app.MapDelete("api/users/{id}", [Authorize(Policy = "AdminOnly")](IUserDataAccess _accountRepo, int id) =>
 {
-    var result = _repo.DeleteUser(id);
+    var result = _accountRepo.DeleteUser(id);
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
 
