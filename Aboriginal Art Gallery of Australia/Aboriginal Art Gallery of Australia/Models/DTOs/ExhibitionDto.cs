@@ -66,7 +66,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public DateOnly EndDate { get; set; }
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<ArtworkOutputDto> ExhibitionArtworks { get; set; }
+        public List<ArtworkOutputDto> ExhibitionArtworks { get; set; } = null!;
+
+        public ExhibitionArtworkOutputDto()
+        {
+        }
 
         public ExhibitionArtworkOutputDto(int id, string name, string description, string? backgroundImageURL, DateOnly startDate, DateOnly endDate, DateTime modifiedAt, DateTime createdAt, List<ArtworkOutputDto> exhibitionArtworks)
         {

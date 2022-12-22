@@ -39,7 +39,11 @@
         public string MediaType { get; set; }
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<String> ContributingArtists { get; set; }
+        public List<String> ContributingArtists { get; set; } = null!;
+
+        public ArtworkOutputDto()
+        {
+        }
 
         public ArtworkOutputDto()
         {
