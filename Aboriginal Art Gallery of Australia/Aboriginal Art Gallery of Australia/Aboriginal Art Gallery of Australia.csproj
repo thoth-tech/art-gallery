@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Persistence\Implementations\EF\**" />
+    <Content Remove="Persistence\Implementations\EF\**" />
+    <EmbeddedResource Remove="Persistence\Implementations\EF\**" />
+    <None Remove="Persistence\Implementations\EF\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="DateOnlyTimeOnly.AspNet" Version="2.0.0" />
     <PackageReference Include="DateOnlyTimeOnly.AspNet.Swashbuckle" Version="2.0.0" />
@@ -22,10 +29,6 @@
   <ItemGroup>
 	<!-- emits global using BcryptNet = global::BCrypt.Net.BCrypt; -->
 	<Using Include="BCrypt.Net.BCrypt" Alias="BC" />
-  </ItemGroup>
-	
-  <ItemGroup>
-    <Folder Include="Persistence\Implementations\EF\" />
   </ItemGroup>
 
 </Project>

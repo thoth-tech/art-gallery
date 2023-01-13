@@ -47,7 +47,7 @@ var securityScheme = new OpenApiSecurityScheme()
 {
     Name = "Authorization",
     Type = SecuritySchemeType.Http,
-    Scheme = "Bearer",
+    Scheme = "bearer",
     BearerFormat = "JWT",
     In = ParameterLocation.Header,
     Description = "JSON Web Token based security",
@@ -67,7 +67,7 @@ var securityRequirement = new OpenApiSecurityRequirement()
             Reference = new OpenApiReference
             {
                 Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
+                Id = "bearer"
             }
         },
         new string[] {}
@@ -84,6 +84,7 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Aboriginal Art Gallery API",
+        Version = "1.0.0",
         Description = "New backend service that provides resources for the Aboriginal Art Gallery of Australia",
         Contact = new OpenApiContact
         {
@@ -91,7 +92,7 @@ builder.Services.AddSwaggerGen(options =>
             Email = "jdoe@deakin.edu.au"
         }
     });
-    options.AddSecurityDefinition("Bearer", securityScheme);
+    options.AddSecurityDefinition("bearer", securityScheme);
     options.AddSecurityRequirement(securityRequirement);
 });
 #endregion
@@ -135,7 +136,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -241,7 +241,7 @@ app.MapGet("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, int art
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
 
-app.MapGet("api/artwork/of-the-day", ([FromServices] ArtworkOfTheDayMiddleware _showcase, IArtworkDataAccess _artworkRepo) => _showcase.GetArtworkOfTheDay(_artworkRepo.GetArtworks()));
+app.MapGet("api/artworks/of-the-day", ([FromServices] ArtworkOfTheDayMiddleware _showcase, IArtworkDataAccess _artworkRepo) => _showcase.GetArtworkOfTheDay(_artworkRepo.GetArtworks()));
 
 app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, ArtworkInputDto artwork) =>
 {
@@ -454,7 +454,7 @@ app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDa
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapPut("api/exhibitions/{id}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId, ExhibitionInputDto exhibition) =>
+app.MapPut("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId, ExhibitionInputDto exhibition) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
