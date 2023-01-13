@@ -7,11 +7,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
     public class ExhibitionRepository : IRepository, IExhibitionDataAccess
     {
-
-        //TODO: Test last three methods and ExhibitionArtworksById
-        // These endpoints have all broken because the startdate and enddate are now DateOnly and that isn't mapping properly
-        // I tried to fix in the MapTo extension method but no luck so far
-
         private IRepository _repo => this;
 
         private readonly IConfiguration _configuration;
@@ -41,7 +36,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return exhibition;
         }
 
-        //TODO: Find a way to write lines 45 and 48 in a single SQL statement + check over logic
         public ExhibitionArtworkOutputDto? GetExhibitionArtworksById(int id)
         {
             var allArtworks = new List<ArtworkOutputDto>();
@@ -67,7 +61,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("exhibitionId", id)
             };
 
-            // This query is throwing InvalidOperation exception: 'the parameter already belongs to a collection'
             var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_exhibition.artwork_id, " +
                 "artwork.title, description, media, primary_image_url, secondary_image_url, year_created, " +
                 "artwork.modified_at, artwork.created_at, media.media_type as media_type FROM artwork INNER JOIN " +
@@ -86,7 +79,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             }
 
             var exhibition = _repo.ExecuteReader<ExhibitionArtworkOutputDto>("SELECT * FROM exhibition " +
-                "WHERE exhibition_id = @exhibitionId", sqlParams)
+                $"WHERE exhibition_id = {id}", sqlParams)
                 .SingleOrDefault();
 
             if (exhibition is not null) exhibition.ExhibitionArtworks = artworksOutput;
