@@ -18,7 +18,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
         /// Cycles through the passed list of artists and selects a random artist every X minutes. 
         /// </summary>
         /// <param name="allArtists">The list of all artists published by the gallery.</param>
-        /// <returns></returns>
+        /// <returns>A random artist from the list of all artists.</returns>
         public ArtistOutputDto? GetArtistOfTheDay(List<ArtistOutputDto> allArtists)
         {
             List<ArtistOutputDto>? eligibleArtists = allArtists;
