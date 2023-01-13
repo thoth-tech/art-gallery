@@ -173,7 +173,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 {
                     cmd.Parameters.AddWithValue("@name", exhibition.Name);
                     cmd.Parameters.AddWithValue("@description", exhibition.Description);
-                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageURL);
+                    cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageUrl);
                     cmd.Parameters.AddWithValue("@startDate", exhibition.StartDate);
                     cmd.Parameters.AddWithValue("@endDate", exhibition.EndDate);
                     var result = cmd.ExecuteNonQuery();
@@ -198,7 +198,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 {
                     cmdString += "description = @description, ";
                 }
-                if (exhibition.BackgroundImageURL is not null && exhibition.BackgroundImageURL != "" && exhibition.BackgroundImageURL != "string")
+                if (exhibition.BackgroundImageUrl is not null && exhibition.BackgroundImageUrl != "" && exhibition.BackgroundImageUrl != "string")
                 {
                     cmdString += "background_image_url = @backgroundImageUrl, ";
                 }
@@ -224,9 +224,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     {
                         cmd.Parameters.AddWithValue("@description", exhibition.Description);
                     }
-                    if (exhibition.BackgroundImageURL is not null && exhibition.BackgroundImageURL != "" && exhibition.BackgroundImageURL != "string")
+                    if (exhibition.BackgroundImageUrl is not null && exhibition.BackgroundImageUrl != "" && exhibition.BackgroundImageUrl != "string")
                     {
-                        cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageURL);
+                        cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageUrl);
                     }
                     if (exhibition.StartDate != default(DateOnly))
                     {

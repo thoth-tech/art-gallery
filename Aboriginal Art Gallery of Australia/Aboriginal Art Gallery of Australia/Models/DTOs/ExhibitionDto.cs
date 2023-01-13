@@ -6,7 +6,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string BackgroundImageURL { get; set; }
+        public string BackgroundImageUrl { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
 
@@ -14,7 +14,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         {
             this.Name = name;
             this.Description = description;
-            this.BackgroundImageURL = backgroundImageURL;
+            this.BackgroundImageUrl = backgroundImageURL;
             this.StartDate = startDate;
             this.EndDate = endDate;
         }
@@ -22,7 +22,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public ExhibitionInputDto(){
             this.Name = "";
             this.Description = "";
-            this.BackgroundImageURL = "";
+            this.BackgroundImageUrl = "";
         }
     }
 
@@ -31,7 +31,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public int ExhibitionId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string BackgroundImageURL { get; set; }
+        public string BackgroundImageUrl { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public DateTime ModifiedAt { get; set; }
@@ -42,7 +42,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
             this.ExhibitionId = exhibitionId;
             this.Name = name;
             this.Description = description;
-            this.BackgroundImageURL = backgroundImageURL;
+            this.BackgroundImageUrl = backgroundImageURL;
             this.StartDate = startDate;
             this.EndDate = endDate;
             this.ModifiedAt = modifiedAt;
@@ -52,7 +52,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public ExhibitionOutputDto(){
             this.Name = "";
             this.Description = "";
-            this.BackgroundImageURL = "";
+            this.BackgroundImageUrl = "";
         }
     }
 
@@ -61,7 +61,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string? BackgroundImageURL { get; set; }
+        public string? BackgroundImageUrl { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public DateTime ModifiedAt { get; set; }
@@ -73,7 +73,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
             this.Id = id;
             this.Name = name;
             this.Description = description;
-            this.BackgroundImageURL = backgroundImageURL;
+            this.BackgroundImageUrl = backgroundImageURL;
             this.StartDate = startDate;
             this.EndDate = endDate;
             this.ModifiedAt = modifiedAt;
@@ -84,7 +84,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public ExhibitionArtworkOutputDto(){
             this.Name = "";
             this.Description = "";
-            this.BackgroundImageURL = "";
+            this.BackgroundImageUrl = "";
             this.ExhibitionArtworks = new List<ArtworkOutputDto>();
         }
     }

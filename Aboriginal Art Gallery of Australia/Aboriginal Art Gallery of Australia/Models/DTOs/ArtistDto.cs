@@ -8,7 +8,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DisplayName { get; set; }
-        public string ProfileImageURL { get; set; }
+        public string ProfileImageUrl { get; set; }
         public string PlaceOfBirth { get; set; }
         public int? YearOfBirth { get; set; }
         public int? YearOfDeath { get; set; } = null;
@@ -17,7 +17,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
             this.FirstName = "";
             this.LastName = "";
             this.DisplayName = "";
-            this.ProfileImageURL = "";
+            this.ProfileImageUrl = "";
             this.PlaceOfBirth = "";
         }
 
@@ -29,7 +29,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
             this.FirstName = firstName;
             this.LastName = lastName;
             this.DisplayName = displayName;
-            this.ProfileImageURL = profileImageURL;
+            this.ProfileImageUrl = profileImageURL;
             this.PlaceOfBirth = placeOfBirth;
             this.YearOfBirth = yearOfBirth;
             this.YearOfDeath = yearOfDeath;
@@ -42,7 +42,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DisplayName { get; set; }
-        public string ProfileImageURL { get; set; }
+        public string ProfileImageUrl { get; set; }
         public string PlaceOfBirth { get; set; }
         public int YearOfBirth { get; set; }
         public int? YearOfDeath { get; set; } = null;
@@ -53,7 +53,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
             this.FirstName = "";
             this.LastName = "";
             this.DisplayName = "";
-            this.ProfileImageURL = "";
+            this.ProfileImageUrl = "";
             this.PlaceOfBirth = "";
         }
 
@@ -63,7 +63,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
             this.FirstName = firstName;
             this.LastName = lastName;
             this.DisplayName = displayName;
-            this.ProfileImageURL = profileImageURL;
+            this.ProfileImageUrl = profileImageURL;
             this.PlaceOfBirth = placeOfBirth;
             this.YearOfBirth = yearOfBirth;
             this.YearOfDeath = yearOfDeath;

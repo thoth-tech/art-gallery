@@ -100,7 +100,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             {
                 new("name", exhibition.Name),
                 new("description", exhibition.Description),
-                new("backgroundImageUrl", exhibition.BackgroundImageURL)
+                new("backgroundImageUrl", exhibition.BackgroundImageUrl)
             };
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("INSERT INTO exhibition(name, description, " +
@@ -118,7 +118,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("exhibitionId", id),
                 new("name", exhibition.Name),
                 new("description", exhibition.Description),
-                new("backgroundImageUrl", exhibition.BackgroundImageURL)
+                new("backgroundImageUrl", exhibition.BackgroundImageUrl)
             };
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("UPDATE exhibition SET name = @name, " +

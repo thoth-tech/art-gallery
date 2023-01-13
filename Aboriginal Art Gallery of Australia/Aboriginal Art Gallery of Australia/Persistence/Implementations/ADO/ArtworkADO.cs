@@ -145,8 +145,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 {
                     cmd.Parameters.AddWithValue("@title", artwork.Title);
                     cmd.Parameters.AddWithValue("@description", artwork.Description);
-                    cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageURL);
-                    cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageURL);
+                    cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
+                    cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
                     cmd.Parameters.AddWithNullableValue("@yearCreated", artwork.YearCreated);
                     cmd.Parameters.AddWithNullableValue("@mediaId", artwork.MediaId);
                     var result = cmd.ExecuteNonQuery();
@@ -171,11 +171,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 {
                     cmdString += "description = @description, ";
                 }
-                if (artwork.PrimaryImageURL is not null && artwork.PrimaryImageURL != "" && artwork.PrimaryImageURL != "string")
+                if (artwork.PrimaryImageUrl is not null && artwork.PrimaryImageUrl != "" && artwork.PrimaryImageUrl != "string")
                 {
                     cmdString += "primary_image_url = @primaryImageURL, ";
                 }
-                if (artwork.SecondaryImageURL is not null && artwork.SecondaryImageURL != "" && artwork.SecondaryImageURL != "string")
+                if (artwork.SecondaryImageUrl is not null && artwork.SecondaryImageUrl != "" && artwork.SecondaryImageUrl != "string")
                 {
                     cmdString += "secondary_image_url = @secondaryImageURL, ";
                 }
@@ -201,13 +201,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     {
                         cmd.Parameters.AddWithValue("@description", artwork.Description);
                     }
-                    if (artwork.PrimaryImageURL is not null && artwork.PrimaryImageURL != "" && artwork.PrimaryImageURL != "string")
+                    if (artwork.PrimaryImageUrl is not null && artwork.PrimaryImageUrl != "" && artwork.PrimaryImageUrl != "string")
                     {
-                        cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageURL);
+                        cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
                     }
-                    if (artwork.SecondaryImageURL is not null && artwork.SecondaryImageURL != "" && artwork.SecondaryImageURL != "string")
+                    if (artwork.SecondaryImageUrl is not null && artwork.SecondaryImageUrl != "" && artwork.SecondaryImageUrl != "string")
                     {
-                        cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageURL);
+                        cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
                     }
                     if (artwork.YearCreated is not null && artwork.YearCreated != 0)
                     {

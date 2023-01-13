@@ -9,7 +9,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
     {
 
         //TODO: Test last 4 methods and fix GetById
-        //Urls not reading from database
 
         private IRepository _repo => this;
 
@@ -106,13 +105,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("title", artwork.Title),
                 new("description", artwork.Description),
                 new("mediaId", artwork.MediaId),
-                new("primary_image_url", artwork.PrimaryImageURL),
-                new("secondary_image_url", artwork.SecondaryImageURL ?? (object)DBNull.Value),
+                new("primary_image_url", artwork.PrimaryImageUrl),
+                new("secondary_image_url", artwork.SecondaryImageUrl ?? (object)DBNull.Value),
                 new("year_created", artwork.YearCreated)
             };
 
             var result = _repo.ExecuteReader<ArtworkInputDto>("INSERT INTO artwork VALUES (DEFAULT, " +
-                "@title, @description, @mediaId, @primary_image_url, @secondary_image_url, @year_created, " +
+                "@title, @description, @primary_image_url, @secondary_image_url, @year_created, @mediaId, " +
                 "current_timestamp, current_timestamp) RETURNING *", sqlParams)
                 .SingleOrDefault();
 
@@ -127,8 +126,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("title", artwork.Title),
                 new("description", artwork.Description),
                 new("mediaId", artwork.MediaId),
-                new("primaryImageURL", artwork.PrimaryImageURL),
-                new("secondaryImageURL", artwork.SecondaryImageURL ?? (object)DBNull.Value),
+                new("primaryImageURL", artwork.PrimaryImageUrl),
+                new("secondaryImageURL", artwork.SecondaryImageUrl ?? (object)DBNull.Value),
                 new("yearCreated", artwork.YearCreated)
             };
 

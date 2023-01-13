@@ -166,7 +166,7 @@ app.MapPost("api/artists/", [Authorize] (IArtistDataAccess _artistRepo, ArtistIn
             if (propertyValue == null || propertyValue.Equals(""))
                 return Results.BadRequest($"A {property.Name} is required.");
 
-            if (property.Name.Contains(nameof(artist.ProfileImageURL)) && propertyValue.ToString()!.IsValidURL() == false)
+            if (property.Name.Contains(nameof(artist.ProfileImageUrl)) && propertyValue.ToString()!.IsValidURL() == false)
                 return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
 
@@ -199,7 +199,7 @@ app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo,
 
         if (property.PropertyType == typeof(string) && propertyValue != null && !propertyValue.Equals(""))
         {
-            if (property.Name.Contains(nameof(artist.ProfileImageURL)) && propertyValue.ToString()!.IsValidURL() == false)
+            if (property.Name.Contains(nameof(artist.ProfileImageUrl)) && propertyValue.ToString()!.IsValidURL() == false)
                 return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
 
