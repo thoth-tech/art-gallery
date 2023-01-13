@@ -58,7 +58,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 
     public class ExhibitionArtworkOutputDto
     {
-        public int Id { get; set; }
+        public int ExhibitionId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string? BackgroundImageUrl { get; set; }
@@ -70,7 +70,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 
         public ExhibitionArtworkOutputDto(int id, string name, string description, string? backgroundImageURL, DateOnly startDate, DateOnly endDate, DateTime modifiedAt, DateTime createdAt, List<ArtworkOutputDto> exhibitionArtworks)
         {
-            this.Id = id;
+            this.ExhibitionId = id;
             this.Name = name;
             this.Description = description;
             this.BackgroundImageUrl = backgroundImageURL;

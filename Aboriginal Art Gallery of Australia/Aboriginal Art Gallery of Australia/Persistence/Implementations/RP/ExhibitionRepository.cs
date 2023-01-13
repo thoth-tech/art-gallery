@@ -62,7 +62,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             };
 
             var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_exhibition.artwork_id, " +
-                "artwork.title, description, media, primary_image_url, secondary_image_url, year_created, " +
+                "artwork.title, artwork.description, primary_image_url, secondary_image_url, year_created, " +
                 "artwork.modified_at, artwork.created_at, media.media_type as media_type FROM artwork INNER JOIN " +
                 "artwork_exhibition ON artwork_exhibition.artwork_id = artwork.artwork_id INNER JOIN media ON " +
                 "media.media_id = artwork.media_id WHERE exhibition_id = @exhibitionId", sqlParams);
@@ -79,7 +79,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             }
 
             var exhibition = _repo.ExecuteReader<ExhibitionArtworkOutputDto>("SELECT * FROM exhibition " +
-                $"WHERE exhibition_id = {id}", sqlParams)
+                $"WHERE exhibition_id = {id}")
                 .SingleOrDefault();
 
             if (exhibition is not null) exhibition.ExhibitionArtworks = artworksOutput;
