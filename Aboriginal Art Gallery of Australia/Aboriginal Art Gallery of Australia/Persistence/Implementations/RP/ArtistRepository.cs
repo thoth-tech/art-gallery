@@ -22,6 +22,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return artists;
         }
 
+
         public ArtistOutputDto? GetArtistById(int id)
         {
             var sqlParams = new NpgsqlParameter[]
