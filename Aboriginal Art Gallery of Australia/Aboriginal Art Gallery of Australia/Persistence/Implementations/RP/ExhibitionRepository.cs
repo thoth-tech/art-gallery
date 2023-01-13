@@ -11,7 +11,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
         //TODO: Test last three methods and ExhibitionArtworksById
         // These endpoints have all broken because the startdate and enddate are now DateOnly and that isn't mapping properly
         // I tried to fix in the MapTo extension method but no luck so far
-        //Need to switch nation/nation_id for media/media_id
 
         private IRepository _repo => this;
 
@@ -71,9 +70,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             // This query is throwing InvalidOperation exception: 'the parameter already belongs to a collection'
             var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_exhibition.artwork_id, " +
                 "artwork.title, description, media, primary_image_url, secondary_image_url, year_created, " +
-                "artwork.modified_at, artwork.created_at, nation.title as nation_title FROM artwork INNER JOIN " +
-                "artwork_exhibition ON artwork_exhibition.artwork_id = artwork.artwork_id INNER JOIN nation ON " +
-                "nation.nation_id = artwork.nation_id WHERE exhibition_id = @exhibitionId", sqlParams);
+                "artwork.modified_at, artwork.created_at, media.media_type as media_type FROM artwork INNER JOIN " +
+                "artwork_exhibition ON artwork_exhibition.artwork_id = artwork.artwork_id INNER JOIN media ON " +
+                "media.media_id = artwork.media_id WHERE exhibition_id = @exhibitionId", sqlParams);
 
             foreach (ArtworkOutputDto artwork in artworksOutput)
             {

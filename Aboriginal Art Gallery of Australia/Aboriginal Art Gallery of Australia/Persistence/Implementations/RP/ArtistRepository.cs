@@ -7,7 +7,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
     public class ArtistRepository : IRepository, IArtistDataAccess
     {
-        // TODO: test last two methods
         // Deleted the last two methods as now assigning and deassigning is only done from Artwork
         // The artist data is all loading except the url for the profile image (similar to the issue in the Artwork repository)
 

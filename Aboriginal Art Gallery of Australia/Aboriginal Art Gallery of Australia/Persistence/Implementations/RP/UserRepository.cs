@@ -9,9 +9,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
     public class UserRepository : IRepository, IUserDataAccess
     {
-
-        //TODO: Add data to database and test each of the following methods
-
         private IRepository _repo => this;
 
         private readonly IConfiguration _configuration;
