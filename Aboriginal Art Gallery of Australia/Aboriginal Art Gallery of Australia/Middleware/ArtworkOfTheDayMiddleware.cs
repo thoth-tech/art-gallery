@@ -2,14 +2,23 @@
 
 namespace Aboriginal_Art_Gallery_of_Australia.Middleware
 {
+    /// <summary>
+    /// The ArtworkOfTheDayMiddleware class is responsible for handling the artwork of the day selection.
+    /// To change the delay between artworks, alter the ArtworkDuration constant which is in minutes.
+    /// </summary>
     public class ArtworkOfTheDayMiddleware
     {
-        int i;
-        Random rnd = new();
-        List<ArtworkOutputDto>? previousArtworks;
-        ArtworkOutputDto? currentArtwork;
-        DateTime nextArtworkAt, currentTime;
+        private const int ArtworkDuration = 1; // ArtworkDuration is in minutes - i.e., 1 Day = 1440 minutes.
+        private readonly Random rnd = new();
+        private List<ArtworkOutputDto>? previousArtworks;
+        private ArtworkOutputDto? currentArtwork;
+        private DateTime nextArtworkAt, currentTime;
 
+        /// <summary>
+        /// Cycles through the passed list of artworks and selects a random artwork every X minutes. 
+        /// </summary>
+        /// <param name="allArtworks">The list of all artworks published by the gallery.</param>
+        /// <returns>A random artwork from the list of all artworks.</returns>
         public ArtworkOutputDto? GetArtworkOfTheDay(List<ArtworkOutputDto> allArtworks)
         {
             List<ArtworkOutputDto>? eligibleArtworks = allArtworks;
@@ -20,36 +29,32 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
                 previousArtworks = new();
                 nextArtworkAt = DateTime.Now;
             }
-            else if (currentArtwork is not null) previousArtworks.Add(currentArtwork);
+            else if (currentArtwork is not null)
+            {
+                previousArtworks.Add(currentArtwork);
+            }
 
             if (currentArtwork is null || currentTime.CompareTo(nextArtworkAt) >= 0)
             {
-                if (eligibleArtworks.Count is 0) return null;
-                else eligibleArtworks.RemoveAll(x => previousArtworks.Exists(y => y.ArtworkId == x.ArtworkId));
+                if (eligibleArtworks.Count is 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    _ = eligibleArtworks.RemoveAll(x => previousArtworks.Exists(y => y.ArtworkId == x.ArtworkId));
+                }
 
-                if (eligibleArtworks.Count is 0) return null;
-                //else if (eligibleArtworks.Count is 1) previousArtworks.Clear();
+                if (eligibleArtworks.Count is 0)
+                {
+                    return null;
+                }
 
                 int index = rnd.Next(eligibleArtworks.Count);
                 currentArtwork = eligibleArtworks[index];
-                nextArtworkAt = nextArtworkAt.AddMinutes(1);
+                nextArtworkAt = nextArtworkAt.AddMinutes(ArtworkDuration);
             }
 
-
-            // I will leave the below here for debugging purposes, be sure to comment line 33 so you are not clearing the eligible artworks list before printing it. :)
-            i++;
-            Console.WriteLine($"\nIteration: {i}");
-            Console.WriteLine($"previousArtworks:");
-            foreach (ArtworkOutputDto x in previousArtworks)
-                Console.WriteLine(x.ArtworkId);
-            Console.WriteLine($"eligibleArtworks:");
-            foreach (ArtworkOutputDto x in eligibleArtworks)
-                Console.WriteLine(x.ArtworkId);
-            Console.WriteLine($"currentArtwork: {currentArtwork.ArtworkId}");
-            Console.WriteLine($"nextArtworkAt: {nextArtworkAt}");
-            Console.WriteLine($"\n");
-            if (eligibleArtworks.Count is 1) previousArtworks.Clear();
-            /// End of debug code.
             return currentArtwork;
         }
     }
