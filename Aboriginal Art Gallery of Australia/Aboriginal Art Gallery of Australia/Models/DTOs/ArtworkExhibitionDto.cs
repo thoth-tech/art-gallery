@@ -5,14 +5,14 @@
         public int ArtworkId { get; set; }
         public int ExhibitionName { get; set; }
 
+        public ArtworkExhibitionDto()
+        {
+        }
+
         public ArtworkExhibitionDto(int artworkId, int exhibitionName)
         {
             this.ArtworkId = artworkId;
             this.ExhibitionName = exhibitionName;
-        }
-
-        public ArtworkExhibitionDto()
-        {
         }
     }
 }
