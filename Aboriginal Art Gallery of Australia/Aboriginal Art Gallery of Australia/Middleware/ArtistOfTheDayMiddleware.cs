@@ -1,17 +1,24 @@
-﻿using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
-using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
-using System.Linq.Expressions;
+﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Middleware
 {
-    class ArtistOfTheDayMiddleware
+    /// <summary>
+    /// The ArtistOfTheDayMiddleware class is responsible for handling the artist of the day selection.
+    /// To change the delay between artists, alter the ArtistDuration constant which is in minutes.
+    /// </summary>
+    internal class ArtistOfTheDayMiddleware
     {
-        int i;
-        Random rnd = new();
-        List<ArtistOutputDto>? previousArtists;
-        ArtistOutputDto? currentArtist;
-        DateTime nextArtistAt, currentTime;
+        private const int ArtistDuration = 1; // ArtistDuration is in minutes - i.e., 1 Day = 1440 minutes.
+        private readonly Random rnd = new();
+        private List<ArtistOutputDto>? previousArtists;
+        private ArtistOutputDto? currentArtist;
+        private DateTime nextArtistAt, currentTime;
 
+        /// <summary>
+        /// Cycles through the passed list of artists and selects a random artist every X minutes. 
+        /// </summary>
+        /// <param name="allArtists">The list of all artists published by the gallery.</param>
+        /// <returns></returns>
         public ArtistOutputDto? GetArtistOfTheDay(List<ArtistOutputDto> allArtists)
         {
             List<ArtistOutputDto>? eligibleArtists = allArtists;
@@ -22,36 +29,32 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
                 previousArtists = new();
                 nextArtistAt = DateTime.Now;
             }
-            else if (currentArtist is not null) previousArtists.Add(currentArtist);
+            else if (currentArtist is not null)
+            {
+                previousArtists.Add(currentArtist);
+            }
 
             if (currentArtist is null || currentTime.CompareTo(nextArtistAt) >= 0)
             {
-                if (eligibleArtists.Count is 0) return null;
-                else eligibleArtists.RemoveAll(x => previousArtists.Exists(y => y.ArtistId == x.ArtistId));
+                if (eligibleArtists.Count is 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    eligibleArtists.RemoveAll(x => previousArtists.Exists(y => y.ArtistId == x.ArtistId));
+                }
 
-                if (eligibleArtists.Count is 0) return null;
-                //else if (eligibleArtists.Count is 1) previousArtists.Clear();
+                if (eligibleArtists.Count is 0)
+                {
+                    return null;
+                }
 
                 int index = rnd.Next(eligibleArtists.Count);
                 currentArtist = eligibleArtists[index];
-                nextArtistAt = nextArtistAt.AddMinutes(1);
+                nextArtistAt = nextArtistAt.AddMinutes(ArtistDuration);
             }
 
-
-            // I will leave the below here for debugging purposes, be sure to comment line 33 so you are not clearing the eligible artist list before printing it. :)
-            i++;
-            Console.WriteLine($"\nIteration: {i}");
-            Console.WriteLine($"previousArtists:");
-            foreach (ArtistOutputDto x in previousArtists)
-                Console.WriteLine(x.ArtistId);
-            Console.WriteLine($"eligibleArtists:");
-            foreach (ArtistOutputDto x in eligibleArtists)
-                Console.WriteLine(x.ArtistId);
-            Console.WriteLine($"currentArtist: {currentArtist.ArtistId}");
-            Console.WriteLine($"nextArtistAt: {nextArtistAt}");
-            Console.WriteLine($"\n");
-            if (eligibleArtists.Count is 1) previousArtists.Clear();
-            /// End of debug code.
             return currentArtist;
         }
     }
