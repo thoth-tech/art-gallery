@@ -93,12 +93,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             {
                 new("name", exhibition.Name),
                 new("description", exhibition.Description),
-                new("backgroundImageUrl", exhibition.BackgroundImageUrl)
+                new("backgroundImageUrl", exhibition.BackgroundImageUrl),
+                new("startdate", exhibition.StartDate),
+                new("enddate", exhibition.EndDate)
             };
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("INSERT INTO exhibition(name, description, " +
-                "background_image_url, modified_at, created_at) VALUES (@name, @description, @backgroundImageUrl, " +
-                "current_timestamp, current_timestamp) RETURNING *;", sqlParams)
+                "background_image_url, start_date, end_date, modified_at, created_at) VALUES (@name, @description, " +
+                "@backgroundImageUrl, @startdate, @enddate, current_timestamp, current_timestamp) RETURNING *;", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -111,12 +113,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("exhibitionId", id),
                 new("name", exhibition.Name),
                 new("description", exhibition.Description),
-                new("backgroundImageUrl", exhibition.BackgroundImageUrl)
+                new("backgroundImageUrl", exhibition.BackgroundImageUrl),
+                new("startdate", exhibition.StartDate),
+                new("enddate", exhibition.EndDate)
             };
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("UPDATE exhibition SET name = @name, " +
-                "description = @description, background_image_url = @backgroundImageUrl, " +
-                "modified_at = current_timestamp WHERE exhibition_id = @exhibitionId RETURNING *", sqlParams)
+                "description = @description, background_image_url = @backgroundImageUrl, start_date = @startdate, " +
+                "end_date=@enddate, modified_at = current_timestamp WHERE exhibition_id = @exhibitionId RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
