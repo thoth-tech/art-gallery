@@ -10,7 +10,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
         //TODO: Test last 4 methods and fix GetById
         //Urls not reading from database
-        //Need to switch nation/nation_id for media/media_id
 
         private IRepository _repo => this;
 
@@ -21,8 +20,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             _configuration = configuration;
         }
 
-        //TODO: Find a way to write lines 25 and 28 in a single SQL statement + double check logic
-        // The repo is not collecting the url information for some reason? Other artwork details are all loading fine
+        //TODO: Find a way to write lines 25 and 28 in a single SQL statement
         public List<ArtworkOutputDto> GetArtworks()
         {
             var allArtworks = new List<ArtworkOutputDto>();
@@ -62,7 +60,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return artworksOutput;
         }
 
-        //TODO: Find a way to write lines 68 and 72 in a single SQL statement + fix function
+        //TODO: Find a way to write lines 68 and 72 in a single SQL statement + fix function ??
         public ArtworkOutputDto? GetArtworkById(int id)
         {
             var artworkArtists = new List<String>();
@@ -79,8 +77,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             // This query is throwing InvalidOperation exception: 'the parameter already belongs to a collection'
             var artworkOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id, artwork.title, " +
                 "description, media, primary_image_url, secondary_image_url, year_created, artwork.modified_at, " +
-                "artwork.created_at, nation.title as nation_title FROM artwork INNER JOIN nation " +
-                "ON nation.nation_id = artwork.nation_id WHERE artwork_id = @artworkId", sqlParams)
+                "artwork.created_at, media.media_type as media_type FROM artwork INNER JOIN media " +
+                "ON media.media_id = artwork.media_id WHERE artwork_id = @artworkId", sqlParams)
                 .SingleOrDefault();
 
             foreach (ArtistOutputDto artist in artists)
