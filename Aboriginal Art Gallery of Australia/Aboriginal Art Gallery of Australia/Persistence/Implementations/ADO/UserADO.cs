@@ -148,22 +148,59 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
 
         public UserInputDto? UpdateUser(int id, UserInputDto user)
         {
+
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("UPDATE account " +
-                                                  "SET first_name = @firstName, " +
-                                                      "last_name = @lastName, " +
-                                                      "email = @email, " +
-                                                      "password_hash = @passwordHash, " +
-                                                      "modified_at = current_timestamp " +
-                                                  "WHERE account_id = @accountId", connection);
+
+                String cmdString = "UPDATE account SET ";
+
+                if (user.FirstName is not null && user.FirstName != "" && user.FirstName != "string")
+                {
+                    cmdString += "first_name = @firstName, ";
+                }
+                if (user.LastName is not null && user.LastName != "" && user.LastName != "string")
+                {
+                    cmdString += "last_name = @lastName, ";
+                }
+                if (user.Email is not null && user.Email != "" && user.Email != "string")
+                {
+                    cmdString += "email = @email, ";
+                }
+                if (user.Password is not null && user.Password != "" && user.Password != "string")
+                {
+                    cmdString += "password_hash = @passwordHash, ";
+                }
+                if (user.Role is not null && user.Role != "" && user.Password != "string")
+                {
+                    cmdString += "role = @role, ";
+                }
+
+                cmdString += "modified_at = current_timestamp WHERE account_id = @accountId";
+
+                using var cmd = new NpgsqlCommand(cmdString, connection);
                 {
                     cmd.Parameters.AddWithValue("@accountId", id);
-                    cmd.Parameters.AddWithValue("@firstName", user.FirstName);
-                    cmd.Parameters.AddWithValue("@lastName", user.LastName);
-                    cmd.Parameters.AddWithValue("@email", user.Email);
-                    cmd.Parameters.AddWithValue("@passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384));
+                    if (user.FirstName is not null && user.FirstName != "" && user.FirstName != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@firstName", user.FirstName);
+                    }
+                    if (user.LastName is not null && user.LastName != "" && user.LastName != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@lastName", user.LastName);
+                    }
+                    if (user.Email is not null && user.Email != "" && user.Email != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@email", user.Email);
+                    }
+                    if (user.Password is not null && user.Password != "" && user.Password != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384));
+                    }
+                    if (user.Role is not null && user.Role != "" && user.Password != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@role", user.Role);
+                    }
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? user : null;
                 }

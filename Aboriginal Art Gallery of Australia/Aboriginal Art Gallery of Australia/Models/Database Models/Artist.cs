@@ -2,7 +2,7 @@
 {
     public class Artist
     {
-        public int Id { get; set; }
+        public int ArtistId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DisplayName { get; set; }
@@ -13,9 +13,9 @@
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public Artist(int id, string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
+        public Artist(int artistId, string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
+            ArtistId = artistId;
             FirstName = firstName;
             LastName = lastName;
             DisplayName = displayName;

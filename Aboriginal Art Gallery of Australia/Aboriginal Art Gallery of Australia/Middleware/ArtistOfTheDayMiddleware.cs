@@ -27,7 +27,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
             if (currentArtist is null || currentTime.CompareTo(nextArtistAt) >= 0)
             {
                 if (eligibleArtists.Count is 0) return null;
-                else eligibleArtists.RemoveAll(x => previousArtists.Exists(y => y.Id == x.Id));
+                else eligibleArtists.RemoveAll(x => previousArtists.Exists(y => y.ArtistId == x.ArtistId));
 
                 if (eligibleArtists.Count is 0) return null;
                 //else if (eligibleArtists.Count is 1) previousArtists.Clear();
@@ -43,11 +43,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
             Console.WriteLine($"\nIteration: {i}");
             Console.WriteLine($"previousArtists:");
             foreach (ArtistOutputDto x in previousArtists)
-                Console.WriteLine(x.Id);
-            Console.WriteLine($"eligableAtists:");
+                Console.WriteLine(x.ArtistId);
+            Console.WriteLine($"eligibleArtists:");
             foreach (ArtistOutputDto x in eligibleArtists)
-                Console.WriteLine(x.Id);
-            Console.WriteLine($"currentArtist: {currentArtist.Id}");
+                Console.WriteLine(x.ArtistId);
+            Console.WriteLine($"currentArtist: {currentArtist.ArtistId}");
             Console.WriteLine($"nextArtistAt: {nextArtistAt}");
             Console.WriteLine($"\n");
             if (eligibleArtists.Count is 1) previousArtists.Clear();

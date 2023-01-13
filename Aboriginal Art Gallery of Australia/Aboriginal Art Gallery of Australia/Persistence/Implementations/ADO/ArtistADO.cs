@@ -108,25 +108,72 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("UPDATE artist " +
-                                                  "SET first_name = @firstName, " +
-                                                      "last_name = @lastName, " +
-                                                      "display_name = @displayName, " +
-                                                      "profile_image_url = @profileImageURL, " +
-                                                      "place_of_birth = @placeOfBirth, " +
-                                                      "year_of_birth = @yearOfBirth, " +
-                                                      "year_of_death = @yearOfDeath, " +
-                                                      "modified_at = current_timestamp " +
-                                                  "WHERE artist_id = @artistId", connection);
+
+                String cmdString = "UPDATE artist SET ";
+
+                if (artist.FirstName is not null && artist.FirstName != "" && artist.FirstName != "string")
+                {
+                    cmdString += "first_name = @firstName, ";
+                }
+                if (artist.LastName is not null && artist.LastName != "" && artist.LastName != "string")
+                {
+                    cmdString += "last_name = @lastName, ";
+                }
+                if (artist.DisplayName is not null && artist.DisplayName != "" && artist.DisplayName != "string")
+                {
+                    cmdString += "display_name = @displayName, ";
+                }
+                if (artist.ProfileImageURL is not null && artist.ProfileImageURL != "" && artist.ProfileImageURL != "string")
+                {
+                    cmdString += "profile_image_url = @profileImageURL, ";
+                }
+                if (artist.PlaceOfBirth is not null && artist.PlaceOfBirth != "" && artist.PlaceOfBirth != "string")
+                {
+                    cmdString += "place_of_birth = @placeOfBirth, ";
+                }
+                if (artist.YearOfBirth is not null && artist.YearOfBirth != 0)
+                {
+                    cmdString += "year_of_birth = @yearOfBirth, ";
+                }
+                if (artist.YearOfDeath is not null && artist.YearOfDeath != 0)
+                {
+                    cmdString += "year_of_death = @yearOfDeath, ";
+                }
+
+                cmdString += "modified_at = current_timestamp WHERE artist_id = @artistId";
+
+
+                using var cmd = new NpgsqlCommand(cmdString, connection);
                 {
                     cmd.Parameters.AddWithValue("@artistId", id);
-                    cmd.Parameters.AddWithValue("@firstName", artist.FirstName);
-                    cmd.Parameters.AddWithValue("@lastName", artist.LastName);
-                    cmd.Parameters.AddWithValue("@displayName", artist.DisplayName);
-                    cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageURL);
-                    cmd.Parameters.AddWithValue("@placeOfBirth", artist.PlaceOfBirth);
-                    cmd.Parameters.AddWithNullableValue("@yearOfBirth", artist.YearOfBirth);
-                    cmd.Parameters.AddWithNullableValue("@yearOfDeath", artist.YearOfDeath);
+                    if (artist.FirstName is not null && artist.FirstName != "" && artist.FirstName != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@firstName", artist.FirstName);
+                    }
+                    if (artist.LastName is not null && artist.LastName != "" && artist.LastName != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@lastName", artist.LastName);
+                    }
+                    if (artist.DisplayName is not null && artist.DisplayName != "" && artist.DisplayName != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@displayName", artist.DisplayName);
+                    }
+                    if (artist.ProfileImageURL is not null && artist.ProfileImageURL != "" && artist.ProfileImageURL != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageURL);
+                    }
+                    if (artist.PlaceOfBirth is not null && artist.PlaceOfBirth != "" && artist.PlaceOfBirth != "string")
+                    {
+                        cmd.Parameters.AddWithValue("@placeOfBirth", artist.PlaceOfBirth);
+                    }
+                    if (artist.YearOfBirth is not null && artist.YearOfBirth != 0)
+                    {
+                        cmd.Parameters.AddWithNullableValue("@yearOfBirth", artist.YearOfBirth);
+                    }
+                    if (artist.YearOfDeath is not null && artist.YearOfDeath != 0)
+                    {
+                        cmd.Parameters.AddWithNullableValue("@yearOfDeath", artist.YearOfDeath);
+                    }
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? artist : null;
                 }

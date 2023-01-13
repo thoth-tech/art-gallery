@@ -2,17 +2,19 @@
 {
     public class UserInputDto
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string FirstName { get; set; } = null!;
+        public string LastName { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string Password { get; set; } = null!;
+        public string Role { get; set; }
 
-        public UserInputDto(string firstName, string lastName, string email, string password)
+        public UserInputDto(string firstName, string lastName, string email, string password, string role)
         {
             this.FirstName = firstName;
             this.LastName = lastName;
             this.Email = email;
             this.Password = password;
+            this.Role = role;
         }
 
         public UserInputDto(){
@@ -20,12 +22,13 @@
             this.LastName = "";
             this.Email = "";
             this.Password = "";
+            this.Role = "";
         }
     }
 
     public class UserOutputDto
     {
-        public int Id { get; set; }
+        public int AccountId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -35,9 +38,9 @@
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public UserOutputDto(int id, string firstName, string lastName, string email, string passwordHash, string role, DateTime? activeAt, DateTime modifiedAt, DateTime createdAt)
+        public UserOutputDto(int accountId, string firstName, string lastName, string email, string passwordHash, string role, DateTime? activeAt, DateTime modifiedAt, DateTime createdAt)
         {
-            this.Id = id;
+            this.AccountId = accountId;
             this.FirstName = firstName;
             this.LastName = lastName;
             this.Email = email;

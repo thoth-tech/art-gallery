@@ -38,7 +38,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 
     public class ArtistOutputDto
     {
-        public int Id { get; set; }
+        public int ArtistId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DisplayName { get; set; }
@@ -57,9 +57,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
             this.PlaceOfBirth = "";
         }
 
-        public ArtistOutputDto(int id, string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
+        public ArtistOutputDto(int artistId, string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
         {
-            this.Id = id;
+            this.ArtistId = artistId;
             this.FirstName = firstName;
             this.LastName = lastName;
             this.DisplayName = displayName;

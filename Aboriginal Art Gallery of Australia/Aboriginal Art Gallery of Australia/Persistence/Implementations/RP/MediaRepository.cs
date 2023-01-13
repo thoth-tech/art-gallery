@@ -18,8 +18,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 
         public List<MediaOutputDto> GetMediaTypes()
         {
-            var mediaTypes = _repo.ExecuteReader<MediaOutputDto>("SELECT * FROM media");
-            return mediaTypes;
+            var mediatypes = _repo.ExecuteReader<MediaOutputDto>("SELECT * FROM media");
+            return mediatypes;
         }
 
         public MediaOutputDto? GetMediaTypeById(int id)
@@ -40,11 +40,10 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var sqlParams = new NpgsqlParameter[]
             {
                 new("mediaType", media.MediaType),
-                new("description", media.Description),
+                new("description", media.Description)
             };
 
-            var result = _repo.ExecuteReader<MediaInputDto>("INSERT INTO media VALUES " +
-                "(DEFAULT, @mediaType, @description, current_timestamp, current_timestamp) RETURNING *", sqlParams)
+            var result = _repo.ExecuteReader<MediaInputDto>("INSERT INTO media(media_type, description, modified_at, created_at) VALUES (@mediaType, @description, current_timestamp, current_timestamp) RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -55,13 +54,25 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var sqlParams = new NpgsqlParameter[]
             {
                 new("mediaId", id),
-                new("mediaType", media.MediaType),
-                new("description", media.Description),
+                new("media_type", media.MediaType),
+                new("description", media.Description)
             };
 
-            var result = _repo.ExecuteReader<MediaInputDto>("UPDATE media SET media_type = @mediaType, description = @description, " +
-                "modified_at = current_timestamp WHERE media_id = @mediaId RETURNING *", sqlParams)
-                .SingleOrDefault();
+            // Allowing update of only one field
+            String cmdString = "UPDATE media SET ";
+
+            if (media.MediaType is not null && media.MediaType != "" && media.MediaType != "string")
+            {
+                cmdString += "media_type = @mediaType, ";
+            }
+            if (media.Description is not null && media.Description != "" && media.Description != "string")
+            {
+                cmdString += "description = @description, ";
+            }
+
+            cmdString += "modified_at = current_timestamp WHERE media_id = @mediaId RETURNING *";
+
+            var result = _repo.ExecuteReader<MediaInputDto>(cmdString, sqlParams).SingleOrDefault();
 
             return result;
         }

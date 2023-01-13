@@ -8,6 +8,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
     public class ArtistRepository : IRepository, IArtistDataAccess
     {
         // TODO: test last two methods
+        // Deleted the last two methods as now assigning and deassigning is only done from Artwork
+        // The artist data is all loading except the url for the profile image (similar to the issue in the Artwork repository)
 
         private IRepository _repo => this;
 
@@ -37,8 +39,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return artist;
         }
 
-        
-
         public ArtistInputDto? InsertArtist(ArtistInputDto artist)
         {
             var sqlParams = new NpgsqlParameter[]
@@ -46,13 +46,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("firstName", artist.FirstName),
                 new("lastName", artist.LastName),
                 new("displayName", artist.DisplayName),
+                new("profileImageURL", artist.DisplayName),
                 new("placeOfBirth", artist.PlaceOfBirth),
                 new("yearOfBirth", artist.YearOfBirth),
                 new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value)
             };
 
             var result = _repo.ExecuteReader<ArtistInputDto>("INSERT INTO artist " +
-                "VALUES (DEFAULT, @firstName, @lastName, @displayName, @placeOfBirth, " +
+                "VALUES (DEFAULT, @firstName, @lastName, @displayName, @profileImageURL, @placeOfBirth, " +
                 "@yearOfBirth, @yearOfDeath, current_timestamp, current_timestamp) RETURNING *", sqlParams)
                 .SingleOrDefault();
 
@@ -72,11 +73,40 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value)
             };
 
-            var result = _repo.ExecuteReader<ArtistInputDto>("UPDATE artist SET first_name = @firstName, " +
-                "last_name = @lastName, display_name = @displayName, place_of_birth = @placeOfBirth, " +
-                "year_of_birth = @yearOfBirth, year_of_death = @yearOfDeath, modified_at = current_timestamp " +
-                "WHERE artist_id = @artistId RETURNING *", sqlParams)
-                .SingleOrDefault();
+            String cmdString = "UPDATE artist SET ";
+
+            if (artist.FirstName is not null && artist.FirstName != "" && artist.FirstName != "string")
+            {
+                cmdString += "first_name = @firstName, ";
+            }
+            if (artist.LastName is not null && artist.LastName != "" && artist.LastName != "string")
+            {
+                cmdString += "last_name = @lastName, ";
+            }
+            if (artist.DisplayName is not null && artist.DisplayName != "" && artist.DisplayName != "string")
+            {
+                cmdString += "display_name = @displayName, ";
+            }
+            if (artist.ProfileImageURL is not null && artist.ProfileImageURL != "" && artist.ProfileImageURL != "string")
+            {
+                cmdString += "profile_image_url = @profileImageURL, ";
+            }
+            if (artist.PlaceOfBirth is not null && artist.PlaceOfBirth != "" && artist.PlaceOfBirth != "string")
+            {
+                cmdString += "place_of_birth = @placeOfBirth, ";
+            }
+            if (artist.YearOfBirth is not null && artist.YearOfBirth != 0)
+            {
+                cmdString += "year_of_birth = @yearOfBirth, ";
+            }
+            if (artist.YearOfDeath is not null && artist.YearOfDeath != 0)
+            {
+                cmdString += "year_of_death = @yearOfDeath, ";
+            }
+
+            cmdString += "modified_at = current_timestamp WHERE artist_id = @artistId RETURNING *";
+
+            var result = _repo.ExecuteReader<ArtistInputDto>(cmdString, sqlParams).SingleOrDefault();
 
             return result;
         }
@@ -89,40 +119,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             };
 
             _repo.ExecuteReader<ArtistOutputDto>("DELETE FROM artist WHERE artist_id = @artistId", sqlParams);
-                
-            return true;
-        }
-
-        // TODO: test method function
-        public ArtistArtworkDto? AssignArtwork(int artistId, int artworkId)
-        {
-            var sqlParams = new NpgsqlParameter[]
-            {
-                new("artistId", artistId),
-                new("artworkId", artworkId)
-            };
-
-            var result = _repo.ExecuteReader<ArtistArtworkDto>("INSERT INTO artist_artwork(artist_id, artwork_id, " +
-                "modified_at, created_at) VALUES (@artistId, @artworkId, current_timestamp, " +
-                "current_timestamp) RETURNING *", sqlParams)
-                .SingleOrDefault();
-
-            return result;
-        }
-
-        // TODO: test method function
-        public bool DeassignArtwork(int artistId, int artworkId)
-        {
-            var sqlParams = new NpgsqlParameter[]
-            {
-                new("artistId", artistId),
-                new("artworkId", artworkId)
-            };
-
-            _repo.ExecuteReader<ArtistArtworkDto>("DELETE FROM artist_artwork WHERE artist_id = @artistId " +
-                "AND artwork_id = @artworkId", sqlParams);
 
             return true;
         }
+
     }
 }

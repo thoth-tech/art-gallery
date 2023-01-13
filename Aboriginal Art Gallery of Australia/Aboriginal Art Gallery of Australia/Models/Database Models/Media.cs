@@ -2,15 +2,15 @@
 {
     public class Media
     {
-        public int Id { get; set; }
+        public int MediaId { get; set; }
         public string MediaType { get; set; }
         public string Description { get; set; }
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public Media(int id, string mediaType, string description, DateTime modifiedAt, DateTime createdAt)
+        public Media(int mediaId, string mediaType, string description, DateTime modifiedAt, DateTime createdAt)
         {
-            Id = id;
+            MediaId = mediaId;
             MediaType = mediaType;
             Description = description;
             ModifiedAt = modifiedAt;

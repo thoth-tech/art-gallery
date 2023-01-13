@@ -106,23 +106,21 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
  */
 
 // Implementation 1 - ADO
-builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
-builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
-builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
-builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
-builder.Services.AddScoped<IUserDataAccess, UserADO>();
+// builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
+// builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
+// builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
+// builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
+// builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
-// builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
-// builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
-// builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
-// builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
-// builder.Services.AddScoped<IUserDataAccess, UserRepository>();
+builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
+builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
+builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
+builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
+builder.Services.AddScoped<IUserDataAccess, UserRepository>();
 
 
-// Implementation 3 - Entity Framework
-
-builder.Services.AddAuthorization();
+// builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -199,11 +197,8 @@ app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo,
     {
         var propertyValue = property.GetValue(artist, null);
 
-        if (property.PropertyType == typeof(string))
+        if (property.PropertyType == typeof(string) && propertyValue != null && !propertyValue.Equals(""))
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
-
             if (property.Name.Contains(nameof(artist.ProfileImageURL)) && propertyValue.ToString()!.IsValidURL() == false)
                 return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
@@ -212,9 +207,6 @@ app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo,
         {
             if (propertyValue != null && ((int)propertyValue > DateTime.Today.Year))
                 return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
-
-            if (property.Name.Contains(nameof(artist.YearOfBirth)) && propertyValue == null)
-                return Results.BadRequest($"A {property.Name} is required.");
 
             if (property.Name.Contains(nameof(artist.YearOfDeath)) && propertyValue != null && ((int)propertyValue <= artist.YearOfBirth))
                 return Results.BadRequest($"The {property.Name} can not be before the year of birth.");
@@ -239,7 +231,6 @@ app.MapDelete("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRe
 #region Map Artwork Endpoints
 
 app.MapGet("api/artworks/", (IArtworkDataAccess _artworkRepo) => _artworkRepo.GetArtworks());
-
 
 app.MapGet("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, int artworkId) =>
 {
@@ -294,19 +285,15 @@ app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkR
     {
         var propertyValue = property.GetValue(artwork, null);
 
-        if (property.PropertyType == typeof(string))
+        if (property.PropertyType == typeof(string) && propertyValue != null)
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
 
             if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
                 return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
 
-        if (property.PropertyType == typeof(int?))
+        if (property.PropertyType == typeof(int?) && propertyValue != null)
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
 
             if (property.Name.Contains(nameof(artwork.YearCreated)) && ((int)propertyValue > DateTime.Today.Year))
                 return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
@@ -402,9 +389,6 @@ app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int 
 
         if (property.PropertyType == typeof(string))
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
-
             if (property.Name.Contains(nameof(media.MediaType)) && (_mediaRepo.GetMediaTypes().Exists(x => x.MediaType == media.MediaType) == true))
                 return Results.Conflict($"A {nameof(media.MediaType)} matching this type already exists.");
         }
@@ -442,7 +426,6 @@ app.MapGet("api/exhibitions/{exhibitionId}/artworks", [AllowAnonymous] (IExhibit
 
 app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, ExhibitionInputDto exhibition) =>
 {
-
     PropertyInfo[] properties = exhibition.GetType().GetProperties();
     foreach (PropertyInfo property in properties)
     {
@@ -462,8 +445,8 @@ app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDa
             if (propertyValue == null || propertyValue.Equals(""))
                 return Results.BadRequest($"A {property.Name} is required.");
 
-            if (property.Name.Contains(nameof(exhibition.StartDate)) && ((DateOnly)propertyValue >= exhibition.EndDate))
-                return Results.BadRequest($"{property.Name} can not be greater then {exhibition.EndDate} (The end date).");
+            if (property.Name.Contains(nameof(exhibition.StartDate)) && ((DateOnly)propertyValue > exhibition.EndDate))
+                return Results.BadRequest($"{property.Name} can not be after {exhibition.EndDate} (The end date).");
         }
     }
 
@@ -481,26 +464,20 @@ app.MapPut("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (
     {
         var propertyValue = property.GetValue(exhibition, null);
 
-        if (property.PropertyType == typeof(string))
+        if (property.PropertyType == typeof(string) && propertyValue != null)
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
-
-            if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
+            if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false && propertyValue.ToString() != "")
                 return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
 
         if (property.PropertyType == typeof(DateOnly))
         {
-            if (propertyValue == null || propertyValue.Equals(""))
-                return Results.BadRequest($"A {property.Name} is required.");
-
-            if (property.Name.Contains(nameof(exhibition.StartDate)) && ((DateOnly)propertyValue >= exhibition.EndDate))
-                return Results.BadRequest($"{property.Name} can not be greater then {exhibition.EndDate}.");
+            if (property.Name.Contains(nameof(exhibition.StartDate)) && (DateOnly)propertyValue != default(DateOnly) && ((DateOnly)propertyValue > exhibition.EndDate))
+                return Results.BadRequest($"{property.Name} can not be after then {exhibition.EndDate}.");
         }
     }
 
-    var result = _exhibitionRepo.InsertExhibition(exhibition);
+    var result = _exhibitionRepo.UpdateExhibition(exhibitionId, exhibition);
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
@@ -540,36 +517,52 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", [Au
 #endregion
 
 #region Map User Endpoints
+//TODO: add input validation for these endponts
+app.MapGet("api/users/", [Authorize] (IUserDataAccess _accountRepo) => _accountRepo.GetUsers());
 
-app.MapGet("api/users/", [Authorize] (IUserDataAccess _repo) => _repo.GetUsers());
-
-app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _repo, int id) =>
+app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int id) =>
 {
-    var result = _repo.GetUserById(id);
+    var result = _accountRepo.GetUserById(id);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _repo, UserInputDto user) =>
+app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo, UserInputDto user) =>
 {
-    var result = _repo.InsertUser(user);
+    var result = _accountRepo.InsertUser(user);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _repo, LoginDto login) =>
+app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, LoginDto login) =>
 {
-    var result = _repo.AuthenticateUser(login);
+    var result = _accountRepo.AuthenticateUser(login);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-app.MapPut("api/users/{id}", [Authorize(Policy = "AdminOnly")] (IUserDataAccess _repo, int id, UserInputDto user) =>
+app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int accountId, UserInputDto user) =>
 {
-    var result = _repo.UpdateUser(id, user);
-    return result is not null ? Results.NoContent() : Results.BadRequest();
+    if (_accountRepo.GetUserById(accountId) == null)
+        return Results.NotFound($"No user can be found with an {nameof(accountId)} of {accountId}");
+
+    PropertyInfo[] properties = user.GetType().GetProperties();
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(user, null);
+
+        if (property.PropertyType == typeof(string) && propertyValue != null && !propertyValue.Equals(""))
+        {
+            Console.WriteLine(propertyValue.ToString() != "Admin");
+            Console.WriteLine((propertyValue.ToString() != "User" && propertyValue.ToString() != "Admin"));
+            if (property.Name.Contains(nameof(user.Role)) && (propertyValue.ToString() != "User" && propertyValue.ToString() != "Admin"))
+                return Results.BadRequest($"A {property.Name} is required to be either User or Admin");
+        }
+    }
+    var result = _accountRepo.UpdateUser(accountId, user);
+    return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
-app.MapDelete("api/users/{id}", [Authorize(Policy = "AdminOnly")](IUserDataAccess _repo, int id) =>
+app.MapDelete("api/users/{id}", [Authorize(Policy = "AdminOnly")](IUserDataAccess _accountRepo, int id) =>
 {
-    var result = _repo.DeleteUser(id);
+    var result = _accountRepo.DeleteUser(id);
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
 
