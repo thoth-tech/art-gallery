@@ -472,7 +472,7 @@ app.MapPut("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (
 
         if (property.PropertyType == typeof(DateOnly))
         {
-            if (property.Name.Contains(nameof(exhibition.StartDate)) && (DateOnly)propertyValue != default(DateOnly) && ((DateOnly)propertyValue > exhibition.EndDate))
+            if (property.Name.Contains(nameof(exhibition.StartDate)) && (DateOnly)propertyValue! != default(DateOnly) && ((DateOnly)propertyValue > exhibition.EndDate))
                 return Results.BadRequest($"{property.Name} can not be after then {exhibition.EndDate}.");
         }
     }

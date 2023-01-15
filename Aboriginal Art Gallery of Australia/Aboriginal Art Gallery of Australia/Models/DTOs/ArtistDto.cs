@@ -1,74 +1,67 @@
-﻿using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
-using System.ComponentModel.DataAnnotations;
-
-namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
+﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 {
+    /// <summary>
+    /// The ArtistInputDto class is used to decouple the service layer from the database layer. It provides a means of mapping the necessary user input to the appropriate database model.
+    /// </summary>
     public class ArtistInputDto
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DisplayName { get; set; }
-        public string ProfileImageUrl { get; set; }
-        public string PlaceOfBirth { get; set; }
-        public int? YearOfBirth { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
+        public string ProfileImageUrl { get; set; } = string.Empty;
+        public string PlaceOfBirth { get; set; } = string.Empty;
+        public int? YearOfBirth { get; set; } = 0;
         public int? YearOfDeath { get; set; } = null;
-
-        public ArtistInputDto(){
-            this.FirstName = "";
-            this.LastName = "";
-            this.DisplayName = "";
-            this.ProfileImageUrl = "";
-            this.PlaceOfBirth = "";
-        }
 
         public ArtistInputDto(string firstName, string lastName, string? displayName, string profileImageURL, string placeOfBirth, int? yearOfBirth, int? yearOfDeath)
         {
-            if (displayName == null || displayName == "")
+            if (displayName is null or "")
+            {
                 displayName = $"{firstName} {lastName}";
+            }
 
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.DisplayName = displayName;
-            this.ProfileImageUrl = profileImageURL;
-            this.PlaceOfBirth = placeOfBirth;
-            this.YearOfBirth = yearOfBirth;
-            this.YearOfDeath = yearOfDeath;
+            FirstName = firstName;
+            LastName = lastName;
+            DisplayName = displayName;
+            ProfileImageUrl = profileImageURL;
+            PlaceOfBirth = placeOfBirth;
+            YearOfBirth = yearOfBirth;
+            YearOfDeath = yearOfDeath;
         }
+
+        public ArtistInputDto() { }
     }
 
+    /// <summary>
+    /// The ArtistOutputDto class is used to decouple the database layer from the service layer. It provides a means of mapping the necessary information from the database to the appropriate user output.
+    /// </summary>
     public class ArtistOutputDto
     {
-        public int ArtistId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DisplayName { get; set; }
-        public string ProfileImageUrl { get; set; }
-        public string PlaceOfBirth { get; set; }
-        public int YearOfBirth { get; set; }
+        public int ArtistId { get; set; } = 0;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
+        public string ProfileImageUrl { get; set; } = string.Empty;
+        public string PlaceOfBirth { get; set; } = string.Empty;
+        public int? YearOfBirth { get; set; } = 0;
         public int? YearOfDeath { get; set; } = null;
-        public DateTime ModifiedAt { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime ModifiedAt { get; set; } = DateTime.MinValue;
+        public DateTime CreatedAt { get; set; } = DateTime.MinValue;
 
-        public ArtistOutputDto(){
-            this.FirstName = "";
-            this.LastName = "";
-            this.DisplayName = "";
-            this.ProfileImageUrl = "";
-            this.PlaceOfBirth = "";
-        }
-
-        public ArtistOutputDto(int artistId, string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
+        public ArtistOutputDto(int artistId, string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int? yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
         {
-            this.ArtistId = artistId;
-            this.FirstName = firstName;
-            this.LastName = lastName;
-            this.DisplayName = displayName;
-            this.ProfileImageUrl = profileImageURL;
-            this.PlaceOfBirth = placeOfBirth;
-            this.YearOfBirth = yearOfBirth;
-            this.YearOfDeath = yearOfDeath;
-            this.ModifiedAt = modifiedAt;
-            this.CreatedAt = createdAt;
+            ArtistId = artistId;
+            FirstName = firstName;
+            LastName = lastName;
+            DisplayName = displayName;
+            ProfileImageUrl = profileImageURL;
+            PlaceOfBirth = placeOfBirth;
+            YearOfBirth = yearOfBirth;
+            YearOfDeath = yearOfDeath;
+            ModifiedAt = modifiedAt;
+            CreatedAt = createdAt;
         }
+
+        public ArtistOutputDto() { }
     }
 }

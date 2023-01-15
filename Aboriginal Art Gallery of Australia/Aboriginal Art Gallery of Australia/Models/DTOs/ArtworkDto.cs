@@ -2,12 +2,12 @@
 {
     public class ArtworkInputDto
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string PrimaryImageUrl { get; set; }
-        public string SecondaryImageUrl { get; set; }
-        public int? YearCreated { get; set; }
-        public int? MediaId { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string PrimaryImageUrl { get; set; } = string.Empty;
+        public string SecondaryImageUrl { get; set; } = string.Empty;
+        public int? YearCreated { get; set; } = null;
+        public int? MediaId { get; set; } = null;
 
         public ArtworkInputDto(string title, string description, string primaryImageURL, string secondaryImageURL, int? yearCreated, int? mediaId)
         {
