@@ -517,7 +517,7 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", [Au
 #endregion
 
 #region Map User Endpoints
-//TODO: add input validation for these endponts
+
 app.MapGet("api/users/", [Authorize] (IUserDataAccess _accountRepo) => _accountRepo.GetUsers());
 
 app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int id) =>
@@ -528,12 +528,44 @@ app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
 
 app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo, UserInputDto user) =>
 {
+    PropertyInfo[] properties = user.GetType().GetProperties();
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(user, null);
+
+        if (property.PropertyType == typeof(string))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+            {
+                if (!property.Name.Contains(nameof(user.Role)))
+                {
+                    return Results.BadRequest($"A {property.Name} is required.");
+                }
+            }
+
+            if (property.Name.Contains("email") && propertyValue.ToString()!.IsValidEmail() == false)
+                return Results.BadRequest($"A valid email is required.");
+        }
+    }
+
     var result = _accountRepo.InsertUser(user);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
 app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, LoginDto login) =>
 {
+    PropertyInfo[] properties = login.GetType().GetProperties();
+
+    foreach (PropertyInfo property in properties)
+    {
+        var propertyValue = property.GetValue(login, null);
+
+        if (property.PropertyType == typeof(string))
+        {
+            if (propertyValue == null || propertyValue.Equals(""))
+                return Results.BadRequest($"A {property.Name} is required.");
+        }
+    }
     var result = _accountRepo.AuthenticateUser(login);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
@@ -550,8 +582,6 @@ app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
 
         if (property.PropertyType == typeof(string) && propertyValue != null && !propertyValue.Equals(""))
         {
-            Console.WriteLine(propertyValue.ToString() != "Admin");
-            Console.WriteLine((propertyValue.ToString() != "User" && propertyValue.ToString() != "Admin"));
             if (property.Name.Contains(nameof(user.Role)) && (propertyValue.ToString() != "User" && propertyValue.ToString() != "Admin"))
                 return Results.BadRequest($"A {property.Name} is required to be either User or Admin");
         }
