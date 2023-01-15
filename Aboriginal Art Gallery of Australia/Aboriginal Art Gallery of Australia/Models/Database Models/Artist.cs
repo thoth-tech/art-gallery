@@ -1,7 +1,7 @@
 ﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
 {
     /// <summary>
-    /// The Artist class is responsible for handling the database model associated with artist.
+    /// The Artist class is responsible for handling the database model associated with artists.
     /// </summary>
     public class Artist
     {
