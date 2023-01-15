@@ -4,8 +4,8 @@
     {
         public string Title { get; set; }
         public string Description { get; set; }
-        public string PrimaryImageURL { get; set; }
-        public string SecondaryImageURL { get; set; }
+        public string PrimaryImageUrl { get; set; }
+        public string SecondaryImageUrl { get; set; }
         public int? YearCreated { get; set; }
         public int? MediaId { get; set; }
 
@@ -13,8 +13,8 @@
         {
             this.Title = title;
             this.Description = description;
-            this.PrimaryImageURL = primaryImageURL;
-            this.SecondaryImageURL = secondaryImageURL;
+            this.PrimaryImageUrl = primaryImageURL;
+            this.SecondaryImageUrl = secondaryImageURL;
             this.YearCreated = yearCreated;
             this.MediaId = mediaId;
         }
@@ -23,8 +23,8 @@
         {
             this.Title = "";
             this.Description = "";
-            this.PrimaryImageURL = "";
-            this.SecondaryImageURL = "";
+            this.PrimaryImageUrl = "";
+            this.SecondaryImageUrl = "";
         }
     }
 
@@ -33,8 +33,8 @@
         public int ArtworkId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string PrimaryImageURL { get; set; }
-        public string? SecondaryImageURL { get; set; }
+        public string PrimaryImageUrl { get; set; }
+        public string? SecondaryImageUrl { get; set; }
         public int YearCreated { get; set; }
         public string MediaType { get; set; }
         public DateTime ModifiedAt { get; set; }
@@ -45,8 +45,8 @@
         {
             this.Title = "";
             this.Description = "";
-            this.PrimaryImageURL = "";
-            this.SecondaryImageURL = "";
+            this.PrimaryImageUrl = "";
+            this.SecondaryImageUrl = "";
             this.MediaType = "";
             this.ContributingArtists = new List<String>();
         }
@@ -56,8 +56,8 @@
             this.ArtworkId = artworkId;
             this.Title = title;
             this.Description = description;
-            this.PrimaryImageURL = primaryImageURL;
-            this.SecondaryImageURL = secondaryImageURL;
+            this.PrimaryImageUrl = primaryImageURL;
+            this.SecondaryImageUrl = secondaryImageURL;
             this.YearCreated = yearCreated;
             this.MediaType = mediaType;
             this.ModifiedAt = modifiedAt;
