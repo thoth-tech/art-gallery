@@ -545,6 +545,9 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
 
             if (property.Name.Contains("email") && propertyValue.ToString()!.IsValidEmail() == false)
                 return Results.BadRequest($"A valid email is required.");
+
+            if (property.Name.Contains("password") && propertyValue.ToString()!.IsValidPassword() == false)
+            return Results.BadRequest($"A valid password is required.");
         }
     }
 

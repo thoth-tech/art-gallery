@@ -86,5 +86,16 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
             }
             return false;
         }
+
+        public static bool IsValidPassword(this string str)
+        {
+            // Validate if a str is a valid password
+            Regex validPassword = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.).*$");
+            if (validPassword.IsMatch(str))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
