@@ -45,7 +45,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
                 }
 
                 var prop = props.FirstOrDefault(x => x.Equals(columnName.ToString()));
-                if (!string.IsNullOrEmpty(prop)) fastMember[entity, prop] = dr.IsDBNull(i) ? null : dr.GetValue(i);
+
+                if (prop == "StartDate" || prop == "EndDate")
+                {
+                    DateOnly dateCast = DateOnly.FromDateTime((DateTime)dr.GetValue(i));
+                    fastMember[entity, prop] = dateCast;
+                }
+
+                else if (!string.IsNullOrEmpty(prop)) fastMember[entity, prop] = dr.IsDBNull(i) ? null : dr.GetValue(i);
             }
         }
 

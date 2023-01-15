@@ -7,10 +7,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
     public class ArtistRepository : IRepository, IArtistDataAccess
     {
-        // TODO: test last two methods
-        // Deleted the last two methods as now assigning and deassigning is only done from Artwork
-        // The artist data is all loading except the url for the profile image (similar to the issue in the Artwork repository)
-
         private IRepository _repo => this;
 
         private readonly IConfiguration _configuration;
@@ -46,7 +42,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("firstName", artist.FirstName),
                 new("lastName", artist.LastName),
                 new("displayName", artist.DisplayName),
-                new("profileImageURL", artist.DisplayName),
+                new("profileImageURL", artist.ProfileImageUrl),
                 new("placeOfBirth", artist.PlaceOfBirth),
                 new("yearOfBirth", artist.YearOfBirth),
                 new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value)
@@ -87,7 +83,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             {
                 cmdString += "display_name = @displayName, ";
             }
-            if (artist.ProfileImageURL is not null && artist.ProfileImageURL != "" && artist.ProfileImageURL != "string")
+            if (artist.ProfileImageUrl is not null && artist.ProfileImageUrl != "" && artist.ProfileImageUrl != "string")
             {
                 cmdString += "profile_image_url = @profileImageURL, ";
             }

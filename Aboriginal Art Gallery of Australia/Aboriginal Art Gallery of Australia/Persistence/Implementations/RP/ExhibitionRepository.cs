@@ -7,12 +7,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
     public class ExhibitionRepository : IRepository, IExhibitionDataAccess
     {
-
-        //TODO: Test last three methods and ExhibitionArtworksById
-        // These endpoints have all broken because the startdate and enddate are now DateOnly and that isn't mapping properly
-        // I tried to fix in the MapTo extension method but no luck so far
-        //Need to switch nation/nation_id for media/media_id
-
         private IRepository _repo => this;
 
         private readonly IConfiguration _configuration;
@@ -42,7 +36,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return exhibition;
         }
 
-        //TODO: Find a way to write lines 45 and 48 in a single SQL statement + check over logic
         public ExhibitionArtworkOutputDto? GetExhibitionArtworksById(int id)
         {
             var allArtworks = new List<ArtworkOutputDto>();
@@ -68,12 +61,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("exhibitionId", id)
             };
 
-            // This query is throwing InvalidOperation exception: 'the parameter already belongs to a collection'
             var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_exhibition.artwork_id, " +
-                "artwork.title, description, media, primary_image_url, secondary_image_url, year_created, " +
-                "artwork.modified_at, artwork.created_at, nation.title as nation_title FROM artwork INNER JOIN " +
-                "artwork_exhibition ON artwork_exhibition.artwork_id = artwork.artwork_id INNER JOIN nation ON " +
-                "nation.nation_id = artwork.nation_id WHERE exhibition_id = @exhibitionId", sqlParams);
+                "artwork.title, artwork.description, primary_image_url, secondary_image_url, year_created, " +
+                "artwork.modified_at, artwork.created_at, media.media_type as media_type FROM artwork INNER JOIN " +
+                "artwork_exhibition ON artwork_exhibition.artwork_id = artwork.artwork_id INNER JOIN media ON " +
+                "media.media_id = artwork.media_id WHERE exhibition_id = @exhibitionId", sqlParams);
 
             foreach (ArtworkOutputDto artwork in artworksOutput)
             {
@@ -87,7 +79,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             }
 
             var exhibition = _repo.ExecuteReader<ExhibitionArtworkOutputDto>("SELECT * FROM exhibition " +
-                "WHERE exhibition_id = @exhibitionId", sqlParams)
+                $"WHERE exhibition_id = {id}")
                 .SingleOrDefault();
 
             if (exhibition is not null) exhibition.ExhibitionArtworks = artworksOutput;
@@ -101,12 +93,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             {
                 new("name", exhibition.Name),
                 new("description", exhibition.Description),
-                new("backgroundImageUrl", exhibition.BackgroundImageURL)
+                new("backgroundImageUrl", exhibition.BackgroundImageUrl),
+                new("startdate", exhibition.StartDate),
+                new("enddate", exhibition.EndDate)
             };
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("INSERT INTO exhibition(name, description, " +
-                "background_image_url, modified_at, created_at) VALUES (@name, @description, @backgroundImageUrl, " +
-                "current_timestamp, current_timestamp) RETURNING *;", sqlParams)
+                "background_image_url, start_date, end_date, modified_at, created_at) VALUES (@name, @description, " +
+                "@backgroundImageUrl, @startdate, @enddate, current_timestamp, current_timestamp) RETURNING *;", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -119,12 +113,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("exhibitionId", id),
                 new("name", exhibition.Name),
                 new("description", exhibition.Description),
-                new("backgroundImageUrl", exhibition.BackgroundImageURL)
+                new("backgroundImageUrl", exhibition.BackgroundImageUrl),
+                new("startdate", exhibition.StartDate),
+                new("enddate", exhibition.EndDate)
             };
 
             var result = _repo.ExecuteReader<ExhibitionInputDto>("UPDATE exhibition SET name = @name, " +
-                "description = @description, background_image_url = @backgroundImageUrl, " +
-                "modified_at = current_timestamp WHERE exhibition_id = @exhibitionId RETURNING *", sqlParams)
+                "description = @description, background_image_url = @backgroundImageUrl, start_date = @startdate, " +
+                "end_date=@enddate, modified_at = current_timestamp WHERE exhibition_id = @exhibitionId RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;

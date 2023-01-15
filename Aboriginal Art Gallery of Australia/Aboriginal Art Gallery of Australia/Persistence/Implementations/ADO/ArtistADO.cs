@@ -93,7 +93,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     cmd.Parameters.AddWithValue("@firstName", artist.FirstName);
                     cmd.Parameters.AddWithValue("@lastName", artist.LastName);
                     cmd.Parameters.AddWithValue("@displayName", artist.DisplayName);
-                    cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageURL);
+                    cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageUrl);
                     cmd.Parameters.AddWithValue("@placeOfBirth", artist.PlaceOfBirth);
                     cmd.Parameters.AddWithNullableValue("@yearOfBirth", artist.YearOfBirth);
                     cmd.Parameters.AddWithNullableValue("@yearOfDeath", artist.YearOfDeath);
@@ -123,7 +123,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 {
                     cmdString += "display_name = @displayName, ";
                 }
-                if (artist.ProfileImageURL is not null && artist.ProfileImageURL != "" && artist.ProfileImageURL != "string")
+                if (artist.ProfileImageUrl is not null && artist.ProfileImageUrl != "" && artist.ProfileImageUrl != "string")
                 {
                     cmdString += "profile_image_url = @profileImageURL, ";
                 }
@@ -158,9 +158,9 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     {
                         cmd.Parameters.AddWithValue("@displayName", artist.DisplayName);
                     }
-                    if (artist.ProfileImageURL is not null && artist.ProfileImageURL != "" && artist.ProfileImageURL != "string")
+                    if (artist.ProfileImageUrl is not null && artist.ProfileImageUrl != "" && artist.ProfileImageUrl != "string")
                     {
-                        cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageURL);
+                        cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageUrl);
                     }
                     if (artist.PlaceOfBirth is not null && artist.PlaceOfBirth != "" && artist.PlaceOfBirth != "string")
                     {
