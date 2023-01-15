@@ -1,5 +1,8 @@
 ﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
 {
+    /// <summary>
+    /// The Artwork class is responsible for handling the database model associated with artworks. 
+    /// </summary>
     public class Artwork
     {
         public int ArtworkId { get; set; }

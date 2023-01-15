@@ -1,5 +1,8 @@
 ﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
 {
+    /// <summary>
+    /// The Media class is responsible for handling the database model associated with various media types. 
+    /// </summary>
     public class Media
     {
         public int MediaId { get; set; }

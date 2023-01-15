@@ -1,5 +1,8 @@
 ﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
 {
+    /// <summary>
+    /// The Exhibition class is responsible for handling the database model associated with exhibitions. 
+    /// </summary>
     public class Exhibition
     {
         public int ExhibitionId { get; set; }
