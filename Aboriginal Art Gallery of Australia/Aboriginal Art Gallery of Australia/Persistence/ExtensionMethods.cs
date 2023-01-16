@@ -79,7 +79,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
         public static bool IsValidEmail(this string str)
         {
             // Validate if a str is a valid email
-            Regex validEmail = new Regex("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$");
+            Regex validEmail = new Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$");
             if (validEmail.IsMatch(str))
             {
                 return true;

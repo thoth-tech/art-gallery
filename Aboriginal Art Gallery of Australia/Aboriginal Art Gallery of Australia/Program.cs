@@ -36,8 +36,9 @@ builder.Services.AddAuthentication(options =>
         (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidateLifetime = false,
-        ValidateIssuerSigningKey = true
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero // Removes default buffer of five minutes on token expiry
     };
 });
 #endregion
@@ -542,12 +543,14 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
                     return Results.BadRequest($"A {property.Name} is required.");
                 }
             }
+            if (propertyValue != null)
+            {
+                if (property.Name.Contains("email") && propertyValue.ToString()!.IsValidEmail() == false)
+                    return Results.BadRequest($"A valid email is required.");
 
-            if (property.Name.Contains("email") && propertyValue.ToString()!.IsValidEmail() == false)
-                return Results.BadRequest($"A valid email is required.");
-
-            if (property.Name.Contains("password") && propertyValue.ToString()!.IsValidPassword() == false)
-            return Results.BadRequest($"A valid password is required.");
+                if (property.Name.Contains("password") && propertyValue.ToString()!.IsValidPassword() == false)
+                    return Results.BadRequest($"A valid password is required.");
+            }
         }
     }
 
