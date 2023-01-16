@@ -47,7 +47,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
 
                 var prop = props.FirstOrDefault(x => x.Equals(columnName.ToString()));
 
-                if (prop == "StartDate" || prop == "EndDate")
+                if (prop is not null && prop.GetType().Equals(typeof(DateOnly)))
                 {
                     DateOnly dateCast = DateOnly.FromDateTime((DateTime)dr.GetValue(i));
                     fastMember[entity, prop] = dateCast;
