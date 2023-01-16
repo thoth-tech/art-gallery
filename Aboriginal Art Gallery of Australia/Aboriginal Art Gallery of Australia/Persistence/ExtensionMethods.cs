@@ -47,13 +47,16 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
 
                 var prop = props.FirstOrDefault(x => x.Equals(columnName.ToString()));
 
-                if (prop == "StartDate" || prop == "EndDate")
+                try
+                {
+                    if (!string.IsNullOrEmpty(prop)) fastMember[entity, prop] = dr.IsDBNull(i) ? null : dr.GetValue(i);
+                }
+                catch (InvalidCastException e)
+                when (e.Message.Equals("Unable to cast object of type 'System.DateTime' to type 'System.DateOnly'."))
                 {
                     DateOnly dateCast = DateOnly.FromDateTime((DateTime)dr.GetValue(i));
                     fastMember[entity, prop] = dateCast;
                 }
-
-                else if (!string.IsNullOrEmpty(prop)) fastMember[entity, prop] = dr.IsDBNull(i) ? null : dr.GetValue(i);
             }
         }
 
