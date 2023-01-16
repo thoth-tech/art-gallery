@@ -111,7 +111,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return true;
         }
 
-        public Tuple<UserOutputDto, string>? AuthenticateUser(LoginDto login)
+        public string? AuthenticateUser(LoginDto login)
         {
            var sqlParams = new NpgsqlParameter[]
             {
@@ -121,13 +121,16 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var user = _repo.ExecuteReader<UserOutputDto>("SELECT * FROM account WHERE email = @email", sqlParams).SingleOrDefault();
 
             // Authenticate user with given login information and return an auth token if valid
-            bool authenticated = BC.EnhancedVerify(login.Password, user.PasswordHash, hashType: HashType.SHA384);
-            if (authenticated)
+            if (user != null)
             {
-                user.PasswordHash = ""; // Removing password hash
-                var handler = new TokenAuthenticationHandler(_configuration);
-                string token = handler.GenerateToken(user);
-                return new Tuple<UserOutputDto, string>(user, token);
+                bool authenticated = BC.EnhancedVerify(login.Password, user.PasswordHash, hashType: HashType.SHA384);
+                if (authenticated)
+                {
+                    user.PasswordHash = ""; // Removing password hash
+                    var handler = new TokenAuthenticationHandler(_configuration);
+
+                    return handler.GenerateToken(user);
+                }
             }
 
             return null;
