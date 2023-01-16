@@ -36,23 +36,17 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
 
             if (currentArtist is null || currentTime.CompareTo(nextArtistAt) >= 0)
             {
-                if (eligibleArtists.Count is 0)
-                {
-                    return null;
-                }
-                else
-                {
-                    eligibleArtists.RemoveAll(x => previousArtists.Exists(y => y.ArtistId == x.ArtistId));
-                }
+                eligibleArtists.RemoveAll(x => previousArtists.Exists(y => y.ArtistId == x.ArtistId));
+                
+                if (eligibleArtists.Count <= 1)
+                    previousArtists.Clear();
 
                 if (eligibleArtists.Count is 0)
-                {
                     return null;
-                }
 
                 int index = rnd.Next(eligibleArtists.Count);
                 currentArtist = eligibleArtists[index];
-                nextArtistAt = nextArtistAt.AddMinutes(ArtistDuration);
+                nextArtistAt = nextArtistAt.AddSeconds(ArtistDuration);
             }
 
             return currentArtist;
