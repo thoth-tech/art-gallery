@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Reflection.Metadata.Ecma335;
+using System.Text.RegularExpressions;
 using System.Text;
 using FastMember;
 using Npgsql;
@@ -72,6 +73,28 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
                     myUri.AbsolutePath.Contains(".gif")
                     )
                     return true;
+            return false;
+        }
+
+        public static bool IsValidEmail(this string str)
+        {
+            // Validate if a str is a valid email
+            Regex validEmail = new Regex("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$");
+            if (validEmail.IsMatch(str))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool IsValidPassword(this string str)
+        {
+            // Validate if a str is a valid password
+            Regex validPassword = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.).*$");
+            if (validPassword.IsMatch(str))
+            {
+                return true;
+            }
             return false;
         }
     }
