@@ -1,4 +1,5 @@
 using Aboriginal_Art_Gallery_of_Australia.Middleware;
+using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO;
@@ -187,6 +188,38 @@ app.MapPost("api/artists/", [Authorize] (IArtistDataAccess _artistRepo, ArtistIn
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
+/*
+ * Without Reflection
+ * 
+app.MapPost("api/artists/", [Authorize] (IArtistDataAccess _artistRepo, ArtistInputDto artist) =>
+{
+    if (artist is not null)
+    {
+        if (artist.FirstName.IsNullOrEmpty()) return Results.BadRequest($"Artist's first name is required.");
+        else if (artist.LastName.IsNullOrEmpty()) return Results.BadRequest($"Artist's last name is required.");
+        else if (artist.DisplayName.IsNullOrEmpty()) return Results.BadRequest($"Artist's display name is required.");
+        else if (artist.ProfileImageUrl.IsNullOrEmpty()) return Results.BadRequest($"Artist's profile image url is required.");
+        else if (artist.PlaceOfBirth.IsNullOrEmpty()) return Results.BadRequest($"Artist's place of birth is required.");
+
+        if (!artist.ProfileImageUrl.IsValidURL()) return Results.BadRequest($"An absolute profile image url is " +
+        $"required in the following format: https://www.sample.url/picture.jpg");
+
+        if (artist.YearOfBirth is not null && artist.YearOfDeath is not null)
+        {
+            if (artist.YearOfBirth > DateTime.Today.Year || artist.YearOfDeath > DateTime.Today.Year)
+                return Results.BadRequest($"The entered years can not be greater than {DateTime.Today.Year}.");
+
+            if (artist.YearOfDeath <= artist.YearOfBirth) return Results.BadRequest($"The year of death can not be before the year of birth.");
+        }
+        else if (artist.YearOfBirth is null) return Results.BadRequest($"A year of birth is required.");
+    }
+    else return Results.BadRequest($"Artist details required.");
+
+    var result = _artistRepo.InsertArtist(artist);
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
+});
+*/
+
 app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo, int artistId, ArtistInputDto artist) =>
 {
     if (_artistRepo.GetArtistById(artistId) == null)
@@ -217,10 +250,38 @@ app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo,
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
+/*
+ * Without Reflection
+ * 
+app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo, int artistId, ArtistInputDto artist) =>
+{
+    if (_artistRepo.GetArtistById(artistId) == null)
+        return Results.NotFound($"No artist can be found with an ID of {artistId}");
+
+    if (artist is not null)
+    {
+        if (!artist.ProfileImageUrl.IsValidURL()) return Results.BadRequest($"An absolute profile image url is " +
+        $"required in the following format: https://www.sample.url/picture.jpg");
+
+        if (artist.YearOfBirth is not null && artist.YearOfDeath is not null)
+        {
+            if (artist.YearOfBirth > DateTime.Today.Year || artist.YearOfDeath > DateTime.Today.Year)
+                return Results.BadRequest($"The entered years can not be greater than {DateTime.Today.Year}.");
+
+            if (artist.YearOfDeath <= artist.YearOfBirth) return Results.BadRequest($"The year of death can not be before the year of birth.");
+        }
+    }
+    else return Results.BadRequest($"A missing value is required.");
+
+    var result = _artistRepo.UpdateArtist(artistId, artist);
+    return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
+});
+*/
+
 app.MapDelete("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo, int artistId) =>
 {
     if (_artistRepo.GetArtistById(artistId) == null)
-        return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}");
+        return Results.NotFound($"No artist can be found with an ID of {artistId}");
 
     var result = _artistRepo.DeleteArtist(artistId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
@@ -255,7 +316,7 @@ app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMedi
             if (propertyValue == null || propertyValue.Equals(""))
                 return Results.BadRequest($"A {property.Name} is required.");
 
-            if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
+            if (property.Name.Contains("Url") && propertyValue.ToString()!.IsValidURL() == false)
                 return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
 
@@ -265,7 +326,7 @@ app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMedi
                 return Results.BadRequest($"A {property.Name} is required.");
 
             if (property.Name.Contains(nameof(artwork.YearCreated)) && ((int)propertyValue > DateTime.Today.Year))
-                return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
+                return Results.BadRequest($"{property.Name} can not be greater than {DateTime.Today.Year}.");
 
             if (property.Name.Contains(nameof(artwork.MediaId)) && (_mediaRepo.GetMediaTypeById((int)propertyValue) == null))
                 return Results.BadRequest($"No mediatype can be found with an {property.Name} of {propertyValue}");
@@ -274,6 +335,39 @@ app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMedi
     var result = _artworkRepo.InsertArtwork(artwork);
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
+
+/*
+ * Without Reflection
+ * 
+app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, ArtworkInputDto artwork) =>
+{
+    if (artwork is not null)
+    {
+        if (artwork.Title.IsNullOrEmpty()) return Results.BadRequest($"Artwork title is required.");
+        else if (artwork.Description.IsNullOrEmpty()) return Results.BadRequest($"Artwork description is required.");
+        else if (artwork.PrimaryImageUrl.IsNullOrEmpty()) return Results.BadRequest($"Artwork's primary image url is required.");
+        else if (artwork.SecondaryImageUrl.IsNullOrEmpty()) return Results.BadRequest($"Artwork's secondary image url is required.");
+        else if (artwork.MediaId == null) return Results.BadRequest($"A media ID is required.");
+
+        if (!artwork.PrimaryImageUrl.IsValidURL() || !artwork.SecondaryImageUrl.IsValidURL())
+            return Results.BadRequest($"An absolute primary or secondary image url is required in the following format: https://www.sample.url/picture.jpg");
+
+        if (_mediaRepo.GetMediaTypeById((int)artwork.MediaId) == null)
+            return Results.NotFound($"No mediatype can be found with an ID of {artwork.MediaId}");
+
+        if (artwork.YearCreated is not null)
+        {
+            if (artwork.YearCreated > DateTime.Today.Year)
+                return Results.BadRequest($"The entered year can not be greater than {DateTime.Today.Year}.");
+        }
+        else return Results.BadRequest($"Year of artwork creation is required.");
+    }
+    else return Results.BadRequest($"Artwork details required.");
+
+    var result = _artworkRepo.InsertArtwork(artwork);
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
+});
+*/
 
 app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, int artworkId, ArtworkInputDto artwork) =>
 {
@@ -287,14 +381,12 @@ app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkR
 
         if (property.PropertyType == typeof(string) && propertyValue != null)
         {
-
             if (property.Name.Contains("URL") && propertyValue.ToString()!.IsValidURL() == false)
                 return Results.BadRequest($"An absolute {property.Name} is required in the following format: https://www.sample.url/picture.jpg");
         }
 
         if (property.PropertyType == typeof(int?) && propertyValue != null)
         {
-
             if (property.Name.Contains(nameof(artwork.YearCreated)) && ((int)propertyValue > DateTime.Today.Year))
                 return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
 
@@ -306,6 +398,32 @@ app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkR
     var result = _artworkRepo.UpdateArtwork(artworkId, artwork);
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
+
+/*
+ * Without Reflection
+ * 
+app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, int artworkId, ArtworkInputDto artwork) =>
+{
+    if (_artworkRepo.GetArtworkById(artworkId) == null)
+        return Results.NotFound($"No artwork can be found with an ID of {artworkId}");
+
+    if (artwork is not null)
+    {
+        if (!artwork.PrimaryImageUrl.IsValidURL() || !artwork.SecondaryImageUrl.IsValidURL())
+            return Results.BadRequest($"An absolute primary or secondary image url is required in the following format: https://www.sample.url/picture.jpg");
+
+        if (artwork.YearCreated > DateTime.Today.Year && artwork.YearCreated is not null)
+            return Results.BadRequest($"The entered year can not be greater than {DateTime.Today.Year}.");
+
+        if (_mediaRepo.GetMediaTypeById((int)artwork.MediaId!) == null)
+            return Results.NotFound($"No mediatype can be found with an ID of {artwork.MediaId}");
+    }
+    else return Results.BadRequest($"Artwork details required.");
+
+    var result = _artworkRepo.InsertArtwork(artwork);
+    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
+});
+*/
 
 app.MapDelete("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkRepo, int artworkId) =>
 {

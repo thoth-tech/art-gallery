@@ -64,6 +64,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("firstName", artist.FirstName),
                 new("lastName", artist.LastName),
                 new("displayName", artist.DisplayName),
+                new("profileImageURL", artist.ProfileImageUrl),
                 new("placeOfBirth", artist.PlaceOfBirth),
                 new("yearOfBirth", artist.YearOfBirth),
                 new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value)
@@ -83,13 +84,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             {
                 cmdString += "display_name = @displayName, ";
             }
-            if (artist.ProfileImageUrl is not null && artist.ProfileImageUrl != "" && artist.ProfileImageUrl != "string")
-            {
-                cmdString += "profile_image_url = @profileImageURL, ";
-            }
             if (artist.PlaceOfBirth is not null && artist.PlaceOfBirth != "" && artist.PlaceOfBirth != "string")
             {
                 cmdString += "place_of_birth = @placeOfBirth, ";
+            }
+            if (artist.ProfileImageUrl is not null && artist.ProfileImageUrl != "" && artist.ProfileImageUrl != "string")
+            {
+                cmdString += "profile_image_url = @profileImageURL, ";
             }
             if (artist.YearOfBirth is not null && artist.YearOfBirth != 0)
             {
