@@ -43,7 +43,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// Authenticates the user by verifying the submitted login information.
         /// </summary>
         /// <param name="login">The user login to be authenticated.</param>
-        /// <returns>Returns the user output with the password hash as a blank string.</returns>
-        Tuple<UserOutputDto, string>? AuthenticateUser(LoginDto login);
+        /// <returns>Returns the token as a string.</returns>
+        string? AuthenticateUser(LoginDto login);
     }
 }

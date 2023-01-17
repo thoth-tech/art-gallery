@@ -54,7 +54,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
-                using var cmd = new NpgsqlCommand("SELECT * FROM account WHERE account_id = @account_id", connection);
+                using var cmd = new NpgsqlCommand("SELECT * FROM account WHERE account_id = @userID", connection);
                 {
                     cmd.Parameters.AddWithValue("@userId", id);
                     using var dr = cmd.ExecuteReader();
@@ -81,7 +81,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             }
         }
 
-        public Tuple<UserOutputDto, string>? AuthenticateUser(LoginDto login)
+        public string? AuthenticateUser(LoginDto login)
         {
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
@@ -114,8 +114,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                 {
                                     user.PasswordHash = ""; // Removing password hash
                                     var handler = new TokenAuthenticationHandler(_configuration);
-                                    string token = handler.GenerateToken(user);
-                                    return new Tuple<UserOutputDto, string>(user, token);
+
+                                    return handler.GenerateToken(user);
                                 }
                             }
                         }
