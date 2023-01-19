@@ -473,7 +473,7 @@ app.MapGet("api/media/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
 
-app.MapPost("api/media/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
+app.MapPost("api/media><l0/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
 {
     PropertyInfo[] properties = media.GetType().GetProperties();
     List<MediaOutputDto> mediaTypes = _mediaRepo.GetMediaTypes();
@@ -518,8 +518,8 @@ app.MapPost("api/media/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDt
 
 app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId, MediaInputDto media) =>
 {
-    if (_mediaRepo.GetMediaTypeById(mediaId) == null)
-        Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
+    if (_mediaRepo.GetMediaTypeById(mediaId) is null)
+        return Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
 
     PropertyInfo[] properties = media.GetType().GetProperties();
     List<MediaOutputDto> mediaTypes = _mediaRepo.GetMediaTypes();
@@ -544,7 +544,7 @@ app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int 
 app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId, MediaInputDto media) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
-        Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
+        return Results.NotFound($"No media type can be found with a {nameof(mediaId)} of {mediaId}.");
 
     if (media is not null)
     {
@@ -561,7 +561,7 @@ app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int 
 app.MapDelete("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
-        Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
+        Results.NotFound($"No media type can be found with a {nameof(mediaId)} of {mediaId}.");
 
     var result = _mediaRepo.DeleteMediaType(mediaId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
@@ -744,6 +744,7 @@ app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
+// Issue with validating email and password - always says invalid when should return valid
 app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo, UserInputDto user) =>
 {
     PropertyInfo[] properties = user.GetType().GetProperties();
@@ -762,10 +763,10 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
             }
             if (propertyValue != null)
             {
-                if (property.Name.Contains("email") && propertyValue.ToString()!.IsValidEmail() == false)
+                if (property.Name.Contains("Email") && propertyValue.ToString()!.IsValidEmail() == false)
                     return Results.BadRequest($"A valid email is required.");
 
-                if (property.Name.Contains("password") && propertyValue.ToString()!.IsValidPassword() == false)
+                if (property.Name.Contains("Password") && propertyValue.ToString()!.IsValidPassword() == false)
                     return Results.BadRequest($"A valid password is required.");
             }
         }
@@ -788,8 +789,10 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
         else if (user.Password.IsNullOrEmpty()) return Results.BadRequest($"A user {nameof(user.Password)} is required.");
         else if (user.Role.IsNullOrEmpty()) return Results.BadRequest($"A user {nameof(user.Role)} is required.");
 
-        if (!user.Email.IsValidEmail()) return Results.BadRequest($"A valid email is required.");
-        if (!user.Password.IsValidPassword()) return Results.BadRequest($"A valid password is required.");
+        if (user.Email.IsValidEmail() is false)
+            return Results.BadRequest($"A valid email is required.");
+        if (!user.Password.IsValidPassword())
+            return Results.BadRequest($"A valid password is required.");
     }
     else return Results.BadRequest($"User details required.");
 
@@ -863,7 +866,7 @@ app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
 
     if (user is not null)
     {
-        if (user.Role != "User" || user.Role != "Admin")
+        if (user.Role.ToString() != "User" && user.Role.ToString() != "Admin")
             return Results.BadRequest($"A {nameof(user.Role)} is required to be either User or Admin");
     }
     else return Results.BadRequest($"User details required.");
@@ -878,6 +881,7 @@ app.MapDelete("api/users/{id}", [Authorize(Policy = "AdminOnly")](IUserDataAcces
     var result = _accountRepo.DeleteUser(id);
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
+
 
 #endregion
 
