@@ -1,7 +1,7 @@
 ﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 {
     /// <summary>
-    /// The ArtistArtworkDto class handles data and facilitates relationships between artists and artworks inside the database.
+    /// The ArtistArtworkDto class handles the transfer of entity ID data to facilitate relationships between artists and artworks inside the database.
     /// </summary>
     public class ArtistArtworkDto
     {
@@ -14,8 +14,6 @@
             ArtworkId = artworkId;
         }
 
-        public ArtistArtworkDto()
-        {
-        }
+        public ArtistArtworkDto() { }
     }
 }

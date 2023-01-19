@@ -10,7 +10,7 @@
         public string LastName { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-        public string? Role { get; set; } = "Guest";
+        public string? Role { get; set; } = "Member";
         public DateTime? ActiveAt { get; set; }
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
