@@ -1,11 +1,14 @@
+using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using System.Security.Claims;
-using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
+using System.Text;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Authentication
 {
+    /// <summary>
+    /// The TokenAuthenticationHandler class is responsible for generating user claims and JSON Web Tokens (JWT) upon user authentication to provide user authorization.
+    /// </summary>
     public class TokenAuthenticationHandler
     {
         private readonly IConfiguration _configuration;
@@ -15,6 +18,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Authentication
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Initializers a new instance of the claimsIdentity as well as generates a JWT for user authorization for a set period of time.
+        /// </summary>
+        /// <param name="user">The User Authorization is to be generated for.</param>
+        /// <returns> The JSON Web Token as a string.</returns>
         public string GenerateToken(UserOutputDto user)
         {
             var issuer = _configuration["Jwt:Issuer"];
