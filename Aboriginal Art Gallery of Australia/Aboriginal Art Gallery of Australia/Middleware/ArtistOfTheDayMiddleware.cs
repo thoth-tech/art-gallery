@@ -37,7 +37,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Middleware
             if (currentArtist is null || currentTime.CompareTo(nextArtistAt) >= 0)
             {
                 eligibleArtists.RemoveAll(x => previousArtists.Exists(y => y.ArtistId == x.ArtistId));
-                
+
                 if (eligibleArtists.Count <= 1)
                     previousArtists.Clear();
 

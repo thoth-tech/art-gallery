@@ -38,8 +38,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ClockSkew = TimeSpan.Zero // Removes default buffer of five minutes on token expiry
+        ValidateIssuerSigningKey = true
     };
 });
 #endregion
@@ -52,7 +51,7 @@ var securityScheme = new OpenApiSecurityScheme()
     Scheme = "bearer",
     BearerFormat = "JWT",
     In = ParameterLocation.Header,
-    Description = "JSON Web Token based security",
+    Description = "Please enter a valid token",
 };
 
 builder.Services.AddAuthorization(options =>

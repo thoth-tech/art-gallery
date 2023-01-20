@@ -127,7 +127,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 if (authenticated)
                 {
                     user.PasswordHash = ""; // Removing password hash
-                    var handler = new TokenAuthenticationHandler(_configuration);
+                    var handler = new TokenAuthentication(_configuration);
 
                     return handler.GenerateToken(user);
                 }
