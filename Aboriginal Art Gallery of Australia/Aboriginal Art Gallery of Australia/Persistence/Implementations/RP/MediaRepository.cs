@@ -54,7 +54,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var sqlParams = new NpgsqlParameter[]
             {
                 new("mediaId", id),
-                new("media_type", media.MediaType),
+                new("mediaType", media.MediaType),
                 new("description", media.Description)
             };
 

@@ -1,5 +1,8 @@
 ﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 {
+    /// <summary>
+    /// The ArtworkInputDto class is used to decouple the service layer from the database layer. It provides a means of mapping the necessary user input to the appropriate database model.
+    /// </summary>
     public class ArtworkInputDto
     {
         public string Title { get; set; } = string.Empty;
@@ -11,58 +14,47 @@
 
         public ArtworkInputDto(string title, string description, string primaryImageURL, string secondaryImageURL, int? yearCreated, int? mediaId)
         {
-            this.Title = title;
-            this.Description = description;
-            this.PrimaryImageUrl = primaryImageURL;
-            this.SecondaryImageUrl = secondaryImageURL;
-            this.YearCreated = yearCreated;
-            this.MediaId = mediaId;
+            Title = title;
+            Description = description;
+            PrimaryImageUrl = primaryImageURL;
+            SecondaryImageUrl = secondaryImageURL;
+            YearCreated = yearCreated;
+            MediaId = mediaId;
         }
 
-        public ArtworkInputDto()
-        {
-            this.Title = "";
-            this.Description = "";
-            this.PrimaryImageUrl = "";
-            this.SecondaryImageUrl = "";
-        }
+        public ArtworkInputDto() { }
     }
 
+    /// <summary>
+    /// The ArtworkOutputDto class is used to decouple the database layer from the service layer. It provides a means of mapping the necessary information from the database to the appropriate user output.
+    /// </summary>
     public class ArtworkOutputDto
     {
-        public int ArtworkId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string PrimaryImageUrl { get; set; }
-        public string? SecondaryImageUrl { get; set; }
-        public int YearCreated { get; set; }
-        public string MediaType { get; set; }
-        public DateTime ModifiedAt { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public List<String> ContributingArtists { get; set; } = null!;
-
-        public ArtworkOutputDto()
-        {
-            this.Title = "";
-            this.Description = "";
-            this.PrimaryImageUrl = "";
-            this.SecondaryImageUrl = "";
-            this.MediaType = "";
-            this.ContributingArtists = new List<String>();
-        }
+        public int ArtworkId { get; set; } = 0;
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string PrimaryImageUrl { get; set; } = string.Empty;
+        public string? SecondaryImageUrl { get; set; } = string.Empty;
+        public int YearCreated { get; set; } = 0;
+        public string MediaType { get; set; } = string.Empty;
+        public DateTime ModifiedAt { get; set; } = new DateTime();
+        public DateTime CreatedAt { get; set; } = new DateTime();
+        public List<string> ContributingArtists { get; set; } = new List<string>();
 
         public ArtworkOutputDto(int artworkId, string title, string description, string primaryImageURL, string? secondaryImageURL, int yearCreated, string mediaType, DateTime modifiedAt, DateTime createdAt, List<string> contributingArtists)
         {
-            this.ArtworkId = artworkId;
-            this.Title = title;
-            this.Description = description;
-            this.PrimaryImageUrl = primaryImageURL;
-            this.SecondaryImageUrl = secondaryImageURL;
-            this.YearCreated = yearCreated;
-            this.MediaType = mediaType;
-            this.ModifiedAt = modifiedAt;
-            this.CreatedAt = createdAt;
-            this.ContributingArtists = contributingArtists;
+            ArtworkId = artworkId;
+            Title = title;
+            Description = description;
+            PrimaryImageUrl = primaryImageURL;
+            SecondaryImageUrl = secondaryImageURL;
+            YearCreated = yearCreated;
+            MediaType = mediaType;
+            ModifiedAt = modifiedAt;
+            CreatedAt = createdAt;
+            ContributingArtists = contributingArtists;
         }
+
+        public ArtworkOutputDto() { }
     }
 }

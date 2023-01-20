@@ -1,19 +1,19 @@
 ﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.DTOs
 {
+    /// <summary>
+    /// The LoginDto class is used to decouple the service layer from the database layer. It provides a means of mapping the necessary user credentials to the appropriate database model.
+    /// </summary>
     public class LoginDto
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
 
         public LoginDto(string email, string password)
         {
-            this.Email = email;
-            this.Password = password;
+            Email = email;
+            Password = password;
         }
 
-        public LoginDto(){
-            this.Email = "";
-            this.Password = "";
-        }
+        public LoginDto() { }
     }
 }

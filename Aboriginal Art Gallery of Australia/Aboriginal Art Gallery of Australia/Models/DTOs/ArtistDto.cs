@@ -45,8 +45,8 @@
         public string PlaceOfBirth { get; set; } = string.Empty;
         public int? YearOfBirth { get; set; } = 0;
         public int? YearOfDeath { get; set; } = null;
-        public DateTime ModifiedAt { get; set; } = DateTime.MinValue;
-        public DateTime CreatedAt { get; set; } = DateTime.MinValue;
+        public DateTime ModifiedAt { get; set; } = new DateTime();
+        public DateTime CreatedAt { get; set; } = new DateTime();
 
         public ArtistOutputDto(int artistId, string firstName, string lastName, string displayName, string profileImageURL, string placeOfBirth, int? yearOfBirth, int? yearOfDeath, DateTime modifiedAt, DateTime createdAt)
         {
