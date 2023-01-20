@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Text;
 using FastMember;
 using Npgsql;
-
+using System.Net.Mail;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence
 {
@@ -79,10 +79,40 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
             return false;
         }
 
+        // >>>> Original
+
+        //public static bool IsValidEmail(this string str)
+        //{
+        //    // Validate if a str is a valid email
+        //    Regex validEmail = new Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$");
+        //    if (validEmail.IsMatch(str))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+
+
+        // >>>> Alternative method
+
+        //public static bool IsValidEmail(this string email)
+        //{
+        //    try
+        //    {
+        //        MailAddress m = new MailAddress(email);
+
+        //        return true;
+        //    }
+        //    catch (FormatException)
+        //    {
+        //        return false;
+        //    }
+        //}
+
         public static bool IsValidEmail(this string str)
         {
             // Validate if a str is a valid email
-            Regex validEmail = new Regex("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$");
+            Regex validEmail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,})+)$");
             if (validEmail.IsMatch(str))
             {
                 return true;
@@ -90,15 +120,29 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
             return false;
         }
 
+        // >>>> Original
+
+        //public static bool IsValidPassword(this string str)
+        //{
+        //    // Validate if a str is a valid password
+        //    Regex validPassword = new Regex(" ^ (?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.).*$");
+        //    if (validPassword.IsMatch(str))
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
+
         public static bool IsValidPassword(this string str)
         {
             // Validate if a str is a valid password
-            Regex validPassword = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.).*$");
+            Regex validPassword = new Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
             if (validPassword.IsMatch(str))
             {
                 return true;
             }
             return false;
         }
+
     }
 }

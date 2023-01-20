@@ -767,7 +767,15 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
                     return Results.BadRequest($"A valid email is required.");
 
                 if (property.Name.Contains("Password") && propertyValue.ToString()!.IsValidPassword() == false)
-                    return Results.BadRequest($"A valid password is required.");
+                    return Results.BadRequest($"A valid password is required. Password must contain: " +
+                        $"at least 8 characters, " +
+                        $"at least one lowercase letter, " +
+                        $"at least one uppercase letter, " +
+                        $"at least one digit, and " +
+                        $"at least one special character.");
+
+                //if (property.Name.Contains("Password") && propertyValue.ToString()!.IsValidPassword() == false)
+                //    return Results.BadRequest($"A valid password is required.");
             }
         }
     }
@@ -789,10 +797,15 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
         else if (user.Password.IsNullOrEmpty()) return Results.BadRequest($"A user {nameof(user.Password)} is required.");
         else if (user.Role.IsNullOrEmpty()) return Results.BadRequest($"A user {nameof(user.Role)} is required.");
 
-        if (user.Email.IsValidEmail() is false)
+        if (!user.Email.IsValidEmail())
             return Results.BadRequest($"A valid email is required.");
         if (!user.Password.IsValidPassword())
-            return Results.BadRequest($"A valid password is required.");
+            return Results.BadRequest($"A valid password is required. Password must contain: " +
+                        $"at least 8 characters, " +
+                        $"at least one lowercase letter, " +
+                        $"at least one uppercase letter, " +
+                        $"at least one digit, and " +
+                        $"at least one special character.");
     }
     else return Results.BadRequest($"User details required.");
 
