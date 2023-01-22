@@ -107,18 +107,18 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
  */
 
 // Implementation 1 - ADO
-//builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
-//builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
-//builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
-//builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
-//builder.Services.AddScoped<IUserDataAccess, UserADO>();
+builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
+builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
+builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
+builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
+builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
-builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
+/*builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
 builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
 builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
 builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
-builder.Services.AddScoped<IUserDataAccess, UserRepository>();
+builder.Services.AddScoped<IUserDataAccess, UserRepository>();*/
 
 
 // builder.Services.AddAuthorization();
@@ -436,25 +436,25 @@ app.MapDelete("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artwo
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-app.MapPost("api/artworks/{artworkId}/assign/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
+app.MapPost("api/artworks/{artworkId}/allocate/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
     else if (_artistRepo.GetArtistById(artistId) == null)
         return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}.");
 
-    var result = _artworkRepo.AssignArtist(artistId, artworkId);
+    var result = _artworkRepo.AllocateArtist(artistId, artworkId);
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-app.MapDelete("api/artworks/{artworkId}/deassign/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
+app.MapDelete("api/artworks/{artworkId}/deallocate/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
     else if (_artistRepo.GetArtistById(artistId) == null)
         return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}.");
 
-    var result = _artworkRepo.DeassignArtist(artistId, artworkId);
+    var result = _artworkRepo.DeallocateArtist(artistId, artworkId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 #endregion
@@ -707,7 +707,7 @@ app.MapDelete("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
-app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
+app.MapPost("api/exhibitions/{exhibitionId}/allocate/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
@@ -719,7 +719,7 @@ app.MapPost("api/exhibitions/{exhibitionId}/assign/artwork/{artworkId}", [Author
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
-app.MapDelete("api/exhibitions/{exhibitionId}/deassign/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
+app.MapDelete("api/exhibitions/{exhibitionId}/deallocate/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");

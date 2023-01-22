@@ -154,7 +154,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return true;
         }
 
-        public ArtistArtworkDto? AssignArtist(int artistId, int artworkId)
+        public ArtistArtworkDto? AllocateArtist(int artistId, int artworkId)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -170,7 +170,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return result;
         }
 
-        public bool DeassignArtist(int artistId, int artworkId)
+        public bool DeallocateArtist(int artistId, int artworkId)
         {
             var sqlParams = new NpgsqlParameter[]
             {

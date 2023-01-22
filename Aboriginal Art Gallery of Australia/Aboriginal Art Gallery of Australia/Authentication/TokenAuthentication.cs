@@ -1,6 +1,5 @@
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Microsoft.IdentityModel.Tokens;
-using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
