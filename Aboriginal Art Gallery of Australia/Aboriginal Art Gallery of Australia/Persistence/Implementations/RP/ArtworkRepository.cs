@@ -7,9 +7,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
     public class ArtworkRepository : IRepository, IArtworkDataAccess
     {
-
-        //TODO: Test last 4 methods and fix GetById
-
         private IRepository _repo => this;
 
         private readonly IConfiguration _configuration;
@@ -19,7 +16,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             _configuration = configuration;
         }
 
-        //TODO: Find a way to write lines 25 and 28 in a single SQL statement
         public List<ArtworkOutputDto> GetArtworks()
         {
             var allArtworks = new List<ArtworkOutputDto>();
@@ -62,24 +58,19 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
         public ArtworkOutputDto? GetArtworkById(int id)
         {
             var artworkArtists = new List<String>();
-            var sqlParams1 = new NpgsqlParameter[]
-            {
-                new("artworkId", id)
-            };
-
-            var sqlParams2 = new NpgsqlParameter[]
+            var sqlParams = new NpgsqlParameter[]
             {
                 new("artworkId", id)
             };
 
             var artists = _repo.ExecuteReader<ArtistOutputDto>("SELECT display_name FROM artist_artwork " +
                 "INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id " +
-                "WHERE artwork_id = @artworkId", sqlParams1);
+                "WHERE artwork_id = @artworkId", sqlParams);
 
             var artworkOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id, artwork.title, " +
                 "artwork.description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, " +
                 "artwork.created_at, media.media_type as media_type FROM artwork INNER JOIN media " +
-                $"ON media.media_id = artwork.media_id WHERE artwork_id = @artworkId", sqlParams2)
+                $"ON media.media_id = artwork.media_id WHERE artwork_id = {id}")
                 .SingleOrDefault();
 
             foreach (ArtistOutputDto artist in artists)
