@@ -40,6 +40,5 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <param name="id">The specified artist ID to be matched.</param>
         /// <returns>Returns the result of the delete operation as a boolean value.</returns>
         bool DeleteArtist(int id);
-
     }
 }
