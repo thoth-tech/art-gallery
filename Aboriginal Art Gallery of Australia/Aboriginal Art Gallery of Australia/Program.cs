@@ -107,7 +107,7 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
  */
 
 // Implementation 1 - ADO
-builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
+// builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
 builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
 builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
 builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
@@ -120,6 +120,8 @@ builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
 builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
 builder.Services.AddScoped<IUserDataAccess, UserRepository>();*/
 
+// Implementation 3 - Active Record
+builder.Services.AddScoped<IArtistDataAccess, Artist>();
 
 // builder.Services.AddAuthorization();
 

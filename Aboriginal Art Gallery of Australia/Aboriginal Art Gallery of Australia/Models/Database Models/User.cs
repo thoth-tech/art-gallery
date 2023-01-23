@@ -1,9 +1,12 @@
-﻿namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
+﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
+using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
+
+namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
 {
     /// <summary>
     /// The User class is responsible for handling the database model associated with gallery users. 
     /// </summary>
-    public class User
+    public class User : IUserDataAccess
     {
         public int AccountId { get; set; }
         public string FirstName { get; set; }
@@ -26,6 +29,41 @@
             ActiveAt = activeAt;
             ModifiedAt = modifiedAt;
             CreatedAt = createdAt;
+        }
+
+        // Active Record - Everything under line 33 is required for the active record implementation.
+        private static string _connectionString = "Host=localhost;Database=Deakin University | AAGoA;Username=postgres;Password=postgreSQL;";
+
+        public User() { }
+
+        public List<UserOutputDto> GetUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserOutputDto? GetUserById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserInputDto? InsertUser(UserInputDto user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserInputDto? UpdateUser(int id, UserInputDto user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteUser(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string? AuthenticateUser(LoginDto login)
+        {
+            throw new NotImplementedException();
         }
     }
 }
