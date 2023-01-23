@@ -2,6 +2,10 @@
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
 {
+    /// <summary>
+    /// The IMediaDataAccess interface defines a contract. Any class that implements that contract must provide an implementation 
+    /// of the members defined in the interface.
+    /// </summary>
     public interface IMediaDataAccess
     {
         /// <summary>
@@ -26,7 +30,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <summary>
         /// Updates the media type matching the specified ID in the database/repository.
         /// </summary>
-        /// <param name="media">The updated media type details</param>
+        /// <param name="media">The updated media type details.</param>
         /// <returns>Returns a copy of the updated media type if successful or null if unsuccessful.</returns>
         MediaInputDto? UpdateMediaType(int id, MediaInputDto media);
 

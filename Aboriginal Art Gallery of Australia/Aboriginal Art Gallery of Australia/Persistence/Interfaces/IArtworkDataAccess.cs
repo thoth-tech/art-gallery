@@ -2,6 +2,10 @@
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
 {
+    /// <summary>
+    /// The IArtworkDataAccess interface defines a contract. Any class that implements that contract must provide an implementation 
+    /// of the members defined in the interface.
+    /// </summary>
     public interface IArtworkDataAccess
     {
         /// <summary>

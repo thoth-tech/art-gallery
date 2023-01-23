@@ -1,9 +1,11 @@
 ﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
-using static Aboriginal_Art_Gallery_of_Australia.Models.DTOs.UserInputDto;
-using static Aboriginal_Art_Gallery_of_Australia.Models.DTOs.UserOutputDto;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
 {
+    /// <summary>
+    /// The IUserDataAccess interface defines a contract. Any class that implements that contract must provide an implementation 
+    /// of the members defined in the interface.
+    /// </summary>
     public interface IUserDataAccess
     {
         /// <summary>
@@ -28,7 +30,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <summary>
         /// Updates the user matching the specified ID in the database/repository.
         /// </summary>
-        /// <param name="user">The updated user details</param>
+        /// <param name="user">The updated user details.</param>
         /// <returns>Returns a copy of the updated user if successful or null if unsuccessful.</returns>
         UserInputDto? UpdateUser(int id, UserInputDto user);
 

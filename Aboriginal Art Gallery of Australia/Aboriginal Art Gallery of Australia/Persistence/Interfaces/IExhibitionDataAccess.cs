@@ -2,6 +2,10 @@
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
 {
+    /// <summary>
+    /// The IExhibitionDataAccess interface defines a contract. Any class that implements that contract must provide an implementation 
+    /// of the members defined in the interface.
+    /// </summary>
     public interface IExhibitionDataAccess
     {
         /// <summary>
@@ -32,7 +36,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <summary>
         /// Updates the exhibition matching the specified ID in the database/repository.
         /// </summary>
-        /// <param name="exhibition">The updated exhibition details</param>
+        /// <param name="exhibition">The updated exhibition details.</param>
         /// <returns>Returns a copy of the updated exhibition if successful or null if unsuccessful.</returns>
         ExhibitionInputDto? UpdateExhibition(int id, ExhibitionInputDto exhibition);
 
@@ -43,8 +47,20 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <returns>Returns the result of the delete operation as a boolean value.</returns>
         bool DeleteExhibition(int id);
 
-
+        /// <summary>
+        ///  Allocates the specified artwork to the specified exhibition in the database/repository.
+        /// </summary>
+        /// <param name="artworkId">The Artist ID of the specified artist.</param>
+        /// <param name="exhibitionId">The Exhibition ID of the specified exhibition.</param>
+        /// <returns>Returns a copy of the updated record if successful or null if unsuccessful.</returns>
         ArtworkExhibitionDto? AllocateArtwork(int artworkId, int exhibitionId);
+
+        /// <summary>
+        /// Deallocates the specified artwork from the specified exhibition in the database/repository.
+        /// </summary>
+        /// <param name="artworkId">The Artist ID of the specified artist.</param>
+        /// <param name="exhibitionId">The Exhibition ID of the specified exhibition.</param>
+        /// <returns>Returns the result of the deallocation operation as a boolean value.</returns>
         bool DeallocateArtwork(int artworkId, int exhibitionId);
     }
 }
