@@ -715,7 +715,7 @@ app.MapPost("api/exhibitions/{exhibitionId}/allocate/artwork/{artworkId}", [Auth
     if (_artworkRepo.GetArtworkById(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}");
 
-    var result = _exhibitionRepo.AssignArtwork(artworkId, exhibitionId);
+    var result = _exhibitionRepo.AllocateArtwork(artworkId, exhibitionId);
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
@@ -727,7 +727,7 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deallocate/artwork/{artworkId}", [
     if (_artworkRepo.GetArtworkById(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}");
 
-    var result = _exhibitionRepo.DeassignArtwork(exhibitionId, artworkId);
+    var result = _exhibitionRepo.DeallocateArtwork(exhibitionId, artworkId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 

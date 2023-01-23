@@ -256,7 +256,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             }
         }
 
-        public ArtworkExhibitionDto? AssignArtwork(int artworkId, int exhibitionId)
+        public ArtworkExhibitionDto? AllocateArtwork(int artworkId, int exhibitionId)
         {
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
@@ -271,7 +271,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             }
         }
 
-        public bool DeassignArtwork(int exhibitionId, int artworkId)
+        public bool DeallocateArtwork(int exhibitionId, int artworkId)
         {
             using var connection = new NpgsqlConnection(_configuration.GetConnectionString("PostgresSQL"));
             {
