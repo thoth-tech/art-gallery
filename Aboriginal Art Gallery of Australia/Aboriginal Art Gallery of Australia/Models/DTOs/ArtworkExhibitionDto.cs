@@ -6,12 +6,12 @@
     public class ArtworkExhibitionDto
     {
         public int ArtworkId { get; set; }
-        public int ExhibitionName { get; set; }
+        public int ExhibitionId { get; set; }
 
-        public ArtworkExhibitionDto(int artworkId, int exhibitionName)
+        public ArtworkExhibitionDto(int artworkId, int exhibitionId)
         {
             ArtworkId = artworkId;
-            ExhibitionName = exhibitionName;
+            ExhibitionId = exhibitionId;
         }
 
         public ArtworkExhibitionDto() { }
