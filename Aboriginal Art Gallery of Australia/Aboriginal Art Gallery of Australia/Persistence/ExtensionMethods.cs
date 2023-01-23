@@ -37,12 +37,15 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
         }
 
         /// <summary>
-        /// 
+        /// Maps field values, contained in database columns, to properties within each bounded context using FastMember ORM.
+        /// Ignores snake casing of database column names, and correctly maps DATE (postgreSQL data type) to DateOnly with explicit casting.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="dr"></param>
-        /// <param name="entity"></param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <typeparam name="T"> Specifies the type of the 'entity' parameter in the method's argument, and the type-constraint that can be
+        /// placed on the method when called. </typeparam>
+        /// <param name="dr">The data that is to be mapped from its database field, to properties within a bounded context.</param>
+        /// <param name="entity">Responsible for specifying the type of object to be mapped by-name with FastMember's
+        /// TypeAccessor.</param>
+        /// <exception cref="ArgumentNullException"> Throws this exception the entity passed to the argument is null.</exception>
         public static void MapTo<T>(this NpgsqlDataReader dr, T entity)
         {
             if (entity == null)
