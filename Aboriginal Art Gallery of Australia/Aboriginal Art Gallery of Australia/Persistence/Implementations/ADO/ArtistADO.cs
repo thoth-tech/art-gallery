@@ -3,7 +3,6 @@ using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using Npgsql;
 using static Aboriginal_Art_Gallery_of_Australia.Persistence.ExtensionMethods;
 
-
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
 {
     public class ArtistADO : IArtistDataAccess
