@@ -21,12 +21,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         ArtworkOutputDto? GetArtworkById(int id);
 
         /// <summary>
-        /// Retrieves the artwork of the day from the database/repository.
-        /// </summary>
-        /// <returns>Returns the matching artwork if successful or null if unsuccessful.</returns>
-        ArtworkOutputDto? GetArtworkOfTheDay();
-
-        /// <summary>
         /// Inserts an artwork into the database/repository.
         /// </summary>
         /// <param name="artwork">The new artwork to be inserted.</param>

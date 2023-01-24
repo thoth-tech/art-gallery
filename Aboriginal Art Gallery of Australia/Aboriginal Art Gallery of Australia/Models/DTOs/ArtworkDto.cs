@@ -8,11 +8,11 @@
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string PrimaryImageUrl { get; set; } = string.Empty;
-        public string SecondaryImageUrl { get; set; } = string.Empty;
+        public string? SecondaryImageUrl { get; set; } = null;
         public int? YearCreated { get; set; } = null;
         public int? MediaId { get; set; } = null;
 
-        public ArtworkInputDto(string title, string description, string primaryImageURL, string secondaryImageURL, int? yearCreated, int? mediaId)
+        public ArtworkInputDto(string title, string description, string primaryImageURL, string? secondaryImageURL, int? yearCreated, int? mediaId)
         {
             Title = title;
             Description = description;
@@ -34,14 +34,14 @@
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string PrimaryImageUrl { get; set; } = string.Empty;
-        public string? SecondaryImageUrl { get; set; } = string.Empty;
-        public int YearCreated { get; set; } = 0;
-        public string MediaType { get; set; } = string.Empty;
+        public string? SecondaryImageUrl { get; set; } = null;
+        public int? YearCreated { get; set; } = null;
+        public string? MediaType { get; set; } = null;
         public DateTime ModifiedAt { get; set; } = new DateTime();
         public DateTime CreatedAt { get; set; } = new DateTime();
         public List<string> ContributingArtists { get; set; } = new List<string>();
 
-        public ArtworkOutputDto(int artworkId, string title, string description, string primaryImageURL, string? secondaryImageURL, int yearCreated, string mediaType, DateTime modifiedAt, DateTime createdAt, List<string> contributingArtists)
+        public ArtworkOutputDto(int artworkId, string title, string description, string primaryImageURL, string? secondaryImageURL, int? yearCreated, string? mediaType, DateTime modifiedAt, DateTime createdAt, List<string> contributingArtists)
         {
             ArtworkId = artworkId;
             Title = title;
