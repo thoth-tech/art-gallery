@@ -113,11 +113,22 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
         /// Validates the password string to see if the password contains any illegal characters.
         /// </summary>
         /// <param name="str">The string to be validated.</param>
-        /// <returns>Returns the result as a boolean value.</returns>
-        public static bool IsValidPassword(this string str)
+        /// <returns>Returns the result as a string value.</returns>
+        public static string IsValidPassword(this string str)
         {
-            Regex validPassword = new("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$");
-            return validPassword.IsMatch(str);
+            Regex validLength = new("^.{8,}$");
+            Regex validUppercase = new("^(?=.*?[A-Z])");
+            Regex validLowercase = new("^(?=.*?[a-z])");
+            Regex validDigit = new("^(?=.*?[0-9])");
+            Regex validCharacter = new("(?=.*?[#?!@$%^&*-])");
+
+            if (!validLength.IsMatch(str)) return "Password must be a minimum of 8 characters.";
+            if (!validUppercase.IsMatch(str)) return "Password must contain at least one uppercase letter.";
+            if (!validLowercase.IsMatch(str)) return "Password must contain at least one lowercase letter.";
+            if (!validDigit.IsMatch(str)) return "Password must contain at least one digit.";
+            if (!validCharacter.IsMatch(str)) return "Password must contain at least one special character.";
+
+            return "validated";
         }
 
         /// Option 1: Email Validation using the .NET library.

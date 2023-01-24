@@ -114,18 +114,18 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
 //builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
-/*builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
+builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
 builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
 builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
 builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
-builder.Services.AddScoped<IUserDataAccess, UserRepository>();*/
+builder.Services.AddScoped<IUserDataAccess, UserRepository>();
 
 // Implementation 3 - Active Record
-builder.Services.AddScoped<IArtistDataAccess, Artist>();
-builder.Services.AddScoped<IArtworkDataAccess, Artwork>();
-builder.Services.AddScoped<IExhibitionDataAccess, Exhibition>();
-builder.Services.AddScoped<IMediaDataAccess, Media>();
-builder.Services.AddScoped<IUserDataAccess, User>();
+//builder.Services.AddScoped<IArtistDataAccess, Artist>();
+//builder.Services.AddScoped<IArtworkDataAccess, Artwork>();
+//builder.Services.AddScoped<IExhibitionDataAccess, Exhibition>();
+//builder.Services.AddScoped<IMediaDataAccess, Media>();
+//builder.Services.AddScoped<IUserDataAccess, User>();
 
 // builder.Services.AddAuthorization();
 
@@ -771,16 +771,8 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
                 if (property.Name.Contains("Email") && propertyValue.ToString()!.IsValidEmail() == false)
                     return Results.BadRequest($"A valid email is required.");
 
-                if (property.Name.Contains("Password") && propertyValue.ToString()!.IsValidPassword() == false)
-                    return Results.BadRequest($"A valid password is required. Password must contain: " +
-                        $"at least 8 characters, " +
-                        $"at least one lowercase letter, " +
-                        $"at least one uppercase letter, " +
-                        $"at least one digit, and " +
-                        $"at least one special character.");
-
-                //if (property.Name.Contains("Password") && propertyValue.ToString()!.IsValidPassword() == false)
-                //    return Results.BadRequest($"A valid password is required.");
+                if (property.Name.Contains("Password") && !propertyValue.ToString()!.IsValidPassword().Contains("validated"))
+                    return Results.BadRequest(propertyValue.ToString()!.IsValidPassword());
             }
         }
     }
