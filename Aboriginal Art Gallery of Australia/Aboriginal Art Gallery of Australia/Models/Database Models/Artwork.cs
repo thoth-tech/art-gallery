@@ -1,13 +1,12 @@
 ﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
 {
     /// <summary>
-    /// The Artwork class is responsible for handling the database model associated with artworks. 
+    /// The Artworks class is responsible for handling the database model associated with artworks. The Second half of the Artworks class from line 35 down is the implementation of the Active Record design pattern. This is a duplication of code from the ADO implementation for demonstration purposes.
     /// </summary>
     public class Artwork : IArtworkDataAccess
     {
@@ -43,7 +42,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
         {
             List<ArtworkOutputDto> artworks = new();
             List<KeyValuePair<int, string>> allArtworkArtists = new();
-            using NpgsqlConnection connection = new(_configuration.GetConnectionString("PostgresSQL"));
+            using NpgsqlConnection connection = new(_connectionString);
             {
                 connection.Open();
                 using NpgsqlCommand cmd1 = new("SELECT artwork_id, display_name as contributing_artist " +
@@ -103,7 +102,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
         public ArtworkOutputDto? GetArtworkById(int id)
         {
             List<string> artworkArtists = new();
-            using NpgsqlConnection connection = new(_configuration.GetConnectionString("PostgresSQL"));
+            using NpgsqlConnection connection = new(_connectionString);
             {
                 connection.Open();
                 using NpgsqlCommand cmd1 = new("SELECT artwork_id, display_name as contributing_artist " +

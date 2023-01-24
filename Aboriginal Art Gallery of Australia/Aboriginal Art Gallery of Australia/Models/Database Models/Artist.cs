@@ -6,7 +6,7 @@ using static Aboriginal_Art_Gallery_of_Australia.Persistence.ExtensionMethods;
 namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
 {
     /// <summary>
-    /// The Artist class is responsible for handling the database model associated with artists. The Second half of the Artist class from line 37 down is the implementation of the Active Record design pattern. This is a duplication of code from the ADO implementation for demonstration purposes.
+    /// The Artist class is responsible for handling the database model associated with artists. The Second half of the Artist class from line 37 down is the implementation of the Active Record design pattern. This is a duplication of code from the ADO implementation for OOP demonstration purposes.
     /// </summary>
     public class Artist : IArtistDataAccess
     {
