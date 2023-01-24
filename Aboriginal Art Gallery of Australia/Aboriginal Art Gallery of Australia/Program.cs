@@ -110,7 +110,7 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
 // builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
 // builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
 // builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
-builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
+// builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
 builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
@@ -124,6 +124,7 @@ builder.Services.AddScoped<IUserDataAccess, UserRepository>();*/
 builder.Services.AddScoped<IArtistDataAccess, Artist>();
 builder.Services.AddScoped<IArtworkDataAccess, Artwork>();
 builder.Services.AddScoped<IExhibitionDataAccess, Exhibition>();
+builder.Services.AddScoped<IMediaDataAccess, Media>();
 
 // builder.Services.AddAuthorization();
 
