@@ -83,24 +83,16 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             return artworkOutput;
         }
 
-        public ArtworkOutputDto? GetArtworkOfTheDay()
-        {
-            // Ultra hacky to just get something working for you guys. Will swap between artwork 1 and artwork 2 each minute.
-            if (DateTime.Now.Minute % 2 == 0)
-                return GetArtworkById(1);
-            else return GetArtworkById(2);
-        }
-
         public ArtworkInputDto? InsertArtwork(ArtworkInputDto artwork)
         {
             var sqlParams = new NpgsqlParameter[]
             {
                 new("title", artwork.Title),
                 new("description", artwork.Description),
-                new("mediaId", artwork.MediaId),
+                new("mediaId", artwork.MediaId ?? (object)DBNull.Value),
                 new("primary_image_url", artwork.PrimaryImageUrl),
                 new("secondary_image_url", artwork.SecondaryImageUrl ?? (object)DBNull.Value),
-                new("year_created", artwork.YearCreated)
+                new("year_created", artwork.YearCreated ?? (object)DBNull.Value)
             };
 
             var result = _repo.ExecuteReader<ArtworkInputDto>("INSERT INTO artwork VALUES (DEFAULT, " +
@@ -118,10 +110,10 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("artwork_id", id),
                 new("title", artwork.Title),
                 new("description", artwork.Description),
-                new("mediaId", artwork.MediaId),
+                new("mediaId", artwork.MediaId ?? (object)DBNull.Value),
                 new("primaryImageURL", artwork.PrimaryImageUrl),
                 new("secondaryImageURL", artwork.SecondaryImageUrl ?? (object)DBNull.Value),
-                new("yearCreated", artwork.YearCreated)
+                new("yearCreated", artwork.YearCreated ?? (object)DBNull.Value)
             };
 
             var result = _repo.ExecuteReader<ArtworkInputDto>("UPDATE artwork SET title = @title, description = @description, " +
