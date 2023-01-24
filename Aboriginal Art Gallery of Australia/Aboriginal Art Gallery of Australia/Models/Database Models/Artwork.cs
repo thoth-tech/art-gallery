@@ -6,7 +6,7 @@ using Npgsql;
 namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
 {
     /// <summary>
-    /// The Artworks class is responsible for handling the database model associated with artworks. The Second half of the Artworks class from line 35 down is the implementation of the Active Record design pattern. This is a duplication of code from the ADO implementation for demonstration purposes.
+    /// The Artworks class is responsible for handling the database model associated with artworks. The Second half of the Artworks class from line 35 down is the implementation of the Active Record design pattern. This is a duplication of code from the ADO implementation for OOP demonstration purposes.
     /// </summary>
     public class Artwork : IArtworkDataAccess
     {
@@ -33,8 +33,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
             CreatedAt = createdAt;
         }
 
-        // Active Record - Everything under line 30 is required for the active record implementation.
-        private static string _connectionString = "Host=localhost;Database=Deakin University | AAGoA;Username=postgres;Password=postgreSQL;";
+        // Active Record - Everything under line 35 is required for the active record implementation.
+        private static readonly string _connectionString = "Host=localhost;Database=Deakin University | AAGoA;Username=postgres;Password=postgreSQL;";
 
         public Artwork() { }
 
