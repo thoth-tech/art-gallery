@@ -796,13 +796,8 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
 
         if (!user.Email.IsValidEmail())
             return Results.BadRequest($"A valid email is required.");
-        if (!user.Password.IsValidPassword())
-            return Results.BadRequest($"A valid password is required. Password must contain: " +
-                        $"at least 8 characters, " +
-                        $"at least one lowercase letter, " +
-                        $"at least one uppercase letter, " +
-                        $"at least one digit, and " +
-                        $"at least one special character.");
+        if (!user.Password.IsValidPassword().Contains("validated"))
+            return Results.BadRequest(user.Password.IsValidPassword());
     }
     else return Results.BadRequest($"User details required.");
 
