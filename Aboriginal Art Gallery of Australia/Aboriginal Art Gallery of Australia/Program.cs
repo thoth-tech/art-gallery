@@ -107,18 +107,18 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
  */
 
 // Implementation 1 - ADO
-// builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
-// builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
-// builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
-// builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
-//builder.Services.AddScoped<IUserDataAccess, UserADO>();
+builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
+builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
+builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
+builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
+builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
-builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
-builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
-builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
-builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
-builder.Services.AddScoped<IUserDataAccess, UserRepository>();
+//builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
+//builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
+//builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
+//builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
+//builder.Services.AddScoped<IUserDataAccess, UserRepository>();
 
 // Implementation 3 - Active Record
 //builder.Services.AddScoped<IArtistDataAccess, Artist>();
@@ -749,7 +749,6 @@ app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
-// Issue with validating email and password - always says invalid when should return valid
 app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo, UserInputDto user) =>
 {
     PropertyInfo[] properties = user.GetType().GetProperties();
@@ -768,6 +767,9 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
             }
             if (propertyValue != null)
             {
+                if (property.Name.Contains("Email") && (_accountRepo.GetUsers().Exists(x => x.Email == user.Email) == true))
+                    return Results.Conflict($"An account with this email already exists.");
+
                 if (property.Name.Contains("Email") && propertyValue.ToString()!.IsValidEmail() == false)
                     return Results.BadRequest($"A valid email is required.");
 
@@ -794,6 +796,8 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
         else if (user.Password.IsNullOrEmpty()) return Results.BadRequest($"A user {nameof(user.Password)} is required.");
         else if (user.Role.IsNullOrEmpty()) return Results.BadRequest($"A user {nameof(user.Role)} is required.");
 
+        if (_accountRepo.GetUsers().Exists(x => x.Email == user.Email) == true)
+            return Results.Conflict($"An account with this email already exists.");
         if (!user.Email.IsValidEmail())
             return Results.BadRequest($"A valid email is required.");
         if (!user.Password.IsValidPassword().Contains("validated"))
