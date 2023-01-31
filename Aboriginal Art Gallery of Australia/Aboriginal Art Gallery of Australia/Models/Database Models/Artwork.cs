@@ -11,12 +11,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
     public class Artwork : IArtworkDataAccess
     {
         public int ArtworkId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string PrimaryImageURL { get; set; }
-        public string? SecondaryImageURL { get; set; }
-        public int? YearCreated { get; set; }
-        public int? MediaId { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string PrimaryImageURL { get; set; } = string.Empty;
+        public string? SecondaryImageURL { get; set; } = null;
+        public int? YearCreated { get; set; } = null;
+        public int? MediaId { get; set; } = null;
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 

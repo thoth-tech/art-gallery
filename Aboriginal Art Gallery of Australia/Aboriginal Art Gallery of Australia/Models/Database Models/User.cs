@@ -13,11 +13,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
     public class User : IUserDataAccess
     {
         public int AccountId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string PasswordHash { get; set; }
-        public string? Role { get; set; } = "Member";
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+        public string? Role { get; set; } = "User";
         public DateTime? ActiveAt { get; set; }
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -37,13 +37,12 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
 
         // Active Record - Everything under line 33 is required for the active record implementation.
         private static string _connectionString = "Host=localhost;Database=Deakin University | AAGoA;Username=postgres;Password=postgreSQL;";
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration? _configuration;
 
         public User(IConfiguration configuration) 
         {
             _configuration = configuration;
         }
-
 
         public List<UserOutputDto> GetUsers()
         {
