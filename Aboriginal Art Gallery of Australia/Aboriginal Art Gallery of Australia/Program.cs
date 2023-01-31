@@ -478,7 +478,7 @@ app.MapGet("api/media/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
 
-app.MapPost("api/media><l0/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
+app.MapPost("api/media/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
 {
     PropertyInfo[] properties = media.GetType().GetProperties();
     List<MediaOutputDto> mediaTypes = _mediaRepo.GetMediaTypes();
