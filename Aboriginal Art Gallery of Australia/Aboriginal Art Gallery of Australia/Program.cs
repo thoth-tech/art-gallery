@@ -81,12 +81,13 @@ builder.Services.AddDateOnlyTimeOnlyStringConverters();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.UseDateOnlyTimeOnlyStringConverters();
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Aboriginal Art Gallery API",
+        Title = "DDGCIT Gallery API",
         Version = "1.0.0",
-        Description = "New backend service that provides resources for the Aboriginal Art Gallery of Australia",
+        Description = "A new backend services for the DDGCIT Art Gallery.",
         Contact = new OpenApiContact
         {
             Name = "John Doe",
@@ -95,6 +96,8 @@ builder.Services.AddSwaggerGen(options =>
     });
     options.AddSecurityDefinition("bearer", securityScheme);
     options.AddSecurityRequirement(securityRequirement);
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    options.UseDateOnlyTimeOnlyStringConverters();
 });
 #endregion
 
@@ -131,23 +134,25 @@ builder.Services.AddScoped<IUserDataAccess, UserRepository>();
 
 var app = builder.Build();
 
+app.UseStaticFiles();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
-    app.UseSwaggerUI(options =>
+    app.UseSwaggerUI(setup =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-        options.RoutePrefix = string.Empty;
+        setup.InjectStylesheet("/styles/theme-deakin.css");
+        setup.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
     });
+
 }
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-#region Map Artist Endpoints
 
+#region Map Artist Endpoint
 app.MapGet("api/artists/", (IArtistDataAccess _artistRepo) => _artistRepo.GetArtists());
 
 app.MapGet("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistId) =>

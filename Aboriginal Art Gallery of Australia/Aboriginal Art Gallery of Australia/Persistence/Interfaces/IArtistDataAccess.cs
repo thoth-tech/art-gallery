@@ -30,6 +30,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <summary>
         /// Updates the artist matching the specified ID in the database/repository.
         /// </summary>
+        /// <param name="id">The ID of the artist to be updated.</param>
         /// <param name="artist">The updated artist details</param>
         /// <returns>Returns a copy of the updated artist if successful or null if unsuccessful.</returns>
         ArtistInputDto? UpdateArtist(int id, ArtistInputDto artist);

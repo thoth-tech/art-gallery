@@ -24,12 +24,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
         }
 
         /// <summary>
-        /// Adds a <see cref="NpgsqlParameter"/> to the <see cref="NpgsqlParameterCollection"/> given the specified parameter name and
-        /// value, works with nullable datatypes.
+        /// Adds a NpgsqlParameter to the NpgsqlParameterCollection given the specified parameter name and value, works with nullable datatypes.
         /// </summary>
-        /// <param name="collection">Represents a collection of parameters relevant to a <see cref="NpgsqlCommand"/> as well as their respective mappings to columns in a <see cref="DataSet"/>.</param>
-        /// <param name="parameterName">The name of the <see cref="NpgsqlParameter"/>.</param>
-        /// <param name="value">The value of the <see cref="NpgsqlParameter"/> to add to the collection.</param>
+        /// <param name="collection">Represents a collection of parameters relevant to a NpgsqlCommand as well as their respective mappings to columns in a DataSet.</param>
+        /// <param name="parameterName">The name of the NpgsqlParameter.</param>
+        /// <param name="value">The value of the NpgsqlParameter to add to the collection.</param>
         /// <returns>The parameter that was added or null depending on the objects value.</returns>
         public static NpgsqlParameter AddWithNullableValue(this NpgsqlParameterCollection collection, string parameterName, object? value)
         {
@@ -151,6 +150,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
             }
         }
 
+        
+#pragma warning disable CS1587 // XML comment is not placed on a valid language element
         /// Option 2: Email Validation using Regex
         /// <summary>
         /// Validates the email string to see if the email is in the correct format using regex.
@@ -167,4 +168,5 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence
         //    return false;
         //}
     }
+#pragma warning restore CS1587 // XML comment is not placed on a valid language element
 }

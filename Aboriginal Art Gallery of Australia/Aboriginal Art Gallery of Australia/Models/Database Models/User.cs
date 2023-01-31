@@ -37,7 +37,6 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
         }
 
         // Active Record - Everything under line 33 is required for the active record implementation.
-        private static string _connectionString = "Host=localhost;Database=Deakin University | AAGoA;Username=postgres;Password=postgreSQL;";
         private readonly IConfiguration? _configuration;
 
         public User(IConfiguration configuration) 

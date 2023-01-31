@@ -30,6 +30,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <summary>
         /// Updates the user matching the specified ID in the database/repository.
         /// </summary>
+        /// <param name="id">The ID of the user to be updated.</param>
         /// <param name="user">The updated user details.</param>
         /// <returns>Returns a copy of the updated user if successful or null if unsuccessful.</returns>
         UserInputDto? UpdateUser(int id, UserInputDto user);
