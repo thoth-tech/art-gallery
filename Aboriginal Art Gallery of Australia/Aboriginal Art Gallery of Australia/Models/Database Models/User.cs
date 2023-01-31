@@ -1,4 +1,5 @@
-﻿using Aboriginal_Art_Gallery_of_Australia.Authentication;
+﻿using System.Globalization;
+using Aboriginal_Art_Gallery_of_Australia.Authentication;
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using BCrypt.Net;
@@ -43,6 +44,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
         {
             _configuration = configuration;
         }
+
+        readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
         public List<UserOutputDto> GetUsers()
         {
@@ -161,8 +164,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
                 using NpgsqlCommand cmd = new("INSERT INTO account(first_name, last_name, email, password_hash, role, active_at, modified_at, created_at) " +
                                                   "VALUES (@firstName, @lastName, @email, @passwordHash, @role, @activeAt, current_timestamp, current_timestamp);", connection);
                 {
-                    cmd.Parameters.AddWithValue("@firstName", user.FirstName);
-                    cmd.Parameters.AddWithValue("@lastName", user.LastName);
+                    cmd.Parameters.AddWithValue("@firstName", textInfo.ToTitleCase(user.FirstName));
+                    cmd.Parameters.AddWithValue("@lastName", textInfo.ToTitleCase(user.LastName));
                     cmd.Parameters.AddWithValue("@email", user.Email);
                     cmd.Parameters.AddWithValue("@passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384));
                     cmd.Parameters.AddWithValue("@role", "User");
@@ -210,11 +213,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
                     cmd.Parameters.AddWithValue("@accountId", id);
                     if (user.FirstName is not null and not "" and not "string")
                     {
-                        cmd.Parameters.AddWithValue("@firstName", user.FirstName);
+                        cmd.Parameters.AddWithValue("@firstName", textInfo.ToTitleCase(user.FirstName));
                     }
                     if (user.LastName is not null and not "" and not "string")
                     {
-                        cmd.Parameters.AddWithValue("@lastName", user.LastName);
+                        cmd.Parameters.AddWithValue("@lastName", textInfo.ToTitleCase(user.LastName));
                     }
                     if (user.Email is not null and not "" and not "string")
                     {
@@ -226,7 +229,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
                     }
                     if (user.Role is not null && user.Role != "" && user.Password != "string")
                     {
-                        cmd.Parameters.AddWithValue("@role", user.Role);
+                        cmd.Parameters.AddWithValue("@role", textInfo.ToTitleCase(user.Role));
                     }
                     int result = cmd.ExecuteNonQuery();
                     return result is 1 ? user : null;

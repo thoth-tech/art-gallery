@@ -1,4 +1,6 @@
-﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
+﻿using System.Globalization;
+using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
+using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using Npgsql;
 
@@ -12,6 +14,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
         {
             _configuration = configuration;
         }
+
+        readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
         public List<ExhibitionOutputDto> GetExhibitions()
         {
@@ -173,7 +177,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 using NpgsqlCommand cmd = new("INSERT INTO exhibition(name, description, background_image_url, start_date, end_date, modified_at, created_at) " +
                                                   "VALUES (@name, @description, @backgroundImageUrl, @startDate, @endDate, current_timestamp, current_timestamp);", connection);
                 {
-                    cmd.Parameters.AddWithValue("@name", exhibition.Name);
+                    cmd.Parameters.AddWithValue("@name", textInfo.ToTitleCase(exhibition.Name));
                     cmd.Parameters.AddWithValue("@description", exhibition.Description);
                     cmd.Parameters.AddWithValue("@backgroundImageUrl", exhibition.BackgroundImageUrl);
                     cmd.Parameters.AddWithValue("@startDate", exhibition.StartDate);
@@ -191,14 +195,14 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             {
                 connection.Open();
                 using NpgsqlCommand cmd = new("UPDATE exhibition " +
-                                              "SET name = @name " +
+                                              "SET name = @name, " +
                                                   "description = @description, " +
                                                   "background_image_url = @backgroundImageUrl, " +
                                                   "modified_at = current_timestamp " +
                                               "WHERE exhibition_id = @exhibitionId", connection);
                 {
                     cmd.Parameters.AddWithValue("@exhibitionId", id);
-                    cmd.Parameters.AddWithValue("@name", exhibition.Name);
+                    cmd.Parameters.AddWithValue("@name", textInfo.ToTitleCase(exhibition.Name));
                     cmd.Parameters.AddWithValue("@description", exhibition.Description);
                     cmd.Parameters.AddWithNullableValue("@backgroundImageUrl", exhibition.BackgroundImageUrl);
                     int result = cmd.ExecuteNonQuery();
@@ -244,7 +248,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                     _ = cmd.Parameters.AddWithValue("@exhibitionId", id);
                     if (exhibition.Name is not null and not "" and not "string")
                     {
-                        _ = cmd.Parameters.AddWithValue("@name", exhibition.Name);
+                        _ = cmd.Parameters.AddWithValue("@name", textInfo.ToTitleCase(exhibition.Name));
                     }
                     if (exhibition.Description is not null and not "" and not "string")
                     {

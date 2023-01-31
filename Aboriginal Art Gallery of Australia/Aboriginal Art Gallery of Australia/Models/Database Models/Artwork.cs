@@ -1,4 +1,5 @@
-﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
+﻿using System.Globalization;
+using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using Npgsql;
@@ -37,6 +38,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
         private static readonly string _connectionString = "Host=localhost;Database=Deakin University | AAGoA;Username=postgres;Password=postgreSQL;";
 
         public Artwork() { }
+
+        readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
         public List<ArtworkOutputDto> GetArtworks()
         {
@@ -161,7 +164,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
                 using NpgsqlCommand cmd = new("INSERT INTO artwork(title, description, primary_image_url, secondary_image_url, year_created, media_id, modified_at, created_at) " +
                                               "VALUES (@title, @description, @primaryImageURL, @secondaryImageURL, @yearCreated, @mediaId, current_timestamp, current_timestamp)", connection);
                 {
-                    cmd.Parameters.AddWithValue("@title", artwork.Title);
+                    cmd.Parameters.AddWithValue("@title", textInfo.ToTitleCase(artwork.Title));
                     cmd.Parameters.AddWithValue("@description", artwork.Description);
                     cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
                     cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
@@ -192,7 +195,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
                                                   "WHERE artwork_id = @artwork_id", connection);
                 {
                     cmd.Parameters.AddWithValue("@artwork_id", id);
-                    cmd.Parameters.AddWithValue("@title", artwork.Title);
+                    cmd.Parameters.AddWithValue("@title", textInfo.ToTitleCase(artwork.Title));
                     cmd.Parameters.AddWithValue("@description", artwork.Description);
                     cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
                     cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);

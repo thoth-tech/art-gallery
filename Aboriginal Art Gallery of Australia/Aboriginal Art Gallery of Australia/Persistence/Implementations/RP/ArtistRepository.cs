@@ -2,6 +2,7 @@
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using static Aboriginal_Art_Gallery_of_Australia.Persistence.ExtensionMethods;
 using Npgsql;
+using System.Globalization;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
@@ -15,6 +16,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
         {
             _configuration = configuration;
         }
+
+        readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
         public List<ArtistOutputDto> GetArtists()
         {
@@ -39,11 +42,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
         {
             var sqlParams = new NpgsqlParameter[]
             {
-                new("firstName", artist.FirstName),
-                new("lastName", artist.LastName),
-                new("displayName", artist.DisplayName),
+                new("firstName", textInfo.ToTitleCase(artist.FirstName)),
+                new("lastName", textInfo.ToTitleCase(artist.LastName)),
+                new("displayName", textInfo.ToTitleCase(artist.DisplayName)),
                 new("profileImageURL", artist.ProfileImageUrl),
-                new("placeOfBirth", artist.PlaceOfBirth),
+                new("placeOfBirth", textInfo.ToTitleCase(artist.PlaceOfBirth)),
                 new("yearOfBirth", artist.YearOfBirth),
                 new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value)
             };
@@ -61,11 +64,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var sqlParams = new NpgsqlParameter[]
             {
                 new("artistId", id),
-                new("firstName", artist.FirstName),
-                new("lastName", artist.LastName),
-                new("displayName", artist.DisplayName),
+                new("firstName", textInfo.ToTitleCase(artist.FirstName)),
+                new("lastName", textInfo.ToTitleCase(artist.LastName)),
+                new("displayName", textInfo.ToTitleCase(artist.DisplayName)),
                 new("profileImageURL", artist.ProfileImageUrl),
-                new("placeOfBirth", artist.PlaceOfBirth),
+                new("placeOfBirth", textInfo.ToTitleCase(artist.PlaceOfBirth)),
                 new("yearOfBirth", artist.YearOfBirth),
                 new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value)
             };

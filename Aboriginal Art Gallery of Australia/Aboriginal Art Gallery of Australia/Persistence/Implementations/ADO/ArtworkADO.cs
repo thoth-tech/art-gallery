@@ -1,4 +1,6 @@
-﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
+﻿using System.Globalization;
+using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
+using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using Npgsql;
 
@@ -12,6 +14,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
         {
             _configuration = configuration;
         }
+
+        readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
         public List<ArtworkOutputDto> GetArtworks()
         {
@@ -136,7 +140,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                 using NpgsqlCommand cmd = new("INSERT INTO artwork(title, description, primary_image_url, secondary_image_url, year_created, media_id, modified_at, created_at) " +
                                               "VALUES (@title, @description, @primaryImageURL, @secondaryImageURL, @yearCreated, @mediaId, current_timestamp, current_timestamp)", connection);
                 {
-                    cmd.Parameters.AddWithValue("@title", artwork.Title);
+                    cmd.Parameters.AddWithValue("@title", textInfo.ToTitleCase(artwork.Title));
                     cmd.Parameters.AddWithValue("@description", artwork.Description);
                     cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
                     cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
@@ -167,7 +171,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
                                                   "WHERE artwork_id = @artwork_id", connection);
                 {
                     cmd.Parameters.AddWithValue("@artwork_id", id);
-                    cmd.Parameters.AddWithValue("@title", artwork.Title);
+                    cmd.Parameters.AddWithValue("@title", textInfo.ToTitleCase(artwork.Title));
                     cmd.Parameters.AddWithValue("@description", artwork.Description);
                     cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
                     cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
@@ -180,73 +184,73 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
         }
 
         // Option 2: The update function does not require all DTO fields to be complete. Any field left null, “”, or its default value; i.e., string, 0, ect, will not be updated. Nullable fields can not be set back to null after being updated.
-/*        public ArtworkInputDto? UpdateArtwork(int id, ArtworkInputDto artwork)
-        {
-            using NpgsqlConnection connection = new(_configuration.GetConnectionString("PostgresSQL"));
-            {
-                connection.Open();
+        /*        public ArtworkInputDto? UpdateArtwork(int id, ArtworkInputDto artwork)
+                {
+                    using NpgsqlConnection connection = new(_configuration.GetConnectionString("PostgresSQL"));
+                    {
+                        connection.Open();
 
-                string cmdString = "UPDATE artwork SET ";
+                        string cmdString = "UPDATE artwork SET ";
 
-                if (artwork.Title is not null and not "" and not "string")
-                {
-                    cmdString += "title = @title, ";
-                }
-                if (artwork.Description is not null and not "" and not "string")
-                {
-                    cmdString += "description = @description, ";
-                }
-                if (artwork.PrimaryImageUrl is not null and not "" and not "string")
-                {
-                    cmdString += "primary_image_url = @primaryImageURL, ";
-                }
-                if (artwork.SecondaryImageUrl is not null and not "" and not "string")
-                {
-                    cmdString += "secondary_image_url = @secondaryImageURL, ";
-                }
-                if (artwork.YearCreated is not null and not 0)
-                {
-                    cmdString += "year_created = @yearCreated, ";
-                }
-                if (artwork.MediaId is not null and not 0)
-                {
-                    cmdString += "media_id = @mediaId, ";
-                }
+                        if (artwork.Title is not null and not "" and not "string")
+                        {
+                            cmdString += "title = @title, ";
+                        }
+                        if (artwork.Description is not null and not "" and not "string")
+                        {
+                            cmdString += "description = @description, ";
+                        }
+                        if (artwork.PrimaryImageUrl is not null and not "" and not "string")
+                        {
+                            cmdString += "primary_image_url = @primaryImageURL, ";
+                        }
+                        if (artwork.SecondaryImageUrl is not null and not "" and not "string")
+                        {
+                            cmdString += "secondary_image_url = @secondaryImageURL, ";
+                        }
+                        if (artwork.YearCreated is not null and not 0)
+                        {
+                            cmdString += "year_created = @yearCreated, ";
+                        }
+                        if (artwork.MediaId is not null and not 0)
+                        {
+                            cmdString += "media_id = @mediaId, ";
+                        }
 
-                cmdString += "modified_at = current_timestamp WHERE artwork_id = @artwork_id";
+                        cmdString += "modified_at = current_timestamp WHERE artwork_id = @artwork_id";
 
-                using NpgsqlCommand cmd = new(cmdString, connection);
-                {
-                    _ = cmd.Parameters.AddWithValue("@artwork_id", id);
-                    if (artwork.Title is not null and not "" and not "string")
-                    {
-                        _ = cmd.Parameters.AddWithValue("@title", artwork.Title);
+                        using NpgsqlCommand cmd = new(cmdString, connection);
+                        {
+                            _ = cmd.Parameters.AddWithValue("@artwork_id", id);
+                            if (artwork.Title is not null and not "" and not "string")
+                            {
+                                _ = cmd.Parameters.AddWithValue("@title", textInfo.ToTitleCase(artwork.Title));
+                            }
+                            if (artwork.Description is not null and not "" and not "string")
+                            {
+                                _ = cmd.Parameters.AddWithValue("@description", artwork.Description);
+                            }
+                            if (artwork.PrimaryImageUrl is not null and not "" and not "string")
+                            {
+                                _ = cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
+                            }
+                            if (artwork.SecondaryImageUrl is not null and not "" and not "string")
+                            {
+                                _ = cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
+                            }
+                            if (artwork.YearCreated is not null and not 0)
+                            {
+                                _ = cmd.Parameters.AddWithNullableValue("@yearCreated", artwork.YearCreated);
+                            }
+                            if (artwork.MediaId is not null and not 0)
+                            {
+                                _ = cmd.Parameters.AddWithNullableValue("@mediaId", artwork.MediaId);
+                            }
+                            int result = cmd.ExecuteNonQuery();
+                            return result is 1 ? artwork : null;
+                        }
                     }
-                    if (artwork.Description is not null and not "" and not "string")
-                    {
-                        _ = cmd.Parameters.AddWithValue("@description", artwork.Description);
-                    }
-                    if (artwork.PrimaryImageUrl is not null and not "" and not "string")
-                    {
-                        _ = cmd.Parameters.AddWithValue("@primaryImageURL", artwork.PrimaryImageUrl);
-                    }
-                    if (artwork.SecondaryImageUrl is not null and not "" and not "string")
-                    {
-                        _ = cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
-                    }
-                    if (artwork.YearCreated is not null and not 0)
-                    {
-                        _ = cmd.Parameters.AddWithNullableValue("@yearCreated", artwork.YearCreated);
-                    }
-                    if (artwork.MediaId is not null and not 0)
-                    {
-                        _ = cmd.Parameters.AddWithNullableValue("@mediaId", artwork.MediaId);
-                    }
-                    int result = cmd.ExecuteNonQuery();
-                    return result is 1 ? artwork : null;
-                }
-            }
-        }*/
+                }*/
 
         public bool DeleteArtwork(int id)
         {

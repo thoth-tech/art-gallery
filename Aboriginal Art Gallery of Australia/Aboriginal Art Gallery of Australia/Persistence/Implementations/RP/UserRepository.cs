@@ -4,6 +4,8 @@ using static Aboriginal_Art_Gallery_of_Australia.Persistence.ExtensionMethods;
 using Aboriginal_Art_Gallery_of_Australia.Authentication;
 using Npgsql;
 using BCrypt.Net;
+using System.Globalization;
+using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
@@ -17,6 +19,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
         {
             _configuration = configuration;
         }
+
+        readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
         public List<UserOutputDto> GetUsers()
         {
@@ -41,8 +45,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
         {
             var sqlParams = new NpgsqlParameter[]
             {
-                new("firstName", user.FirstName),
-                new("lastName", user.LastName),
+                new("firstName", textInfo.ToTitleCase(user.FirstName)),
+                new("lastName", textInfo.ToTitleCase(user.LastName)),
                 new("email", user.Email),
                 new("passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384)),
                 new("role", "User"),
@@ -62,11 +66,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var sqlParams = new NpgsqlParameter[]
             {
                 new("accountId", id),
-                new("firstName", user.FirstName),
-                new("lastName", user.LastName),
+                new("firstName", textInfo.ToTitleCase(user.FirstName)),
+                new("lastName", textInfo.ToTitleCase(user.LastName)),
                 new("email", user.Email),
                 new("passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384)),
-                new("role", user.Role)
+                new("role", textInfo.ToTitleCase(user.Role))
             };
 
             String cmdString = "UPDATE account SET ";

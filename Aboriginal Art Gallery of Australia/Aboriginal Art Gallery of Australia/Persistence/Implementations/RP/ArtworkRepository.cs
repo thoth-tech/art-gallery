@@ -2,6 +2,8 @@
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using static Aboriginal_Art_Gallery_of_Australia.Persistence.ExtensionMethods;
 using Npgsql;
+using System.Globalization;
+using Aboriginal_Art_Gallery_of_Australia.Models.Database_Models;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
 {
@@ -15,6 +17,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
         {
             _configuration = configuration;
         }
+
+        readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
         public List<ArtworkOutputDto> GetArtworks()
         {
@@ -87,7 +91,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
         {
             var sqlParams = new NpgsqlParameter[]
             {
-                new("title", artwork.Title),
+                new("title", textInfo.ToTitleCase(artwork.Title)),
                 new("description", artwork.Description),
                 new("mediaId", artwork.MediaId ?? (object)DBNull.Value),
                 new("primary_image_url", artwork.PrimaryImageUrl),
@@ -108,7 +112,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
             var sqlParams = new NpgsqlParameter[]
             {
                 new("artwork_id", id),
-                new("title", artwork.Title),
+                new("title", textInfo.ToTitleCase(artwork.Title)),
                 new("description", artwork.Description),
                 new("mediaId", artwork.MediaId ?? (object)DBNull.Value),
                 new("primaryImageURL", artwork.PrimaryImageUrl),
