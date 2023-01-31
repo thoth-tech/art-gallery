@@ -1,6 +1,5 @@
 ﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
