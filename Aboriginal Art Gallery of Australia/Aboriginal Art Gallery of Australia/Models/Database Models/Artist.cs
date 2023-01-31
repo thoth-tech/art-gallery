@@ -11,13 +11,13 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
     public class Artist : IArtistDataAccess
     {
         public int ArtistId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string DisplayName { get; set; }
-        public string ProfileImageURL { get; set; }
-        public string PlaceOfBirth { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
+        public string ProfileImageURL { get; set; } = string.Empty;
+        public string PlaceOfBirth { get; set; } = string.Empty;
         public int YearOfBirth { get; set; }
-        public int? YearOfDeath { get; set; }
+        public int? YearOfDeath { get; set; } = null;
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 

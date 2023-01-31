@@ -11,8 +11,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
     public class Media : IMediaDataAccess
     {
         public int MediaId { get; set; }
-        public string MediaType { get; set; }
-        public string Description { get; set; }
+        public string MediaType { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
 
