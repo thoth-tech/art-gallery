@@ -30,6 +30,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <summary>
         /// Updates the artwork matching the specified ID in the database/repository.
         /// </summary>
+        /// <param name="id">The ID of the artwork type to be updated.</param>
         /// <param name="artwork">The updated artwork details.</param>
         /// <returns>Returns a copy of the updated artwork if successful or null if unsuccessful.</returns>
         ArtworkInputDto? UpdateArtwork(int id, ArtworkInputDto artwork);

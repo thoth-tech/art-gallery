@@ -7,6 +7,13 @@
     <RootNamespace>Aboriginal_Art_Gallery_of_Australia</RootNamespace>
   </PropertyGroup>
 
+	<!-- Enabling XML comments in your code provides auto-documentation into OpenAPI and, on top of that, adds
+         hints into the Intellisense feature of your IDE. -->
+  <PropertyGroup>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Persistence\Implementations\EF\**" />
     <Content Remove="Persistence\Implementations\EF\**" />
@@ -29,6 +36,11 @@
   <ItemGroup>
 	<!-- emits global using BcryptNet = global::BCrypt.Net.BCrypt; -->
 	<Using Include="BCrypt.Net.BCrypt" Alias="BC" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\swagger\" />
   </ItemGroup>
 
 </Project>

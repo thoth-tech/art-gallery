@@ -3,7 +3,6 @@ using Aboriginal_Art_Gallery_of_Australia.Authentication;
 using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using BCrypt.Net;
-using Microsoft.Extensions.Configuration;
 using Npgsql;
 
 namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
@@ -36,8 +35,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
             CreatedAt = createdAt;
         }
 
-        // Active Record - Everything under line 33 is required for the active record implementation.
-        private static string _connectionString = "Host=localhost;Database=Deakin University | AAGoA;Username=postgres;Password=postgreSQL;";
+        // Active Record - Everything under line 36 is required for the active record implementation.
         private readonly IConfiguration? _configuration;
 
         public User(IConfiguration configuration) 

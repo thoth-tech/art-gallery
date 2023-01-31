@@ -36,6 +36,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces
         /// <summary>
         /// Updates the exhibition matching the specified ID in the database/repository.
         /// </summary>
+        /// <param name="id">The ID of the exhibition to be updated.</param>
         /// <param name="exhibition">The updated exhibition details.</param>
         /// <returns>Returns a copy of the updated exhibition if successful or null if unsuccessful.</returns>
         ExhibitionInputDto? UpdateExhibition(int id, ExhibitionInputDto exhibition);
