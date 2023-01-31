@@ -1,4 +1,5 @@
-﻿using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
+﻿using System.Globalization;
+using Aboriginal_Art_Gallery_of_Australia.Models.DTOs;
 using Aboriginal_Art_Gallery_of_Australia.Persistence.Interfaces;
 using Npgsql;
 using static Aboriginal_Art_Gallery_of_Australia.Persistence.ExtensionMethods;
@@ -39,6 +40,8 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
         private static readonly string _connectionString = "Host=localhost;Database=Deakin University | AAGoA;Username=postgres;Password=postgreSQL;";
 
         public Artist() { }
+
+        readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
         public List<ArtistOutputDto> GetArtists()
         {
@@ -114,11 +117,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
                 using NpgsqlCommand cmd = new("INSERT INTO artist(first_name, last_name, display_name, profile_image_url,place_of_birth, year_of_birth, year_of_death, modified_at, created_at) " +
                                               "VALUES (@firstName, @lastName, @displayName, @profileImageURL, @placeOfBirth, @yearOfBirth, @yearOfDeath, current_timestamp, current_timestamp);", connection);
                 {
-                    cmd.Parameters.AddWithValue("@firstName", artist.FirstName);
-                    cmd.Parameters.AddWithValue("@lastName", artist.LastName);
-                    cmd.Parameters.AddWithValue("@displayName", artist.DisplayName);
+                    cmd.Parameters.AddWithValue("@firstName", textInfo.ToTitleCase(artist.FirstName));
+                    cmd.Parameters.AddWithValue("@lastName", textInfo.ToTitleCase(artist.LastName));
+                    cmd.Parameters.AddWithValue("@displayName", textInfo.ToTitleCase(artist.DisplayName));
                     cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageUrl);
-                    cmd.Parameters.AddWithValue("@placeOfBirth", artist.PlaceOfBirth);
+                    cmd.Parameters.AddWithValue("@placeOfBirth", textInfo.ToTitleCase(artist.PlaceOfBirth));
                     cmd.Parameters.AddWithNullableValue("@yearOfBirth", artist.YearOfBirth);
                     cmd.Parameters.AddWithNullableValue("@yearOfDeath", artist.YearOfDeath);
                     int result = cmd.ExecuteNonQuery();
@@ -144,11 +147,11 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
                                               "WHERE artist_id = @artistId", connection);
                 {
                     cmd.Parameters.AddWithValue("@artistId", id);
-                    cmd.Parameters.AddWithValue("@firstName", artist.FirstName);
-                    cmd.Parameters.AddWithValue("@lastName", artist.LastName);
-                    cmd.Parameters.AddWithValue("@displayName", artist.DisplayName);
+                    cmd.Parameters.AddWithValue("@firstName", textInfo.ToTitleCase(artist.FirstName));
+                    cmd.Parameters.AddWithValue("@lastName", textInfo.ToTitleCase(artist.LastName));
+                    cmd.Parameters.AddWithValue("@displayName", textInfo.ToTitleCase(artist.DisplayName));
                     cmd.Parameters.AddWithValue("@profileImageURL", artist.ProfileImageUrl);
-                    cmd.Parameters.AddWithValue("@placeOfBirth", artist.PlaceOfBirth);
+                    cmd.Parameters.AddWithValue("@placeOfBirth", textInfo.ToTitleCase(artist.PlaceOfBirth));
                     cmd.Parameters.AddWithNullableValue("@yearOfBirth", artist.YearOfBirth);
                     cmd.Parameters.AddWithNullableValue("@yearOfDeath", artist.YearOfDeath);
                     int result = cmd.ExecuteNonQuery();
