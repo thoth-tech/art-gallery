@@ -13,6 +13,8 @@
 
         public UserInputDto(string firstName, string lastName, string email, string password, string role)
         {
+            if (role == string.Empty) role = "User";
+
             FirstName = firstName;
             LastName = lastName;
             Email = email;
