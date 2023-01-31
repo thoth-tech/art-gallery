@@ -70,7 +70,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.RP
                 new("lastName", textInfo.ToTitleCase(user.LastName)),
                 new("email", user.Email),
                 new("passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384)),
-                new("role", user.Role)
+                new("role", textInfo.ToTitleCase(user.Role))
             };
 
             String cmdString = "UPDATE account SET ";

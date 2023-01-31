@@ -229,7 +229,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Models.Database_Models
                     }
                     if (user.Role is not null && user.Role != "" && user.Password != "string")
                     {
-                        cmd.Parameters.AddWithValue("@role", user.Role);
+                        cmd.Parameters.AddWithValue("@role", textInfo.ToTitleCase(user.Role));
                     }
                     int result = cmd.ExecuteNonQuery();
                     return result is 1 ? user : null;

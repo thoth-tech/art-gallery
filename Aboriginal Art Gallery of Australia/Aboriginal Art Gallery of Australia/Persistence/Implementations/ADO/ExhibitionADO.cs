@@ -195,7 +195,7 @@ namespace Aboriginal_Art_Gallery_of_Australia.Persistence.Implementations.ADO
             {
                 connection.Open();
                 using NpgsqlCommand cmd = new("UPDATE exhibition " +
-                                              "SET name = @name " +
+                                              "SET name = @name, " +
                                                   "description = @description, " +
                                                   "background_image_url = @backgroundImageUrl, " +
                                                   "modified_at = current_timestamp " +

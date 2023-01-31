@@ -857,7 +857,8 @@ app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
 
         if (property.PropertyType == typeof(string) && propertyValue != null && !propertyValue.Equals(""))
         {
-            if (property.Name.Contains(nameof(user.Role)) && (propertyValue.ToString() != "User" && propertyValue.ToString() != "Admin"))
+            if (property.Name.Contains(nameof(user.Role)) && (propertyValue.ToString()!.ToLower() != "user"
+            && propertyValue.ToString()!.ToLower() != "admin"))
                 return Results.BadRequest($"A {property.Name} is required to be either User or Admin");
         }
     }
@@ -875,7 +876,7 @@ app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
 
     if (user is not null)
     {
-        if (user.Role.ToString() != "User" && user.Role.ToString() != "Admin")
+        if (user.Role.ToString().ToLower() != "user" && user.Role.ToString().ToLower() != "admin")
             return Results.BadRequest($"A {nameof(user.Role)} is required to be either User or Admin");
     }
     else return Results.BadRequest($"User details required.");
