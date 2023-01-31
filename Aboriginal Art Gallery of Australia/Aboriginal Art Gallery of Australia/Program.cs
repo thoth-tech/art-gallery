@@ -107,18 +107,18 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
  */
 
 // Implementation 1 - ADO
-builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
-builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
-builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
-builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
-builder.Services.AddScoped<IUserDataAccess, UserADO>();
+//builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
+//builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
+//builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
+//builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
+//builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
-//builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
-//builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
-//builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
-//builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
-//builder.Services.AddScoped<IUserDataAccess, UserRepository>();
+builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
+builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
+builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
+builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
+builder.Services.AddScoped<IUserDataAccess, UserRepository>();
 
 // Implementation 3 - Active Record
 //builder.Services.AddScoped<IArtistDataAccess, Artist>();
@@ -568,15 +568,8 @@ app.MapDelete("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, i
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
         Results.NotFound($"No media type can be found with a {nameof(mediaId)} of {mediaId}.");
 
-    try
-    {
-        var result = _mediaRepo.DeleteMediaType(mediaId);
-        return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
-    }
-    catch (Npgsql.PostgresException)
-    {
-        return Results.Forbid();
-    }
+    var result = _mediaRepo.DeleteMediaType(mediaId);
+    return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
 #endregion
