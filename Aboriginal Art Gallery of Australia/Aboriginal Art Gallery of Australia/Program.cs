@@ -568,8 +568,15 @@ app.MapDelete("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, i
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
         Results.NotFound($"No media type can be found with a {nameof(mediaId)} of {mediaId}.");
 
-    var result = _mediaRepo.DeleteMediaType(mediaId);
-    return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
+    try
+    {
+        var result = _mediaRepo.DeleteMediaType(mediaId);
+        return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
+    }
+    catch (Npgsql.PostgresException)
+    {
+        return Results.Forbid();
+    }
 });
 
 #endregion
