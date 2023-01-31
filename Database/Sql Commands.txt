@@ -1,74 +1,125 @@
-CREATE TABLE artist (
-	artist_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	first_name TEXT NOT NULL CONSTRAINT chk_first_name CHECK (char_length(first_name) <= 100),
-	last_name TEXT NOT NULL CONSTRAINT chk_last_name CHECK (char_length(last_name) <= 100),
-	display_name TEXT NOT NULL CONSTRAINT chk_display_name CHECK (char_length(display_name) <= 255),
-	profile_image_url TEXT NOT NULL CONSTRAINT chk_primary_image_url CHECK (char_length(profile_image_url) <= 255),
-	place_of_birth TEXT NULL CONSTRAINT chk_place_of_birth CHECK (char_length(place_of_birth) <= 100),
-	year_of_birth INTEGER NOT NULL,
-	year_of_death INTEGER,
-	modified_at TIMESTAMP without time zone NOT NULL,
-	created_at TIMESTAMP without time zone NOT NULL
-);
+CREATE TABLE IF NOT EXISTS public.account
+(
+    account_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    first_name text COLLATE pg_catalog."default" NOT NULL,
+    last_name text COLLATE pg_catalog."default" NOT NULL,
+    email text COLLATE pg_catalog."default" NOT NULL,
+    password_hash text COLLATE pg_catalog."default" NOT NULL,
+    role text COLLATE pg_catalog."default" NOT NULL,
+    active_at timestamp without time zone,
+    modified_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    CONSTRAINT account_pkey PRIMARY KEY (account_id),
+    CONSTRAINT chk_first_name CHECK (char_length(first_name) <= 100),
+    CONSTRAINT chk_last_name CHECK (char_length(last_name) <= 100),
+    CONSTRAINT chk_email CHECK (char_length(email) <= 255),
+    CONSTRAINT chk_password CHECK (char_length(password_hash) <= 550),
+    CONSTRAINT chk_role CHECK (char_length(role) <= 50)
+)
 
-CREATE TABLE media (
-	media_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	media_type TEXT NOT NULL CONSTRAINT chk_media_type CHECK (char_length(media_type) <= 150),
-	description TEXT NOT NULL CONSTRAINT chk_description CHECK (char_length(description) <= 2500),
-	modified_at TIMESTAMP without time zone NOT NULL,
-	created_at TIMESTAMP without time zone NOT NULL
-);
+CREATE TABLE IF NOT EXISTS public.artist
+(
+    artist_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    first_name text COLLATE pg_catalog."default" NOT NULL,
+    last_name text COLLATE pg_catalog."default" NOT NULL,
+    display_name text COLLATE pg_catalog."default" NOT NULL,
+    profile_image_url text COLLATE pg_catalog."default" NOT NULL,
+    place_of_birth text COLLATE pg_catalog."default",
+    year_of_birth integer NOT NULL,
+    year_of_death integer,
+    modified_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    CONSTRAINT artist_pkey PRIMARY KEY (artist_id),
+    CONSTRAINT chk_first_name CHECK (char_length(first_name) <= 100),
+    CONSTRAINT chk_last_name CHECK (char_length(last_name) <= 100),
+    CONSTRAINT chk_display_name CHECK (char_length(display_name) <= 255),
+    CONSTRAINT chk_primary_image_url CHECK (char_length(profile_image_url) <= 255),
+    CONSTRAINT chk_place_of_birth CHECK (char_length(place_of_birth) <= 100)
+)
 
-CREATE TABLE artwork (
-	artwork_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	title TEXT NOT NULL CONSTRAINT chk_title CHECK (char_length(title) <= 255),
-	description TEXT NOT NULL CONSTRAINT check_description CHECK (char_length(description) <= 2500),
-	primary_image_url TEXT NOT NULL CONSTRAINT chk_primary_image_url CHECK (char_length(primary_image_url) <= 255),
-	secondary_image_url TEXT CONSTRAINT chk_secondary_image_url CHECK (char_length(secondary_image_url) <= 255),
-	year_created INTEGER NOT NULL,
-    media_id INTEGER NOT NULL,
-	modified_at TIMESTAMP without time zone NOT NULL,
-	created_at TIMESTAMP without time zone NOT NULL,
-    CONSTRAINT fk_media FOREIGN KEY(media_id) REFERENCES media(media_id)
-);
+CREATE TABLE IF NOT EXISTS public.artwork
+(
+    artwork_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    title text COLLATE pg_catalog."default" NOT NULL,
+    description text COLLATE pg_catalog."default" NOT NULL,
+    primary_image_url text COLLATE pg_catalog."default" NOT NULL,
+    secondary_image_url text COLLATE pg_catalog."default",
+    year_created integer,
+    media_id integer,
+    modified_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    CONSTRAINT artwork_pkey PRIMARY KEY (artwork_id),
+    CONSTRAINT fk_media FOREIGN KEY (media_id)
+        REFERENCES public.media (media_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE SET NULL
+        NOT VALID,
+    CONSTRAINT chk_title CHECK (char_length(title) <= 255),
+    CONSTRAINT check_description CHECK (char_length(description) <= 2500),
+    CONSTRAINT chk_primary_image_url CHECK (char_length(primary_image_url) <= 255),
+    CONSTRAINT chk_secondary_image_url CHECK (char_length(secondary_image_url) <= 255)
+)
 
-CREATE TABLE artist_artwork (
-	artist_id int NOT NULL,
-	artwork_id int NOT NULL,
-	modified_at TIMESTAMP without time zone NOT NULL,
-	created_at TIMESTAMP without time zone NOT NULL,
-    CONSTRAINT fk_artist FOREIGN KEY(artist_id) REFERENCES artist(artist_id),
-    CONSTRAINT fk_artwork FOREIGN KEY(artwork_id) REFERENCES artwork(artwork_id)
-);
+CREATE TABLE IF NOT EXISTS public.exhibition
+(
+    exhibition_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    name text COLLATE pg_catalog."default" NOT NULL,
+    description text COLLATE pg_catalog."default" NOT NULL,
+    background_image_url text COLLATE pg_catalog."default" NOT NULL,
+    start_date date NOT NULL,
+    end_date date NOT NULL,
+    modified_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    CONSTRAINT exhibition_pkey PRIMARY KEY (exhibition_id),
+    CONSTRAINT chk_name CHECK (char_length(name) <= 1000),
+    CONSTRAINT check_description CHECK (char_length(description) <= 2500),
+    CONSTRAINT chk_background_image_url CHECK (char_length(background_image_url) <= 255)
+)
 
-CREATE TABLE exhibition (
-	exhibition_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	name TEXT NOT NULL CONSTRAINT chk_name CHECK (char_length(name) <= 2500),
-	description TEXT NOT NULL CONSTRAINT check_description CHECK (char_length(description) <= 2500),
-	background_image_url TEXT NOT NULL CONSTRAINT chk_background_image_url CHECK (char_length(background_image_url) <= 255),
-	start_date DATE NOT NULL,
-	end_date DATE NOT NULL,
-	modified_at TIMESTAMP without time zone NOT NULL,
-	created_at TIMESTAMP without time zone NOT NULL
-);
+CREATE TABLE IF NOT EXISTS public.media
+(
+    media_id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    media_type text COLLATE pg_catalog."default" NOT NULL,
+    description text COLLATE pg_catalog."default" NOT NULL,
+    modified_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    CONSTRAINT media_pkey PRIMARY KEY (media_id),
+    CONSTRAINT chk_media_type CHECK (char_length(media_type) <= 150),
+    CONSTRAINT chk_description CHECK (char_length(description) <= 2500)
+)
 
-CREATE TABLE artwork_exhibition (
-	artwork_id int NOT NULL,
-	exhibition_id int NOT NULL,
-	modified_at TIMESTAMP without time zone NOT NULL,
-	created_at TIMESTAMP without time zone NOT NULL,
-    CONSTRAINT fk_artwork FOREIGN KEY(artwork_id) REFERENCES artwork(artwork_id),
-	CONSTRAINT fk_exhibition FOREIGN KEY(exhibition_id) REFERENCES exhibition(exhibition_id)
-);
+CREATE TABLE IF NOT EXISTS public.artist_artwork
+(
+    artist_id integer NOT NULL,
+    artwork_id integer NOT NULL,
+    modified_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    CONSTRAINT fk_artist FOREIGN KEY (artist_id)
+        REFERENCES public.artist (artist_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID,
+    CONSTRAINT fk_artwork FOREIGN KEY (artwork_id)
+        REFERENCES public.artwork (artwork_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID
+)
 
-CREATE TABLE account(
-	account_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	first_name TEXT NOT NULL CONSTRAINT chk_first_name CHECK (char_length(first_name) <= 100),
-	last_name TEXT NOT NULL CONSTRAINT chk_last_name CHECK (char_length(last_name) <= 100),
-	email TEXT NOT NULL CONSTRAINT chk_email CHECK (char_length(email) <= 255),
-	password_hash TEXT NOT NULL CONSTRAINT chk_password CHECK (char_length(password_hash) <= 550),
-	role TEXT NOT NULL CONSTRAINT chk_role CHECK (char_length(role) <= 50),
-	active_at TIMESTAMP without time zone,
-	modified_at TIMESTAMP without time zone NOT NULL,
-	created_at TIMESTAMP without time zone NOT NULL
-);
+CREATE TABLE IF NOT EXISTS public.artwork_exhibition
+(
+    artwork_id integer NOT NULL,
+    exhibition_id integer NOT NULL,
+    modified_at timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    CONSTRAINT fk_artwork FOREIGN KEY (artwork_id)
+        REFERENCES public.artwork (artwork_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID,
+    CONSTRAINT fk_exhibition FOREIGN KEY (exhibition_id)
+        REFERENCES public.exhibition (exhibition_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+        NOT VALID
+)
