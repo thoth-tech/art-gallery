@@ -1,0 +1,446 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>art-gallery-backend</name>
+    </assembly>
+    <members>
+        <member name="T:Art_Gallery_Backend.Authentication.TokenAuthentication">
+            <summary>
+            The TokenAuthentication class is responsible for handling the access token authentication by generating
+            JSON web tokens.
+            </summary>
+        </member>
+        <member name="M:Art_Gallery_Backend.Authentication.TokenAuthentication.GenerateToken(Art_Gallery_Backend.Models.DTOs.UserOutputDto)">
+            <summary>
+            Generates a token for the given user.
+            Then length of time before a token expires is 60 minutes.
+            Signing is done using the configuration settings in appsettings.json, which should
+            be kept secret.
+            </summary>
+            <param name="user">The data for the user who will be authenticated.</param>
+            <returns>A string containing the token.</returns>
+        </member>
+        <member name="T:Art_Gallery_Backend.Middleware.ArtistOfTheDayMiddleware">
+            <summary>
+            The ArtistOfTheDayMiddleware class is responsible for handling the artist of the day selection.
+            To change the delay between artists, alter the ArtistDuration constant which is in minutes.
+            </summary>
+        </member>
+        <member name="M:Art_Gallery_Backend.Middleware.ArtistOfTheDayMiddleware.GetArtistOfTheDay(System.Collections.Generic.List{Art_Gallery_Backend.Models.DTOs.ArtistOutputDto})">
+            <summary>
+            Cycles through the passed list of artists and selects a random artist every X minutes.
+            </summary>
+            <param name="allArtists">The list of all artists published by the gallery.</param>
+            <returns>A random artist from the list of all artists.</returns>
+        </member>
+        <member name="T:Art_Gallery_Backend.Middleware.ArtworkOfTheDayMiddleware">
+            <summary>
+            The ArtworkOfTheDayMiddleware class is responsible for handling the artwork of the day selection.
+            To change the delay between artworks, alter the ArtworkDuration constant which is in minutes.
+            </summary>
+        </member>
+        <member name="M:Art_Gallery_Backend.Middleware.ArtworkOfTheDayMiddleware.GetArtworkOfTheDay(System.Collections.Generic.List{Art_Gallery_Backend.Models.DTOs.ArtworkOutputDto})">
+            <summary>
+            Cycles through the passed list of artworks and selects a random artwork every X minutes. 
+            </summary>
+            <param name="allArtworks">The list of all artworks published by the gallery.</param>
+            <returns>A random artwork from the list of all artworks.</returns>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.Database_Models.Artist">
+            <summary>
+            The Artist class is responsible for handling the database model associated with artists. The Second half of the Artist class from line 37 down is the implementation of the Active Record design pattern. This is a duplication of code from the ADO implementation for OOP demonstration purposes.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.Database_Models.Artwork">
+            <summary>
+            The Artworks class is responsible for handling the database model associated with artworks. The Second half of the Artworks class from line 36 down is the implementation of the Active Record design pattern. This is a duplication of code from the ADO implementation for OOP demonstration purposes.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.Database_Models.Exhibition">
+            <summary>
+            The Exhibitions class is responsible for handling the database model associated with exhibitions. The Second half of the Exhibitions class from line 34 down is the implementation of the Active Record design pattern. This is a duplication of code from the ADO implementation for OOP demonstration purposes.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.Database_Models.Media">
+            <summary>
+            The Media class is responsible for handling the database model associated with various media types. 
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.Database_Models.User">
+            <summary>
+            The User class is responsible for handling the database model associated with gallery users. 
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.ArtistArtworkDto">
+            <summary>
+            The ArtistArtworkDto class handles the transfer of entity ID data to facilitate relationships between artists and artworks inside the database.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.ArtistInputDto">
+            <summary>
+            The ArtistInputDto class is used to decouple the service layer from the database layer. It provides a means of mapping the necessary user input to the appropriate database model.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.ArtistOutputDto">
+            <summary>
+            The ArtistOutputDto class is used to decouple the database layer from the service layer. It provides a means of mapping the necessary information from the database to the appropriate user output.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.ArtworkInputDto">
+            <summary>
+            The ArtworkInputDto class is used to decouple the service layer from the database layer. It provides a means of mapping the necessary user input to the appropriate database model.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.ArtworkOutputDto">
+            <summary>
+            The ArtworkOutputDto class is used to decouple the database layer from the service layer. It provides a means of mapping the necessary information from the database to the appropriate user output.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.ArtworkExhibitionDto">
+            <summary>
+            The ArtworkExhibitionDto class handles the transfer of entity ID data to facilitate relationships between artworks and exhibitions inside the database.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.ExhibitionInputDto">
+            <summary>
+            The ExhibitionInputDto class is used to decouple the service layer from the database layer. It provides a means of mapping the necessary user input to the appropriate database model.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.ExhibitionOutputDto">
+            <summary>
+            The ExhibitionOutputDto class is used to decouple the database layer from the service layer. It provides a means of mapping the necessary information from the database to the appropriate user output.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.ExhibitionArtworkOutputDto">
+            <summary>
+            The ExhibitionOutputDto class is used to decouple the database layer from the service layer. It provides a means of mapping the necessary information from the database to the appropriate user output with the addition of artworks currently displayed within the corresponding exhibition.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.LoginDto">
+            <summary>
+            The LoginDto class is used to decouple the service layer from the database layer. It provides a means of mapping the necessary user credentials to the appropriate database model.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.MediaInputDto">
+            <summary>
+            The MediaInputDto class is used to decouple the service layer from the database layer. It provides a means of mapping the necessary user input to the appropriate database model.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.MediaOutputDto">
+            <summary>
+            The MediaOutputDto class is used to decouple the database layer from the service layer. It provides a means of mapping the necessary information from the database to the appropriate user output.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.UserInputDto">
+            <summary>
+            The UserInputDto class is used to decouple the service layer from the database layer. It provides a means of mapping the necessary user input to the appropriate database model.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Models.DTOs.UserOutputDto">
+            <summary>
+            The UserOutputDto class is used to decouple the database layer from the service layer. It provides a means of mapping the necessary information from the database to the appropriate user output.
+            </summary>
+        </member>
+        <member name="T:Art_Gallery_Backend.Persistence.ExtensionMethods">
+            <summary>
+            The ExtensionMethods class provides the ability "add" methods to existing types without creating a new derived type, recompiling, or otherwise modifying the original type. 
+            </summary>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.ExtensionMethods.ConvertFromNullableValue``1(System.Object)">
+            <summary>
+            Helper Utility for when retriving nullable types from the database, to either return default or the appropriate type where applicable.
+            </summary>
+            <typeparam name="T">The type in which value will be returned, it could be any type eg. int, string, bool, etc.</typeparam>
+            <param name="obj">The object to be checked.</param>
+            <returns>Returns either default or the appropriate datatype.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.ExtensionMethods.AddWithNullableValue(Npgsql.NpgsqlParameterCollection,System.String,System.Object)">
+            <summary>
+            Adds a NpgsqlParameter to the NpgsqlParameterCollection given the specified parameter name and value, works with nullable datatypes.
+            </summary>
+            <param name="collection">Represents a collection of parameters relevant to a NpgsqlCommand as well as their respective mappings to columns in a DataSet.</param>
+            <param name="parameterName">The name of the NpgsqlParameter.</param>
+            <param name="value">The value of the NpgsqlParameter to add to the collection.</param>
+            <returns>The parameter that was added or null depending on the objects value.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.ExtensionMethods.MapTo``1(Npgsql.NpgsqlDataReader,``0)">
+            <summary>
+            Maps field values, contained in database columns, to properties within each bounded context using FastMember ORM.
+            Ignores snake casing of database column names, and correctly maps DATE (postgreSQL data type) to DateOnly with explicit casting.
+            </summary>
+            <typeparam name="T"> Specifies the type of the 'entity' parameter in the method's argument, and the type-constraint that can be
+            placed on the method when called. </typeparam>
+            <param name="dr">The data that is to be mapped from its database field, to properties within a bounded context.</param>
+            <param name="entity">Responsible for specifying the type of object to be mapped by-name with FastMember's
+            TypeAccessor.</param>
+            <exception cref="T:System.ArgumentNullException"> Throws this exception the entity passed to the argument is null.</exception>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.ExtensionMethods.IsValidURL(System.String)">
+            <summary>
+            Validates the URL to ensure it is of type: absolute and includes the appropriate extension.
+            </summary>
+            <param name="str">The string to be validated.</param>
+            <returns>Returns the result as a boolean value.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.ExtensionMethods.IsValidPassword(System.String)">
+            <summary>
+            Validates the password string to see if the password contains any illegal characters.
+            </summary>
+            <param name="str">The string to be validated.</param>
+            <returns>Returns the result as a string value.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.ExtensionMethods.IsValidEmail(System.String)">
+            Option 1: Email Validation using the .NET library.
+            <summary>
+            Validates the email string to see if the email is in the correct format using the .NET mail library.
+            </summary>
+            <param name="str">The string to be validated.</param>
+            <returns>Returns the result as a boolean value.</returns>
+        </member>
+        <member name="T:Art_Gallery_Backend.Persistence.Interfaces.IArtistDataAccess">
+            <summary>
+            The IArtistDataAccess interface defines a contract. Any class that implements that contract must provide an implementation 
+            of the members defined in the interface.
+            </summary>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtistDataAccess.GetArtists">
+            <summary>
+            Retrieves a complete list of artists from the database/repository.
+            </summary>
+            <returns>Returns the collection of artist as a list.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtistDataAccess.GetArtistById(System.Int32)">
+            <summary>
+            Retrieves the artist matching the specified ID from the database/repository.
+            </summary>
+            <returns>Returns the matching artist if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtistDataAccess.InsertArtist(Art_Gallery_Backend.Models.DTOs.ArtistInputDto)">
+            <summary>
+            Inserts an artist into the database/repository.
+            </summary>
+            <param name="artist">The new artist to be inserted.</param>
+            <returns>Returns a copy of the inserted artist if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtistDataAccess.UpdateArtist(System.Int32,Art_Gallery_Backend.Models.DTOs.ArtistInputDto)">
+            <summary>
+            Updates the artist matching the specified ID in the database/repository.
+            </summary>
+            <param name="id">The ID of the artist to be updated.</param>
+            <param name="artist">The updated artist details</param>
+            <returns>Returns a copy of the updated artist if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtistDataAccess.DeleteArtist(System.Int32)">
+            <summary>
+            Delete the artist matching the specified ID from the database/repository.
+            </summary>
+            <param name="id">The specified artist ID to be matched.</param>
+            <returns>Returns the result of the delete operation as a boolean value.</returns>
+        </member>
+        <member name="T:Art_Gallery_Backend.Persistence.Interfaces.IArtworkDataAccess">
+            <summary>
+            The IArtworkDataAccess interface defines a contract. Any class that implements that contract must provide an implementation 
+            of the members defined in the interface.
+            </summary>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtworkDataAccess.GetArtworks">
+            <summary>
+            Retrieves a complete list of artworks from the database/repository.
+            </summary>
+            <returns>Returns the collection of artwork as a list.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtworkDataAccess.GetArtworkById(System.Int32)">
+            <summary>
+            Retrieves the artwork matching the specified ID from the database/repository.
+            </summary>
+            <returns>Returns the matching artwork if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtworkDataAccess.InsertArtwork(Art_Gallery_Backend.Models.DTOs.ArtworkInputDto)">
+            <summary>
+            Inserts an artwork into the database/repository.
+            </summary>
+            <param name="artwork">The new artwork to be inserted.</param>
+            <returns>Returns a copy of the inserted artwork if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtworkDataAccess.UpdateArtwork(System.Int32,Art_Gallery_Backend.Models.DTOs.ArtworkInputDto)">
+            <summary>
+            Updates the artwork matching the specified ID in the database/repository.
+            </summary>
+            <param name="id">The ID of the artwork type to be updated.</param>
+            <param name="artwork">The updated artwork details.</param>
+            <returns>Returns a copy of the updated artwork if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtworkDataAccess.DeleteArtwork(System.Int32)">
+            <summary>
+            Delete the artwork matching the specified ID from the database/repository.
+            </summary>
+            <param name="id">The specified artwork ID to be matched.</param>
+            <returns>Returns the result of the delete operation as a boolean value.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtworkDataAccess.AllocateArtist(System.Int32,System.Int32)">
+            <summary>
+            Allocates the specified artists to the specified artwork in the database/repository.
+            </summary>
+            <param name="artistId">The Artist ID of the specified artist.</param>
+            <param name="artworkId">The Artworks ID of the specified artwork.</param>
+            <returns>Returns a copy of the updated record if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IArtworkDataAccess.DeallocateArtist(System.Int32,System.Int32)">
+            <summary>
+            Deallocates the specified artists to the specified artwork in the database/repository.
+            </summary>
+            <param name="artistId">The Artist ID of the specified artist.</param>
+            <param name="artworkId">The Artwork ID of the specified artwork.</param>
+            <returns>Returns the result of the deallocation operation as a boolean value.</returns>
+        </member>
+        <member name="T:Art_Gallery_Backend.Persistence.Interfaces.IExhibitionDataAccess">
+            <summary>
+            The IExhibitionDataAccess interface defines a contract. Any class that implements that contract must provide an implementation 
+            of the members defined in the interface.
+            </summary>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IExhibitionDataAccess.GetExhibitions">
+            <summary>
+            Retrieves a complete list of exhibitions from the database/repository.
+            </summary>
+            <returns>Returns the collection of exhibition as a list.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IExhibitionDataAccess.GetExhibitionById(System.Int32)">
+            <summary>
+            Retrieves the exhibition matching the specified ID from the database/repository.
+            </summary>
+            <returns>Returns the matching exhibition if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IExhibitionDataAccess.GetExhibitionArtworksById(System.Int32)">
+            <summary>
+            Retrieves the artworks from the exhibition matching the specified ID from the database/repository.
+            </summary>
+            <returns>Returns the matching exhibition and its assosiated artwork if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IExhibitionDataAccess.InsertExhibition(Art_Gallery_Backend.Models.DTOs.ExhibitionInputDto)">
+            <summary>
+            Inserts an exhibition into the database/repository.
+            </summary>
+            <param name="exhibition">The new exhibition to be inserted.</param>
+            <returns>Returns a copy of the inserted exhibition if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IExhibitionDataAccess.UpdateExhibition(System.Int32,Art_Gallery_Backend.Models.DTOs.ExhibitionInputDto)">
+            <summary>
+            Updates the exhibition matching the specified ID in the database/repository.
+            </summary>
+            <param name="id">The ID of the exhibition to be updated.</param>
+            <param name="exhibition">The updated exhibition details.</param>
+            <returns>Returns a copy of the updated exhibition if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IExhibitionDataAccess.DeleteExhibition(System.Int32)">
+            <summary>
+            Delete the exhibition matching the specified ID from the database/repository.
+            </summary>
+            <param name="id">The specified exhibition ID to be matched.</param>
+            <returns>Returns the result of the delete operation as a boolean value.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IExhibitionDataAccess.AllocateArtwork(System.Int32,System.Int32)">
+            <summary>
+             Allocates the specified artwork to the specified exhibition in the database/repository.
+            </summary>
+            <param name="artworkId">The Artist ID of the specified artist.</param>
+            <param name="exhibitionId">The Exhibition ID of the specified exhibition.</param>
+            <returns>Returns a copy of the updated record if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IExhibitionDataAccess.DeallocateArtwork(System.Int32,System.Int32)">
+            <summary>
+            Deallocates the specified artwork from the specified exhibition in the database/repository.
+            </summary>
+            <param name="artworkId">The Artist ID of the specified artist.</param>
+            <param name="exhibitionId">The Exhibition ID of the specified exhibition.</param>
+            <returns>Returns the result of the deallocation operation as a boolean value.</returns>
+        </member>
+        <member name="T:Art_Gallery_Backend.Persistence.Interfaces.IMediaDataAccess">
+            <summary>
+            The IMediaDataAccess interface defines a contract. Any class that implements that contract must provide an implementation 
+            of the members defined in the interface.
+            </summary>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IMediaDataAccess.GetMediaTypes">
+            <summary>
+            Retrieves a complete list of media types from the database/repository.
+            </summary>
+            <returns>Returns the collection of media types as a list.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IMediaDataAccess.GetMediaTypeById(System.Int32)">
+            <summary>
+            Retrieves the media type matching the specified ID from the database/repository.
+            </summary>
+            <returns>Returns the matching media type if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IMediaDataAccess.InsertMediaType(Art_Gallery_Backend.Models.DTOs.MediaInputDto)">
+            <summary>
+            Inserts a media type into the database/repository.
+            </summary>
+            <param name="media">The new media type to be inserted.</param>
+            <returns>Returns a copy of the inserted media type if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IMediaDataAccess.UpdateMediaType(System.Int32,Art_Gallery_Backend.Models.DTOs.MediaInputDto)">
+            <summary>
+            Updates the media type matching the specified ID in the database/repository.
+            </summary>
+            <param name="id">The ID of the media type to be updated.</param>
+            <param name="media">The updated media type details.</param>
+            <returns>Returns a copy of the updated media type if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IMediaDataAccess.DeleteMediaType(System.Int32)">
+            <summary>
+            Delete the media type matching the specified ID from the database/repository.
+            </summary>
+            <param name="id">The specified media type ID to be matched.</param>
+            <returns>Returns the result of the delete operation as a boolean value.</returns>
+        </member>
+        <member name="T:Art_Gallery_Backend.Persistence.Interfaces.IUserDataAccess">
+            <summary>
+            The IUserDataAccess interface defines a contract. Any class that implements that contract must provide an implementation 
+            of the members defined in the interface.
+            </summary>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IUserDataAccess.GetUsers">
+            <summary>
+            Retrieves a complete list of users from the database/repository.
+            </summary>
+            <returns>Returns the collection of user as a list.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IUserDataAccess.GetUserById(System.Int32)">
+            <summary>
+            Retrieves the user matching the specified ID from the database/repository.
+            </summary>
+            <returns>Returns the matching user if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IUserDataAccess.InsertUser(Art_Gallery_Backend.Models.DTOs.UserInputDto)">
+            <summary>
+            Inserts an user into the database/repository.
+            </summary>
+            <param name="user">The new user to be inserted.</param>
+            <returns>Returns a copy of the inserted user if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IUserDataAccess.UpdateUser(System.Int32,Art_Gallery_Backend.Models.DTOs.UserInputDto)">
+            <summary>
+            Updates the user matching the specified ID in the database/repository.
+            </summary>
+            <param name="id">The ID of the user to be updated.</param>
+            <param name="user">The updated user details.</param>
+            <returns>Returns a copy of the updated user if successful or null if unsuccessful.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IUserDataAccess.DeleteUser(System.Int32)">
+            <summary>
+            Delete the user matching the specified ID from the database/repository.
+            </summary>
+            <param name="id">The specified user ID to be matched.</param>
+            <returns>Returns the result of the delete operation as a boolean value.</returns>
+        </member>
+        <member name="M:Art_Gallery_Backend.Persistence.Interfaces.IUserDataAccess.AuthenticateUser(Art_Gallery_Backend.Models.DTOs.LoginDto)">
+            <summary>
+            Authenticates the user by verifying the submitted login information.
+            </summary>
+            <param name="login">The user login to be authenticated.</param>
+            <returns>Returns the token as a string.</returns>
+        </member>
+    </members>
+</doc>
