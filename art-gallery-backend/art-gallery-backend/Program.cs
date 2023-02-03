@@ -780,8 +780,9 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
                 if (property.Name.Contains("Email") && propertyValue.ToString()!.IsValidEmail() == false)
                     return Results.BadRequest($"A valid email is required.");
 
-                if (property.Name.Contains("Password") && !propertyValue.ToString()!.IsValidPassword().Contains("validated"))
-                    return Results.BadRequest(propertyValue.ToString()!.IsValidPassword());
+                if (property.Name.Contains("Password") && propertyValue.ToString()!.IsValidPassword() == false)
+                    return Results.BadRequest($"A valid password is required. Password must contain at least 14 characters. " +
+                        $"The maximum password length is 24.");
             }
         }
     }
