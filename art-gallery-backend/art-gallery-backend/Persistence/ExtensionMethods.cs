@@ -112,8 +112,8 @@ namespace Art_Gallery_Backend.Persistence
         /// Validates the password string to see if the password is of the appropriate length.
         /// </summary>
         /// <param name="str">The string to be validated.</param>
-        /// <returns>Returns the result as a string value.</returns>
-        public static string IsValidPassword(this string str)
+        /// <returns>Returns the result as a bool value.</returns>
+        public static bool IsValidPassword(this string str)
         {
             return (str.Length >=14 && str.Length <= 24) ? true : false;
         }
@@ -130,4 +130,5 @@ namespace Art_Gallery_Backend.Persistence
 
            return isEmail;
         }
+    }
 }
