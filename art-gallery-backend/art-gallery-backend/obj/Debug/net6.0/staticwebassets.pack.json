@@ -1,6 +1,7 @@
 {
   "Files": [
     {
+<<<<<<< HEAD
       "Id": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artists\\charles_sheeler.jpg",
       "PackagePath": "staticwebassets\\images\\artists\\charles_sheeler.jpg"
     },
@@ -11,6 +12,22 @@
     {
       "Id": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artists\\male_placeholder.jpg",
       "PackagePath": "staticwebassets\\images\\artists\\male_placeholder.jpg"
+=======
+      "Id": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artworks\\februarius_(february)_2017.76.4.jpg",
+      "PackagePath": "staticwebassets\\images\\artworks\\februarius_(february)_2017.76.4.jpg"
+    },
+    {
+      "Id": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artworks\\iunius_(june)_2017.76.8.jpg",
+      "PackagePath": "staticwebassets\\images\\artworks\\iunius_(june)_2017.76.8.jpg"
+    },
+    {
+      "Id": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artworks\\januarius_(january)_2017.76.3.jpg",
+      "PackagePath": "staticwebassets\\images\\artworks\\januarius_(january)_2017.76.3.jpg"
+    },
+    {
+      "Id": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artworks\\martius_(march)_2017.76.5.jpg",
+      "PackagePath": "staticwebassets\\images\\artworks\\martius_(march)_2017.76.5.jpg"
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
     },
     {
       "Id": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artworks\\the_concert_2013.38.1.jpg",
@@ -25,6 +42,17 @@
       "PackagePath": "staticwebassets\\images\\readme.txt"
     },
     {
+<<<<<<< HEAD
+=======
+      "Id": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\user_female_placeholder.jpg",
+      "PackagePath": "staticwebassets\\images\\user_female_placeholder.jpg"
+    },
+    {
+      "Id": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\user_male_placeholder.jpg",
+      "PackagePath": "staticwebassets\\images\\user_male_placeholder.jpg"
+    },
+    {
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       "Id": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\styles\\robot.css",
       "PackagePath": "staticwebassets\\styles\\robot.css"
     },

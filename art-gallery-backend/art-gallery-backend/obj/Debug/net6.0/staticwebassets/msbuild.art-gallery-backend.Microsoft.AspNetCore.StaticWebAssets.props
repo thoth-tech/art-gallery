@@ -1,11 +1,19 @@
 ﻿<Project>
   <ItemGroup>
+<<<<<<< HEAD
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artists\charles_sheeler.jpg))">
+=======
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artworks\februarius_(february)_2017.76.4.jpg))">
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       <SourceType>Package</SourceType>
       <SourceId>art-gallery-backend</SourceId>
       <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
       <BasePath>_content/art-gallery-backend</BasePath>
+<<<<<<< HEAD
       <RelativePath>images/artists/charles_sheeler.jpg</RelativePath>
+=======
+      <RelativePath>images/artworks/februarius_(february)_2017.76.4.jpg</RelativePath>
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       <AssetKind>All</AssetKind>
       <AssetMode>All</AssetMode>
       <AssetRole>Primary</AssetRole>
@@ -14,14 +22,24 @@
       <AssetTraitValue></AssetTraitValue>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+<<<<<<< HEAD
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artists\charles_sheeler.jpg))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artists\female_placeholder.jpg))">
+=======
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artworks\februarius_(february)_2017.76.4.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artworks\iunius_(june)_2017.76.8.jpg))">
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       <SourceType>Package</SourceType>
       <SourceId>art-gallery-backend</SourceId>
       <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
       <BasePath>_content/art-gallery-backend</BasePath>
+<<<<<<< HEAD
       <RelativePath>images/artists/female_placeholder.jpg</RelativePath>
+=======
+      <RelativePath>images/artworks/iunius_(june)_2017.76.8.jpg</RelativePath>
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       <AssetKind>All</AssetKind>
       <AssetMode>All</AssetMode>
       <AssetRole>Primary</AssetRole>
@@ -30,14 +48,24 @@
       <AssetTraitValue></AssetTraitValue>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+<<<<<<< HEAD
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artists\female_placeholder.jpg))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artists\male_placeholder.jpg))">
+=======
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artworks\iunius_(june)_2017.76.8.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artworks\januarius_(january)_2017.76.3.jpg))">
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       <SourceType>Package</SourceType>
       <SourceId>art-gallery-backend</SourceId>
       <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
       <BasePath>_content/art-gallery-backend</BasePath>
+<<<<<<< HEAD
       <RelativePath>images/artists/male_placeholder.jpg</RelativePath>
+=======
+      <RelativePath>images/artworks/januarius_(january)_2017.76.3.jpg</RelativePath>
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       <AssetKind>All</AssetKind>
       <AssetMode>All</AssetMode>
       <AssetRole>Primary</AssetRole>
@@ -46,7 +74,27 @@
       <AssetTraitValue></AssetTraitValue>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+<<<<<<< HEAD
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artists\male_placeholder.jpg))</OriginalItemSpec>
+=======
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artworks\januarius_(january)_2017.76.3.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artworks\martius_(march)_2017.76.5.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>art-gallery-backend</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/art-gallery-backend</BasePath>
+      <RelativePath>images/artworks/martius_(march)_2017.76.5.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artworks\martius_(march)_2017.76.5.jpg))</OriginalItemSpec>
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\artworks\the_concert_2013.38.1.jpg))">
       <SourceType>Package</SourceType>
@@ -96,6 +144,41 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\readme.txt))</OriginalItemSpec>
     </StaticWebAsset>
+<<<<<<< HEAD
+=======
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\user_female_placeholder.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>art-gallery-backend</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/art-gallery-backend</BasePath>
+      <RelativePath>images/user_female_placeholder.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\user_female_placeholder.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\user_male_placeholder.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>art-gallery-backend</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/art-gallery-backend</BasePath>
+      <RelativePath>images/user_male_placeholder.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\images\user_male_placeholder.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\styles\robot.css))">
       <SourceType>Package</SourceType>
       <SourceId>art-gallery-backend</SourceId>

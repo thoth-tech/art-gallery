@@ -130,7 +130,6 @@ namespace Art_Gallery_Backend.Persistence.Implementations.ADO
 
         public UserInputDto? InsertUser(UserInputDto user)
         {
-
             using NpgsqlConnection connection = new(_configuration.GetConnectionString("PostgresSQL"));
             {
                 connection.Open();
@@ -141,7 +140,7 @@ namespace Art_Gallery_Backend.Persistence.Implementations.ADO
                     cmd.Parameters.AddWithValue("@lastName", textInfo.ToTitleCase(user.LastName));
                     cmd.Parameters.AddWithValue("@email", user.Email);
                     cmd.Parameters.AddWithValue("@passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384));
-                    cmd.Parameters.AddWithValue("@role", "User");
+                    cmd.Parameters.AddWithValue("@role", user.Role);
                     cmd.Parameters.AddWithValue("@activeAt", DateTime.UtcNow);
                     int result = cmd.ExecuteNonQuery();
                     return result is 1 ? user : null;

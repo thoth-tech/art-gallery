@@ -109,64 +109,26 @@ namespace Art_Gallery_Backend.Persistence
         }
 
         /// <summary>
-        /// Validates the password string to see if the password contains any illegal characters.
+        /// Validates the password string to see if the password is of the appropriate length.
         /// </summary>
         /// <param name="str">The string to be validated.</param>
-        /// <returns>Returns the result as a string value.</returns>
-        public static string IsValidPassword(this string str)
+        /// <returns>Returns the result as a bool value.</returns>
+        public static bool IsValidPassword(this string str)
         {
-            Regex validLength = new("^.{8,}$");
-            Regex validUppercase = new("^(?=.*?[A-Z])");
-            Regex validLowercase = new("^(?=.*?[a-z])");
-            Regex validDigit = new("^(?=.*?[0-9])");
-            Regex validCharacter = new("(?=.*?[#?!@$%^&*-])");
-
-            if (!validLength.IsMatch(str)) return "Password must be a minimum of 8 characters.";
-            if (!validUppercase.IsMatch(str)) return "Password must contain at least one uppercase letter.";
-            if (!validLowercase.IsMatch(str)) return "Password must contain at least one lowercase letter.";
-            if (!validDigit.IsMatch(str)) return "Password must contain at least one digit.";
-            if (!validCharacter.IsMatch(str)) return "Password must contain at least one special character.";
-
-            return "validated";
+            return (str.Length >=14 && str.Length <= 24) ? true : false;
         }
 
-        /// Option 1: Email Validation using the .NET library.
-        /// <summary>
-        /// Validates the email string to see if the email is in the correct format using the .NET mail library.
-        /// </summary>
-        /// <param name="str">The string to be validated.</param>
-        /// <returns>Returns the result as a boolean value.</returns>
-        public static bool IsValidEmail(this string str)
-        {
-            try
-            {
-                MailAddress m = new(str);
 
-                return true;
-            }
-            catch (FormatException)
-            {
-                return false;
-            }
-        }
-
-        
-#pragma warning disable CS1587 // XML comment is not placed on a valid language element
-        /// Option 2: Email Validation using Regex
         /// <summary>
         /// Validates the email string to see if the email is in the correct format using regex.
         /// </summary>
         /// <param name="str">The string to be validated.</param>
         /// <returns>Returns the result as a boolean value.</returns>
-        //public static bool IsValidEmail(this string str)
-        //{
-        //    Regex validEmail = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,})+)$");
-        //    if (validEmail.IsMatch(str))
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
+        public static bool IsValidEmail(this string str)
+        {
+           bool isEmail = Regex.IsMatch(str, @"^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)$", RegexOptions.IgnoreCase);
+
+           return isEmail;
+        }
     }
-#pragma warning restore CS1587 // XML comment is not placed on a valid language element
 }

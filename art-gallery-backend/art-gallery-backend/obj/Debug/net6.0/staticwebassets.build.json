@@ -1,6 +1,10 @@
 {
   "Version": 1,
+<<<<<<< HEAD
   "Hash": "eXx9SHTmtRt+Iw6L/3mDWHiESsNhi3VFu03iVAL8rnE=",
+=======
+  "Hash": "Tj9slGNVo9hyl+7xcWvvpVXpUPDMXNYQ6648MGU1tYg=",
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
   "Source": "art-gallery-backend",
   "BasePath": "_content/art-gallery-backend",
   "Mode": "Default",
@@ -17,12 +21,20 @@
   ],
   "Assets": [
     {
+<<<<<<< HEAD
       "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artists\\charles_sheeler.jpg",
+=======
+      "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artworks\\februarius_(february)_2017.76.4.jpg",
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       "SourceId": "art-gallery-backend",
       "SourceType": "Discovered",
       "ContentRoot": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\",
       "BasePath": "_content/art-gallery-backend",
+<<<<<<< HEAD
       "RelativePath": "images/artists/charles_sheeler.jpg",
+=======
+      "RelativePath": "images/artworks/februarius_(february)_2017.76.4.jpg",
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -31,15 +43,26 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
+<<<<<<< HEAD
       "OriginalItemSpec": "wwwroot\\images\\artists\\charles_sheeler.jpg"
     },
     {
       "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artists\\female_placeholder.jpg",
+=======
+      "OriginalItemSpec": "wwwroot\\images\\artworks\\februarius_(february)_2017.76.4.jpg"
+    },
+    {
+      "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artworks\\iunius_(june)_2017.76.8.jpg",
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       "SourceId": "art-gallery-backend",
       "SourceType": "Discovered",
       "ContentRoot": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\",
       "BasePath": "_content/art-gallery-backend",
+<<<<<<< HEAD
       "RelativePath": "images/artists/female_placeholder.jpg",
+=======
+      "RelativePath": "images/artworks/iunius_(june)_2017.76.8.jpg",
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -48,15 +71,26 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
+<<<<<<< HEAD
       "OriginalItemSpec": "wwwroot\\images\\artists\\female_placeholder.jpg"
     },
     {
       "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artists\\male_placeholder.jpg",
+=======
+      "OriginalItemSpec": "wwwroot\\images\\artworks\\iunius_(june)_2017.76.8.jpg"
+    },
+    {
+      "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artworks\\januarius_(january)_2017.76.3.jpg",
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       "SourceId": "art-gallery-backend",
       "SourceType": "Discovered",
       "ContentRoot": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\",
       "BasePath": "_content/art-gallery-backend",
+<<<<<<< HEAD
       "RelativePath": "images/artists/male_placeholder.jpg",
+=======
+      "RelativePath": "images/artworks/januarius_(january)_2017.76.3.jpg",
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -65,7 +99,28 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
+<<<<<<< HEAD
       "OriginalItemSpec": "wwwroot\\images\\artists\\male_placeholder.jpg"
+=======
+      "OriginalItemSpec": "wwwroot\\images\\artworks\\januarius_(january)_2017.76.3.jpg"
+    },
+    {
+      "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artworks\\martius_(march)_2017.76.5.jpg",
+      "SourceId": "art-gallery-backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\",
+      "BasePath": "_content/art-gallery-backend",
+      "RelativePath": "images/artworks/martius_(march)_2017.76.5.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\artworks\\martius_(march)_2017.76.5.jpg"
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
     },
     {
       "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\artworks\\the_concert_2013.38.1.jpg",
@@ -119,6 +174,43 @@
       "OriginalItemSpec": "wwwroot\\images\\readme.txt"
     },
     {
+<<<<<<< HEAD
+=======
+      "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\user_female_placeholder.jpg",
+      "SourceId": "art-gallery-backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\",
+      "BasePath": "_content/art-gallery-backend",
+      "RelativePath": "images/user_female_placeholder.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\user_female_placeholder.jpg"
+    },
+    {
+      "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\images\\user_male_placeholder.jpg",
+      "SourceId": "art-gallery-backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\",
+      "BasePath": "_content/art-gallery-backend",
+      "RelativePath": "images/user_male_placeholder.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\user_male_placeholder.jpg"
+    },
+    {
+>>>>>>> ecee9e7764b48bdb4d0c1d1368cb64fdcbe00a0b
       "Identity": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\wwwroot\\styles\\robot.css",
       "SourceId": "art-gallery-backend",
       "SourceType": "Discovered",
