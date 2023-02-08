@@ -115,7 +115,7 @@ namespace Art_Gallery_Backend.Persistence
         /// <returns>Returns the result as a bool value.</returns>
         public static bool IsValidPassword(this string str)
         {
-            return (str.Length >=12 && str.Length <= 24) ? true : false;
+            return (str.Length >=14 && str.Length <= 24) ? true : false;
         }
 
 
