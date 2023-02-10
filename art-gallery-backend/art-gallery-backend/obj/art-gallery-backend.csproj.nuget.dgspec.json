@@ -1,27 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend.csproj": {}
+    "/Users/chloehulme/Desktop/Art Gallery Backend/art-gallery-backend/art-gallery-backend/art-gallery-backend/art-gallery-backend.csproj": {}
   },
   "projects": {
-    "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend.csproj": {
+    "/Users/chloehulme/Desktop/Art Gallery Backend/art-gallery-backend/art-gallery-backend/art-gallery-backend/art-gallery-backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend.csproj",
+        "projectUniqueName": "/Users/chloehulme/Desktop/Art Gallery Backend/art-gallery-backend/art-gallery-backend/art-gallery-backend/art-gallery-backend.csproj",
         "projectName": "art-gallery-backend",
-        "projectPath": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend.csproj",
-        "packagesPath": "C:\\Users\\Luke Collins\\.nuget\\packages\\",
-        "outputPath": "D:\\Development\\DDGCIT-art-gallery\\art-gallery-backend\\art-gallery-backend\\art-gallery-backend\\obj\\",
+        "projectPath": "/Users/chloehulme/Desktop/Art Gallery Backend/art-gallery-backend/art-gallery-backend/art-gallery-backend/art-gallery-backend.csproj",
+        "packagesPath": "/Users/chloehulme/.nuget/packages/",
+        "outputPath": "/Users/chloehulme/Desktop/Art Gallery Backend/art-gallery-backend/art-gallery-backend/art-gallery-backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Luke Collins\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/chloehulme/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "/usr/local/share/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -96,7 +95,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.102/RuntimeIdentifierGraph.json"
         }
       }
     }

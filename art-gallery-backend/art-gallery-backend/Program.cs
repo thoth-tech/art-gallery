@@ -153,8 +153,24 @@ app.UseAuthorization();
 
 
 #region Map Artist Endpoint
+
+/// <summary>
+/// Gets all artists.
+/// </summary>
+/// <param name="_artistRepo"> The repository providing data access methods for the artist context. </param>
+/// <returns> A list of all artists. </returns>
+/// <response code="200"> Returns a list of all artists, or an empty
+/// list if there are currently none stored. </response>
 app.MapGet("api/artists/", (IArtistDataAccess _artistRepo) => _artistRepo.GetArtists());
 
+/// <summary>
+/// Gets an artist with the specified id.
+/// </summary>
+/// <param name="_artistRepo"> The repository providing data access methods for the artist context. </param>
+/// <param name="artistId"> The id for the artist to be returned (taken from the request URL). </param>
+/// <returns> An artist with the specified id. </returns>
+/// <response code="200"> Returns the artist with the specified id. </response>
+/// <response code="404"> If no artist with the specified id exitst. </response>
 app.MapGet("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistId) =>
 {
     if (_artistRepo.GetArtistById(artistId) == null)
@@ -164,8 +180,39 @@ app.MapGet("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistI
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
 
+/// <summary>
+/// Gets the artist of the day.
+/// </summary>
+/// <param name="_showcase"> The repository providing data access methods from the Artist Of The Day middleware. </param>
+/// <param name="_artistRepo"> The repository providing data access methods for the artist context. </param>
+/// <returns> The artist of the day. </returns>
+/// <response code="200"> Returns the artist of the day. </response>
 app.MapGet("api/artists/of-the-day", ([FromServices] ArtistOfTheDayMiddleware _showcase, IArtistDataAccess _artistRepo) => _showcase.GetArtistOfTheDay(_artistRepo.GetArtists()));
 
+/// <summary>
+/// Adds a new artist.
+/// </summary>
+/// <param name="_artistRepo"> The repository providing data access methods for the artist context. </param>
+/// <param name="artist"> A new artist (from the HTTP request body). </param>
+/// <returns> The newly added artist. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     POST /api/artists/
+///     {
+///         "fistName": "John",
+///         "lastName": "Smith",
+///         "displayName": "John",
+///         "profileImageUrl": "https://www.sample.url/picture.jpg",
+///         "placeOfBirth": "Melbourne",
+///         "yearOfBirth": 1980,
+///         "yearOfDeath": 2020
+///     }
+///
+/// </remarks>
+/// <response code="200"> Returns the newly added artist. </response>
+/// <response code="400"> If the request body contains any null values, the ProfileImageUrl is not in the correct format,
+/// the birth or death date is greater than the current date, or if the death date is later than the birth date. </response>
 app.MapPost("api/artists/", [Authorize] (IArtistDataAccess _artistRepo, ArtistInputDto artist) =>
 {
     PropertyInfo[] properties = artist.GetType().GetProperties();
@@ -232,6 +279,32 @@ app.MapPost("api/artists/", [Authorize] (IArtistDataAccess _artistRepo, ArtistIn
 });
 */
 
+/// <summary>
+/// Updates an artist.
+/// </summary>
+/// <param name="_artistRepo"> The repository providing data access methods for the artist context. </param>
+/// <param name="artistId"> The id for the artist we are looking to update (from the request URL). </param>
+/// <param name="artist"> Updated details for the artist (from the HTTP request body). </param>
+/// <returns> No content. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     PUT /api/artists/{artistId}
+///     {
+///         "fistName": "John",
+///         "lastName": "Smith",
+///         "displayName": "John",
+///         "profileImageUrl": "https://www.sample.url/picture.jpg",
+///         "placeOfBirth": "Sydney",
+///         "yearOfBirth": 1970,
+///         "yearOfDeath": 2022
+///     }
+///
+/// </remarks>
+/// <response code="204"> If the artist is udpated successfully. </response>
+/// <response code="404"> If the specified id is not associated with any artist. </response>
+/// <response code="400"> If the request body contains any null values, the ProfileImageUrl is not in the correct format,
+/// the birth or death date is greater than the current date, or if the death date is later than the birth date.  </response>
 app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo, int artistId, ArtistInputDto artist) =>
 {
     if (_artistRepo.GetArtistById(artistId) == null)
@@ -291,6 +364,15 @@ app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo,
 });
 */
 
+/// <summary>
+/// Deletes an artist with the specified id.
+/// </summary>
+/// <param name="_artistRepo"> The repository providing data access methods for the artist context. </param>
+/// <param name="artistId"> The id for the artist we are trying to delete (from the request URL). </param>
+/// <returns> No content. </returns>
+/// <response code="204"> No content. </response>
+/// <response code="404"> If no artist with the specified id exits. </response>
+/// <response code="400"> If there is an issues executing the query in the database. </response>
 app.MapDelete("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo, int artistId) =>
 {
     if (_artistRepo.GetArtistById(artistId) == null)
@@ -304,8 +386,23 @@ app.MapDelete("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRe
 
 #region Map Artwork Endpoints
 
+/// <summary>
+/// Gets all artworks.
+/// </summary>
+/// <param name="_artworkRepo"> The repository providing data access methods for the artwork context. </param>
+/// <returns> A list of all artworks. </returns>
+/// <response code="200"> Returns a list of all artworks, or an empty
+/// list if there are currently none stored. </response>
 app.MapGet("api/artworks/", (IArtworkDataAccess _artworkRepo) => _artworkRepo.GetArtworks());
 
+/// <summary>
+/// Gets an artwork with the specified id.
+/// </summary>
+/// <param name="_artworkRepo"> The repository providing data access methods for the artwork context. </param>
+/// <param name="artworkId"> The id for the artwork to be returned (taken from the request URL). </param>
+/// <returns> An artwork with the specified id. </returns>
+/// <response code="200"> Returns the artwork with the specified id. </response>
+/// <response code="404"> If no artwork with the specified id exitst. </response>
 app.MapGet("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, int artworkId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
@@ -315,8 +412,39 @@ app.MapGet("api/artworks/{artworkId}", (IArtworkDataAccess _artworkRepo, int art
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
 
+/// <summary>
+/// Gets the artwork of the day.
+/// </summary>
+/// <param name="_showcase"> The repository providing data access methods from the Artwork Of The Day middleware. </param>
+/// <param name="_artworkRepo"> The repository providing data access methods for the artwork context. </param>
+/// <returns> The artwork of the day. </returns>
+/// <response code="200"> Returns the artwork of the day. </response>
 app.MapGet("api/artworks/of-the-day", ([FromServices] ArtworkOfTheDayMiddleware _showcase, IArtworkDataAccess _artworkRepo) => _showcase.GetArtworkOfTheDay(_artworkRepo.GetArtworks()));
 
+/// <summary>
+/// Adds a new artwork.
+/// </summary>
+/// <param name="_artworkRepo"> The repository providing data access methods for the artwork context. </param>
+/// <param name="_mediaRepo"> The repository providing data access methods for the media context. </param>
+/// <param name="artwork"> A new artwork (from the HTTP request body). </param>
+/// <returns> The newly added artwork. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     POST /api/artworks/
+///     {
+///         "title": "Example Title",
+///         "description": "Example Description",
+///         "primaryImageUrl": "https://www.sample.url/picture.jpg",
+///         "secondaryImageUrl": "https://www.sample.url/picture.jpg",
+///         "yearCreated": 2000,
+///         "mediaId": 1
+///     }
+///
+/// </remarks>
+/// <response code="200"> Returns the newly added artwork. </response>
+/// <response code="400"> If the request body contains any null values, the PrimaryImageUrl or SecondaryImageUrl are not in the correct format,
+/// the year created is greater than the current year, or if the associated media type does not exist. </response>
 app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, ArtworkInputDto artwork) =>
 {
     PropertyInfo[] properties = artwork.GetType().GetProperties();
@@ -384,6 +512,32 @@ app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMedi
 });
 */
 
+/// <summary>
+/// Updates an artwork.
+/// </summary>
+/// <param name="_artworkRepo"> The repository providing data access methods for the artwork context. </param>
+/// <param name="_mediaRepo"> The repository providing data access methods for the media context. </param>
+/// <param name="artworkId"> The id for the artwork we are looking to update (from the request URL). </param>
+/// <param name="artwork"> Updated details for the artwork (from the HTTP request body). </param>
+/// <returns> No content. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     PUT /api/artworks/{artworkId}
+///     {
+///         "title": "Example Title",
+///         "description": "Example Description",
+///         "primaryImageUrl": "https://www.sample.url/picture.jpg",
+///         "secondaryImageUrl": "https://www.sample.url/picture.jpg",
+///         "yearCreated": 2010,
+///         "mediaId": 2
+///     }
+///
+/// </remarks>
+/// <response code="204"> If the artwork is udpated successfully. </response>
+/// <response code="404"> If the specified id is not associated with any artwork. </response>
+/// <response code="400"> If the request body contains any null values, the PrimaryImageUrl or SecondaryImageUrl are not in the correct format,
+/// the year created is greater than the current year, or if the associated media type does not exist. </response>
 app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkRepo, IMediaDataAccess _mediaRepo, int artworkId, ArtworkInputDto artwork) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
@@ -440,6 +594,17 @@ app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkR
 });
 */
 
+/// <summary>
+/// Deletes an artwork with the specified id.
+/// </summary>
+/// 
+/// <param name="_artworkRepo"> The repository providing data access methods for the artwork context. </param>
+/// <param name="artworkId"> The id for the artwork we are trying to delete (from the request URL). </param>
+/// 
+/// <returns> No content. </returns>
+/// <response code="204"> No content. </response>
+/// <response code="404"> If no artwork with the specified id exits. </response>
+/// <response code="400"> If there is an issues executing the query in the database. </response>
 app.MapDelete("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkRepo, int artworkId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
@@ -449,6 +614,19 @@ app.MapDelete("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artwo
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
+/// <summary>
+/// Adds a new artwork/artist pair to the artist/artwork bridging table.
+/// </summary>
+/// 
+/// <param name="_artworkRepo"> The repository providing data access methods for the artwork context. </param>
+/// <param name="_artistRepo"> The repository providing data access methods for the artist context. </param>
+/// <param name="artworkId"> The id for the artwork we are trying to delete (from the request URL). </param>
+/// <param name="artistId"> The id for the artist we are trying to delete (from the request URL). </param>
+/// 
+/// <returns> The newly added artwork/artist pair. </returns>
+/// <response code="200"> Returns the newly added artwork/artist pair. </response>
+/// <response code="404"> If no artist or artwork with the specified ids exist. </response>
+/// <response code="400"> If there is an issues executing the query in the database. </response>
 app.MapPost("api/artworks/{artworkId}/allocate/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
@@ -460,6 +638,19 @@ app.MapPost("api/artworks/{artworkId}/allocate/artist/{artistId}", [Authorize] (
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
+/// <summary>
+/// Deletes an artwork/artist pair with the specified ids from the artist/artwork bridging table.
+/// </summary>
+/// 
+/// <param name="_artworkRepo"> The repository providing data access methods for the artwork context. </param>
+/// <param name="_artistRepo"> The repository providing data access methods for the artist context. </param>
+/// <param name="artworkId"> The id for the artwork we are trying to delete (from the request URL). </param>
+/// <param name="artistId"> The id for the artist we are trying to delete (from the request URL). </param>
+/// 
+/// <returns> No content. </returns>
+/// <response code="204"> No content. </response>
+/// <response code="404"> If no artist or artwork with the specified ids exist. </response>
+/// <response code="400"> If there is an issues executing the query in the database. </response>
 app.MapDelete("api/artworks/{artworkId}/deallocate/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
@@ -474,8 +665,23 @@ app.MapDelete("api/artworks/{artworkId}/deallocate/artist/{artistId}", [Authoriz
 
 #region Map Media Endpoints
 
+/// <summary>
+/// Gets all media types.
+/// </summary>
+/// <param name="_mediaRepo"> The repository providing data access methods for the media context. </param>
+/// <returns> A list of all media types. </returns>
+/// <response code="200"> Returns a list of all media types, or an empty
+/// list if there are currently none stored. </response>
 app.MapGet("api/media/", (IMediaDataAccess _mediaRepo) => _mediaRepo.GetMediaTypes());
 
+/// <summary>
+/// Gets a media type with the specified id.
+/// </summary>
+/// <param name="_mediaRepo"> The repository providing data access methods for the media context. </param>
+/// <param name="mediaId"> The id for the media type to be returned (taken from the request URL). </param>
+/// <returns> A media type with the specified id. </returns>
+/// <response code="200"> Returns the media type with the specified id. </response>
+/// <response code="404"> If no media type with the specified id exitst. </response>
 app.MapGet("api/media/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
@@ -485,6 +691,25 @@ app.MapGet("api/media/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
 });
 
+/// <summary>
+/// Adds a new media type.
+/// </summary>
+/// <param name="_mediaRepo"> The repository providing data access methods for the media context. </param>
+/// <param name="media"> A new media type (from the HTTP request body). </param>
+/// <returns> The newly added media type. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     POST /api/media/
+///     {
+///         "mediaType": "Example Media Type",
+///         "description": "Example Description."
+///     }
+///
+/// </remarks>
+/// <response code="200"> Returns the newly added media type. </response>
+/// <response code="400"> If the request body contains any null values. </response>
+/// <response code="409"> If the media type already exists. </response>
 app.MapPost("api/media/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
 {
     PropertyInfo[] properties = media.GetType().GetProperties();
@@ -528,6 +753,27 @@ app.MapPost("api/media/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDt
 });
 */
 
+/// <summary>
+/// Updates a media type.
+/// </summary>
+/// <param name="_mediaRepo"> The repository providing data access methods for the media context. </param>
+/// <param name="mediaId"> The id for the media type we are looking to update (from the request URL). </param>
+/// <param name="media"> Updated details for the media type (from the HTTP request body). </param>
+/// <returns> No content. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     PUT /api/media/{mediaId}
+///     {
+///         "mediaType": "Example Media Type",
+///         "description": "Example Description."
+///     }
+///
+/// </remarks>
+/// <response code="204"> If the media type is udpated successfully. </response>
+/// <response code="400"> If the request body contains any null values. </response>
+/// <response code="404"> If the specified id is not associated with any media type. </response>
+/// <response code="409"> If the media type already exists. </response>
 app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId, MediaInputDto media) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) is null)
@@ -570,6 +816,17 @@ app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int 
 });
 */
 
+/// <summary>
+/// Deletes a media type with the specified id.
+/// </summary>
+/// 
+/// <param name="_mediaRepo"> The repository providing data access methods for the media context. </param>
+/// <param name="mediaId"> The id for the media type we are trying to delete (from the request URL). </param>
+/// 
+/// <returns> No content. </returns>
+/// <response code="204"> No content. </response>
+/// <response code="404"> If no media type with the specified id exits. </response>
+/// <response code="400"> If there is an issues executing the query in the database. </response>
 app.MapDelete("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
@@ -583,20 +840,65 @@ app.MapDelete("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, i
 
 #region Map Exhibition Endpoints
 
+/// <summary>
+/// Gets all exhibitions.
+/// </summary>
+/// <param name="_exhibitionRepo"> The repository providing data access methods for the exhibition context. </param>
+/// <returns> A list of all exhibitions. </returns>
+/// <response code="200"> Returns a list of all exhibitions, or an empty
+/// list if there are currently none stored. </response>
 app.MapGet("api/exhibitions/", [AllowAnonymous] (IExhibitionDataAccess _exhibitionRepo) => _exhibitionRepo.GetExhibitions());
 
+/// <summary>
+/// Gets an exhibition with the specified id.
+/// </summary>
+/// <param name="_exhibitionRepo"> The repository providing data access methods for the exhibition context. </param>
+/// <param name="exhibitionId"> The id for the exhibition to be returned (taken from the request URL). </param>
+/// <returns> An exhibition with the specified id. </returns>
+/// <response code="200"> Returns the exhibition with the specified id. </response>
+/// <response code="404"> If no exhibition with the specified id exitst. </response>
 app.MapGet("api/exhibitions/{exhibitionId}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
 {
     var result = _exhibitionRepo.GetExhibitionById(exhibitionId);
     return result is not null ? Results.Ok(result) : Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}");
 });
 
+/// <summary>
+/// Gets an exhibition, and it's associated artworks, with the specified id.
+/// </summary>
+/// <param name="_exhibitionRepo"> The repository providing data access methods for the exhibition context. </param>
+/// <param name="exhibitionId"> The id for the exhibition to be returned (taken from the request URL). </param>
+/// <returns> An exhibition, and it's associated artworks, with the specified id. </returns>
+/// <response code="200"> Returns the exhibition with the specified id. </response>
+/// <response code="404"> If no exhibition with the specified id exitst. </response>
 app.MapGet("api/exhibitions/{exhibitionId}/artworks", [AllowAnonymous] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
 {
     var result = _exhibitionRepo.GetExhibitionArtworksById(exhibitionId);
     return result is not null ? Results.Ok(result) : Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}");
 });
 
+/// <summary>
+/// Adds a new exhibition.
+/// </summary>
+/// <param name="_exhibitionRepo"> The repository providing data access methods for the exhibition context. </param>
+/// <param name="exhibition"> A new exhibition (from the HTTP request body). </param>
+/// <returns> The newly added exhibition. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     POST /api/exhibitions/
+///     {
+///         "name": "Example Name",
+///         "description": "Example Description",
+///         "backgroundImageUrl": "https://www.sample.url/picture.jpg",
+///         "startDate": "2022-02-10",
+///         "endDate": "2022-08-10"
+///     }
+///
+/// </remarks>
+/// <response code="200"> Returns the newly added exhibition. </response>
+/// <response code="400"> If the request body contains any null values, the BackgroundImageUrl is not in the correct format,
+/// or the end date is greater than the start date. </response>
 app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, ExhibitionInputDto exhibition) =>
 {
     PropertyInfo[] properties = exhibition.GetType().GetProperties();
@@ -656,6 +958,30 @@ app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDa
 });
 */
 
+/// <summary>
+/// Updates an exhibition.
+/// </summary>
+/// <param name="_exhibitionRepo"> The repository providing data access methods for the exhibition context. </param>
+/// <param name="exhibitionId"> The id for the exhibition we are looking to update (from the request URL). </param>
+/// <param name="exhibition"> Updated details for the exhibition(from the HTTP request body). </param>
+/// <returns> No content. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     PUT /api/exhibitions/{exhibitionId}
+///     {
+///         "name": "Example Name",
+///         "description": "Example Description",
+///         "backgroundImageUrl": "https://www.sample.url/picture.jpg",
+///         "startDate": "2022-11-10",
+///         "endDate": "2023-02-10"
+///     }
+///
+/// </remarks>
+/// <response code="204"> If the media type is udpated successfully. </response>
+/// <response code="400"> If the request body contains any null values, the BackgroundImageUrl is not in the correct format,
+/// or the end date is greater than the start date. </response>
+/// <response code="404"> If the specified id is not associated with any exhibition. </response>
 app.MapPut("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId, ExhibitionInputDto exhibition) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
@@ -711,6 +1037,17 @@ app.MapPut("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (
 });
 */
 
+/// <summary>
+/// Deletes an exhibition with the specified id.
+/// </summary>
+/// 
+/// <param name="_exhibitionRepo"> The repository providing data access methods for the exhibition context. </param>
+/// <param name="exhibitionId"> The id for the exhibition we are trying to delete (from the request URL). </param>
+/// 
+/// <returns> No content. </returns>
+/// <response code="204"> No content. </response>
+/// <response code="404"> If no exhibition with the specified id exits. </response>
+/// <response code="400"> If there is an issues executing the query in the database. </response>
 app.MapDelete("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
@@ -720,6 +1057,19 @@ app.MapDelete("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
+/// <summary>
+/// Adds a new exhibition/artwork pair to the artwork/exhibition bridging table.
+/// </summary>
+/// 
+/// <param name="_exhibitionRepo"> The repository providing data access methods for the exhibition context. </param>
+/// <param name="_artworkRepo"> The repository providing data access methods for the artwork context. </param>
+/// <param name="exhibitionId"> The id for the exhibition we are trying to delete (from the request URL). </param>
+/// <param name="artworkId"> The id for the artwork we are trying to delete (from the request URL). </param>
+/// 
+/// <returns> The newly added exhibition/artwork pair. </returns>
+/// <response code="200"> Returns the newly added exhibition/artwork pair. </response>
+/// <response code="404"> If no exhibition or artwork with the specified ids exist. </response>
+/// <response code="400"> If there is an issues executing the query in the database. </response>
 app.MapPost("api/exhibitions/{exhibitionId}/allocate/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
@@ -732,6 +1082,19 @@ app.MapPost("api/exhibitions/{exhibitionId}/allocate/artwork/{artworkId}", [Auth
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
+/// <summary>
+/// Deletes an exhibition/artwork pair with the specified ids from the artwork/exhibition bridging table.
+/// </summary>
+/// 
+/// <param name="_exhibitionRepo"> The repository providing data access methods for the exhibition context. </param>
+/// <param name="_artworkRepo"> The repository providing data access methods for the artwork context. </param>
+/// <param name="exhibitionId"> The id for the exhibition we are trying to delete (from the request URL). </param>
+/// <param name="artworkId"> The id for the artwork we are trying to delete (from the request URL). </param>
+/// 
+/// <returns> No content. </returns>
+/// <response code="204"> No content. </response>
+/// <response code="404"> If no exhibition or artwork with the specified ids exist. </response>
+/// <response code="400"> If there is an issues executing the query in the database. </response>
 app.MapDelete("api/exhibitions/{exhibitionId}/deallocate/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccess _artworkRepo, int exhibitionId, int artworkId) =>
 {
     if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
@@ -748,14 +1111,50 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deallocate/artwork/{artworkId}", [
 
 #region Map User Endpoints
 
+/// <summary>
+/// Gets all users.
+/// </summary>
+/// <param name="_accountRepo"> The repository providing data access methods for the account context. </param>
+/// <returns> A list of all users. </returns>
+/// <response code="200"> Returns a list of all users, or an empty
+/// list if there are currently none stored. </response>
 app.MapGet("api/users/", [Authorize] (IUserDataAccess _accountRepo) => _accountRepo.GetUsers());
 
+/// <summary>
+/// Gets a user with the specified id.
+/// </summary>
+/// <param name="_accountRepo"> The repository providing data access methods for the account context. </param>
+/// <param name=")"> The id for the user to be returned (taken from the request URL). </param>
+/// <returns> A user with the specified id. </returns>
+/// <response code="200"> Returns the user with the specified id. </response>
+/// <response code="404"> If no user with the specified id exitst. </response>
 app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int id) =>
 {
     var result = _accountRepo.GetUserById(id);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
+/// <summary>
+/// Creates a new user.
+/// </summary>
+/// <param name="_accountRepo"> The repository providing data access methods for the account context. </param>
+/// <param name="user"> A new user (from the HTTP request body). </param>
+/// <returns> The newly created user. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     POST /api/users/signup/
+///     {
+///         "firstName": "John",
+///         "lastName": "Smith",
+///         "email": "example@gmail.com",
+///         "password": "Password12345!",
+///         "role": "User"
+///     }
+///
+/// </remarks>
+/// <response code="200"> Returns the newly created user. </response>
+/// <response code="400"> If the request body contains any null values, or the email/passwprd are invalid. </response>
 app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo, UserInputDto user) =>
 {
     PropertyInfo[] properties = user.GetType().GetProperties();
@@ -818,6 +1217,24 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
 });
 */
 
+/// <summary>
+/// Logs in an existing user.
+/// </summary>
+/// <param name="_accountRepo"> The repository providing data access methods for the account context. </param>
+/// <param name="user"> An existing user (from the HTTP request body). </param>
+/// <returns> The authentication token. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     POST /api/users/login/
+///     {
+///         "email": "example@gmail.com",
+///         "password": "Password12345!",
+///     }
+///
+/// </remarks>
+/// <response code="200"> Returns the authentication token. </response>
+/// <response code="400"> If the request body contains any null values, or the user cannot be authenticated. </response>
 app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, LoginDto login) =>
 {
     PropertyInfo[] properties = login.GetType().GetProperties();
@@ -832,8 +1249,15 @@ app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, 
                 return Results.BadRequest($"A {property.Name} is required.");
         }
     }
-    var result = _accountRepo.AuthenticateUser(login);
-    return result is not null ? Results.Ok(result) : Results.BadRequest();
+
+    try
+    {
+        var result = _accountRepo.AuthenticateUser(login);
+        return result is not null ? Results.Ok(result) : Results.BadRequest();
+    } catch (Npgsql.PostgresException)
+    {
+        return Results.BadRequest($"Password authentication failed.");
+    }
 });
 
 /*
@@ -853,6 +1277,30 @@ app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, 
 });
 */
 
+/// <summary>
+/// Updates a user.
+/// </summary>
+/// <param name="_accountRepo"> The repository providing data access methods for the account context. </param>
+/// <param name="accountId"> The id for the account we are looking to update (from the request URL). </param>
+/// <param name="user"> Updated details for the user (from the HTTP request body). </param>
+/// <returns> No content. </returns>
+/// <remarks>
+/// Sample request body:
+///
+///     PUT /api/users/{id}
+///     {
+///         "firstName": "John",
+///         "lastName": "Smith",
+///         "email": "example@gmail.com",
+///         "password": "Password24680%",
+///         "role": "Admin"
+///     }
+///
+/// </remarks>
+/// <response code="204"> If the user is udpated successfully. </response>
+/// <response code="404"> If the specified id is not associated with any user. </response>
+/// <response code="400"> If the request body contains any null values, or a role other than
+/// 'user' and 'admin' is assigned to the user.  </response>
 app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int accountId, UserInputDto user) =>
 {
     if (_accountRepo.GetUserById(accountId) == null)
@@ -894,6 +1342,15 @@ app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
 });
 */
 
+/// <summary>
+/// Deletes a user with the specified id.
+/// </summary>
+/// <param name="_accountRepo"> The repository providing data access methods for the account context. </param>
+/// <param name=")"> The id for the user we are trying to delete (from the request URL). </param>
+/// <returns> No content. </returns>
+/// <response code="204"> No content. </response>
+/// <response code="404"> If no user with the specified id exits. </response>
+/// <response code="400"> If there is an issues executing the query in the database. </response>
 app.MapDelete("api/users/{id}", [Authorize(Policy = "AdminOnly")](IUserDataAccess _accountRepo, int id) =>
 {
     var result = _accountRepo.DeleteUser(id);
