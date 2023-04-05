@@ -11,13 +11,11 @@ Fork the Thoth Tech `art-gallery-backend` repo in the GitHub GUI.
 Clone this forked repo to a local directory.
 `git clone <HTTPS repo link>`
 
-## Backend Services
-
 ### Setting up PostgreSQL
 
 This project uses Postgres v15.1. A full installation guide can be found at <https://www.postgresql.org/docs/current/tutorial-start.html>
 
-#### PostgreSQL Installation Steps\*\*
+#### PostgreSQL Installation Steps
 
 - Download Postgres on your desired platform at <https://www.postgresql.org/download/.>
 - Follow the installation wizard dialog, when prompted for a password use **‘PostgreSQL’**. Postgres does offer an in-house open source administration and development platform called pgAdmin. Other alternatives to this include Azure Database Studio and DBeaver.
@@ -36,7 +34,7 @@ This project uses Postgres v15.1. A full installation guide can be found at <htt
 
 Visual Studio 2022 is the recommended IDE for the project. The project was built using .NET6, however there is a newer version available. A full in-depth guide for installing .NET7 for a variety of platforms can be found at <https://learn.microsoft.com/en-us/dotnet/core/install/windows?tabs=net70>
 
-#### VS Installation Steps\*\*
+#### VS Installation Steps
 
 - Download Visual Studio 2022 at <https://visualstudio.microsoft.com/vs/community/>.
 - Follow the installation prompts and be sure to select the ASP.NET package under Web & Cloud.
