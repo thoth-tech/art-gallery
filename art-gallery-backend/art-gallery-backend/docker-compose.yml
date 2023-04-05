@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 networks:
   dev:
@@ -16,7 +16,9 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - ConnectionStrings__DefaultConnection=Server=dev_db;User Id=postgres;Password=PostgreSQL;Port:5433;Database=art_gallery_db;IntegratedSecurity=true;Pooling=true;
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=dev_db;User
+        Id=postgres;Password=PostgreSQL;Port:5433;Database=art_gallery_db;IntegratedSecurity=true;Pooling=true;
       - ASPNETCORE_URLS=http://+:80
     networks:
       - dev
@@ -33,6 +35,7 @@ services:
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./db_dump/art-gallery-db.sql:/docker-entrypoint-initdb.d/art-gallery-db.sql
     networks:
       - dev
 
