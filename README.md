@@ -1,15 +1,34 @@
 # Backend Installation Instructions - Written by Chloe Hulme
 
-## With Docker
-
-tbc
-
-## From Source Code
-
-Fork the Thoth Tech `art-gallery-backend` repo in the GitHub GUI.
+First, fork the Thoth Tech `art-gallery-backend` repo in the GitHub GUI.
 
 Clone this forked repo to a local directory.
 `git clone <HTTPS repo link>`
+
+## With Docker
+
+### Installing Docker
+
+Download and install Docker Desktop: <https://www.docker.com/products/docker-desktop/>
+
+### Building and Running the Containers
+
+First, in `appsettings.json` alter the following lines:
+
+- Under `ConnectionStrings`, remove:
+
+- `"PostgresSQL": "Host=localhost;Database=art_gallery_db;Username=postgres;Password=PostgreSQL;"`
+
+- and replace it with: `"PostgresSQL": "Server=host.docker.internal;Database=art_gallery_db;User Id=postgres;Port=5433;Password=PostgreSQL;IntegratedSecurity=true;Pooling=true;"`
+
+Now, build and run the containers with the following command (ensure you have Docker Desktop open when doing so):
+
+- `docker-compose up --build`
+
+To re-run containers without rebuilding their images use: `docker-compose up`.
+Once changes have been made to the app, the containers will need to be rebuilt using `docker-compose build` or `docker-compose up --build`.
+
+## From Source Code
 
 ### Setting up PostgreSQL
 
