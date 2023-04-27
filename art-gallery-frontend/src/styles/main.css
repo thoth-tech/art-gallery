@@ -1,0 +1,72 @@
+.flex-spread {
+    display: flex;
+    justify-content: space-between;
+}
+
+.screen-reader-only {
+    border: 0;
+    clip: rect(0,0,0,0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+:root {
+    --color--facebook:#3b5999;
+    --color--twitter:#55acee;
+    --color--instagram:#527fa3;
+    --color--linkedin:#0077b5;
+    --color--youtube: #ff0000;
+    --color--pinterist:#e60023;
+    --color--primary:#0b7161;
+    --color--secondary:#c74298;
+    --color--yellow:#ffd923;
+    --color--orange:#ff9300;
+    --color--orange-dark:#cc4e07;
+    --color--magenta:#c74298;
+    --color--teal:#007d98;
+    --color--turquoise:#0b7161;
+    --color--turquoise-extra-light:#d8efec;
+    --color--turquoise-light:#58bcaf;
+    --color--turquoise-light-hover:#40a194;
+    --color--turquoise-dark:#024c41;
+    --color--grey:#e1e1e1;
+    --color--grey-light:#f8f8f8;
+    --color--grey-medium:#8a8a8a;
+    --color--grey-med-light:#e1e1e1;
+    --color--grey-dark:#333;
+    --color--grey-med:gray;
+    --color--grey-blue:#f0f9fb;
+    --color--charcoal:#373636;
+    --color--white:#fff;
+    --color--black:#242424;
+    --color--disabled:#8a8a8a;
+    --color--primary-hover:#024c41;
+    --color--primary-hover-light:#a4d1ca;
+    --links--color:var(--color--charcoal,#373636);
+    --font--normal:normal;
+    --font--semibold:600;
+    --font--bold:800;
+    --font--base: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+   }
+
+   /* Always display scroll bars except in mobile view */
+   body {
+        overflow-y: scroll;
+   }
+
+   /* On mobile scrolling is enabled but scroll bar is hidden */
+   @media only screen and (max-width: 800px) {
+        body {
+            overflow: auto;
+            -ms-overflow-style: none; /* for Internet Explorer, Edge */
+            scrollbar-width: none; /* for Firefox */
+        }
+
+        body::-webkit-scrollbar {
+            display: none; /* for Chrome, Safari, and Opera */
+        }
+    }

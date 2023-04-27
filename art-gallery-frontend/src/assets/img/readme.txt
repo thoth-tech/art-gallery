@@ -1,0 +1,1 @@
+Artwork images inside this folder were obtained from the open data collection provided the National Gallery of at for more information please visit https://www.nga.gov/open-access-images.html/

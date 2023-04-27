@@ -1,0 +1,15 @@
+version: '3'
+
+networks:
+  dev:
+    driver: bridge
+
+services:
+  art-gallery-web:
+    image: docker.io/library/art-gallery-web
+    container_name: art-gallery-web-service
+    ports:
+      - "80:8080"
+    build:
+      context: .
+      dockerfile: Dockerfile
