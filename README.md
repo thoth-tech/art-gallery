@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-1. Fork this repository, and clone the forked repository to your local machine by running `git clone https://github.com/<your-username>/art-gallery-dev.git`
+1. Fork this repository, and clone the forked repository to your local machine by running `git clone https://github.com/<your-username>/art-gallery.git`
 2. Navitage to the cloned repository's root directory: `cd <repository-name`>
 
 ### Prerequesites
