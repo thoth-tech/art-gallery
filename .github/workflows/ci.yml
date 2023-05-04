@@ -14,7 +14,7 @@ jobs:
       - name: Markdown lint
         uses: DavidAnson/markdownlint-cli@v0.29.0
         with:
-          args: docs/**/*.md
+          args: '**/*.md'
       - name: Vale
         run: |
           sudo apt update
