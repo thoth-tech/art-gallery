@@ -1,8 +1,8 @@
-import { authHeader } from '@/services/AuthService'
+import { authHeader } from "@/services/AuthService";
 
 // Fetch exhibitions from database.
 export async function getExhibitions() {
-  const response = await fetch('/api/exhibitions')
+  const response = await fetch("/api/exhibitions");
   return await response.json();
 }
 
@@ -12,12 +12,18 @@ export async function postExhibition(name, description, backgroundImageUrl, star
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: authHeader()
+      Authorization: authHeader(),
     },
-    body: JSON.stringify({ name: name, description: description, backgroundImageUrl: backgroundImageUrl, startDate: startDate, endDate: endDate})
-  }
-    let response = await fetch('/api/exhibitions', request)
-    let responseJSON = response.json()
+    body: JSON.stringify({
+      name: name,
+      description: description,
+      backgroundImageUrl: backgroundImageUrl,
+      startDate: startDate,
+      endDate: endDate,
+    }),
+  };
+  let response = await fetch("/api/exhibitions", request);
+  let responseJSON = response.json();
 
-    return responseJSON
+  return responseJSON;
 }

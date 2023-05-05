@@ -2,7 +2,8 @@
 
 ## Getting Started
 
-1. Fork this repository, and clone the forked repository to your local machine by running `git clone https://github.com/<your-username>/art-gallery-backend.git`
+1. Fork this repository, and clone the forked repository to your local machine by running
+   `git clone https://github.com/<your-username>/art-gallery-backend.git`
 2. Navitage to the cloned repository's root directory: `cd <repository-name`>
 
 ## Using Docker
@@ -14,18 +15,22 @@ Download and install Docker Desktop: <https://www.docker.com/products/docker-des
 ### Building and Running the Containers
 
 1. In `appsettings.json` alter the following lines:
-    - Under `ConnectionStrings`, remove `"PostgresSQL": "Host=localhost;Database=art_gallery_db;Username=postgres;Password=PostgreSQL;"`
-    - and replace it with `"PostgresSQL": "Server=host.docker.internal;Database=art_gallery_db;User Id=postgres;Port=5433;Password=PostgreSQL;IntegratedSecurity=true;Pooling=true;"`
 
-2. Next, build and run the containers with the following command (ensure you have Docker Desktop open
-when doing so):
-    - `docker-compose -f docker-compose-dev.yml up --build`
+   - Under `ConnectionStrings`, remove
+     `"PostgresSQL": "Host=localhost;Database=art_gallery_db;Username=postgres;Password=PostgreSQL;"`
+   - and replace it with
+     `"PostgresSQL": "Server=host.docker.internal;Database=art_gallery_db;User Id=postgres;Port=5433;Password=PostgreSQL;IntegratedSecurity=true;Pooling=true;"`
 
-3. To re-run containers without rebuilding their images use: `docker-compose -f docker-compose-dev.yml up`. Once changes have
-been made to the app, the containers will need to be rebuilt using `docker-compose -f docker-compose-dev.yml build` or
-`docker-compose -f docker-compose-dev.yml up --build`.
+2. Next, build and run the containers with the following command (ensure you have Docker Desktop
+   open when doing so): - `docker-compose -f docker-compose-dev.yml up --build`
 
-4. The backend will be available at `http://localhost:7194`, the database will be available on `port 5433`
+3. To re-run containers without rebuilding their images use:
+   `docker-compose -f docker-compose-dev.yml up`. Once changes have been made to the app, the
+   containers will need to be rebuilt using `docker-compose -f docker-compose-dev.yml build` or
+   `docker-compose -f docker-compose-dev.yml up --build`.
+
+4. The backend will be available at `http://localhost:7194`, the database will be available on
+   `port 5433`
 
 5. To stop and remove the containers, run `docker-compose -f docker-compose-dev.yml down`
 
@@ -82,8 +87,10 @@ of platforms can be found at
   For me this was
   **"D:\Development\DDGCIT-art-gallery\art-gallery-backend\art-gallery-backend\art-gallery-backend.sln"**.
 - In `appsettings.json` alter the following lines:
-    1. Under `ConnectionStrings`, remove `"PostgresSQL": "Server=host.docker.internal;Database=art_gallery_db;User Id=postgres;Port=5433;Password=PostgreSQL;IntegratedSecurity=true;Pooling=true;"`
-    2. and replace it with `"PostgresSQL": "Host=localhost;Database=art_gallery_db;Username=postgres;Password=PostgreSQL;"`
+  1. Under `ConnectionStrings`, remove
+     `"PostgresSQL": "Server=host.docker.internal;Database=art_gallery_db;User Id=postgres;Port=5433;Password=PostgreSQL;IntegratedSecurity=true;Pooling=true;"`
+  2. and replace it with
+     `"PostgresSQL": "Host=localhost;Database=art_gallery_db;Username=postgres;Password=PostgreSQL;"`
 - Open the solution, then build and the run the application.
 - You may get an error depending on the speed of your system during the first build – This will be
   due to packages that have not yet installed, give NuGet restore a few minutes to complete this

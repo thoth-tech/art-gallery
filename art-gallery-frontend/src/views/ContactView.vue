@@ -1,14 +1,14 @@
 <template>
-    <HeadingComponent title="Contact"/>
+  <HeadingComponent title="Contact" />
 </template>
 
 <script>
-import HeadingComponent from '@/components/HeadingComponent.vue';
+import HeadingComponent from "@/components/HeadingComponent.vue";
 
 export default {
-  name: 'ContactView',
+  name: "ContactView",
   components: {
-    HeadingComponent
-  }
-}
+    HeadingComponent,
+  },
+};
 </script>
