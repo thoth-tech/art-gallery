@@ -3,8 +3,8 @@ npm-debug.log*
 **/.DS_Store
 .vscode/
 *.log
-**/bin
+**/bin/
 **/appsettings.json
-**/obj
+**/obj/
 bin/
 obj/
