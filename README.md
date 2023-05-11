@@ -38,6 +38,10 @@ Download and install Docker Desktop: <https://www.docker.com/products/docker-des
   │   ├── pull_request_template.md
   │   ├── workflows
   │   │   ├── ci.yml
+  ├── .vale
+  │   ├── thothtech
+  │   ├── vale-json.tmpl
+  │   ├── vale.tmpl
   ├── art-gallery-backend
   │   ├── .vs
   │   ├── art-gallery-backend
