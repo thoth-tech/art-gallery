@@ -38,10 +38,6 @@ Download and install Docker Desktop: <https://www.docker.com/products/docker-des
   │   ├── pull_request_template.md
   │   ├── workflows
   │   │   ├── ci.yml
-  ├── .vale
-  │   ├── thothtech
-  │   ├── vale-json.tmpl
-  │   ├── vale.tmpl
   ├── art-gallery-backend
   │   ├── .vs
   │   ├── art-gallery-backend
@@ -74,13 +70,18 @@ Download and install Docker Desktop: <https://www.docker.com/products/docker-des
   │   ├── package.json
   │   ├── README.md
   │   ├── vue.config.js
+  ├── vale/.vale
+  │   ├── thothtech
+  │   ├── vale-json.tmpl
+  │   ├── vale.tmpl
   ├── .editorconfig
   ├── .gitignore
   ├── .markdownlint.yml
   ├── .prettierignore
   ├── .prettierrc
+  ├── vale.ini
+  ├── CONTRIBUTING.md
   ├── docker-compose.yml
   ├── package-lock.json
-  ├── README.md
-  └── CONTRIBUTING.md
+  └── README.md
 ```
