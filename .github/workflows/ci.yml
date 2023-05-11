@@ -26,4 +26,8 @@ jobs:
           sudo apt update
           sudo apt install snapd
           sudo snap install vale --edge
-          npm --prefix vale/.vale/ run prose:check
+          pushd vale/.vale/
+          vale --output=vale-json.tmpl .
+          popd
+          npm run prose:check
+          
