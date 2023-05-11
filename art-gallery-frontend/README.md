@@ -1,4 +1,4 @@
-# Frontend Installation Instructions - Written by Chloe Hulme
+# Frontend Installation Instructions
 
 ## Getting Started
 

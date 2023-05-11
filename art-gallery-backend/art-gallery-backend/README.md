@@ -1,4 +1,4 @@
-# Backend Installation Instructions - Written by Chloe Hulme
+# Backend Installation Instructions
 
 ## Getting Started
 
