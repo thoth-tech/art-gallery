@@ -1,6 +1,6 @@
 # Indigenous Art Gallery Project
 
-The following guide provides instructions on installation using Docker.
+The the following guide provides instructions on installation using Docker.
 
 Project Specs: .NET 6 API with PostgreSQL v15.1 database and Vue v3.2.13 front end.
 
