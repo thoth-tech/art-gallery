@@ -6,3 +6,5 @@ npm-debug.log*
 **/bin
 **/appsettings.json
 **/obj
+*.cs
+*.txt

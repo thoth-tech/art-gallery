@@ -8,15 +8,18 @@ title: Stored Data
 
 ## Account store
 
-Handles actions relating to user account authentication, sending requests to the user service and changing the locally stored data in response.
+Handles actions relating to user account authentication, sending requests to the user service and
+changing the locally stored data in response.
 
-Dispatches requests to the alert store when a user is successfully registered, or on receiving an error from the user service.
+Dispatches requests to the alert store when a user is successfully registered, or on receiving an
+error from the user service.
 
 ### actions
 
 #### `login()`
 
-Stores a record of the login request, and then a record of whether the login attempt was a success or a failure.
+Stores a record of the login request, and then a record of whether the login attempt was a success
+or a failure.
 
 #### `logout()`
 
@@ -24,7 +27,8 @@ Stores a logout.
 
 #### `register()`
 
-Stores a request for registration, and then a record of whether the registration attempt was a success or a failure.
+Stores a request for registration, and then a record of whether the registration attempt was a
+success or a failure.
 
 <br>
 <br>

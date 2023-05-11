@@ -1,20 +1,20 @@
 <template>
   <div>
-    <HeadingComponent title="ARTWORK OF THE DAY"/>
-    <br>
+    <HeadingComponent title="ARTWORK OF THE DAY" />
+    <br />
     <FeaturedArtwork />
   </div>
 </template>
 
 <script>
-import FeaturedArtwork from '@/components/FeaturedArtwork.vue';
-import HeadingComponent from '@/components/HeadingComponent.vue';
+import FeaturedArtwork from "@/components/FeaturedArtwork.vue";
+import HeadingComponent from "@/components/HeadingComponent.vue";
 
 export default {
-  name: 'ArtworkDayView',
+  name: "ArtworkDayView",
   components: {
     HeadingComponent,
-    FeaturedArtwork
-  }
-}
+    FeaturedArtwork,
+  },
+};
 </script>
