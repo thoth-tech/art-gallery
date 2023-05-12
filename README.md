@@ -30,6 +30,8 @@ Download and install Docker Desktop: <https://www.docker.com/products/docker-des
 
 5. To stop and remove the container, run `docker-compose down`
 
+6. A tutorial for using the above commands can be found at <https://video.deakin.edu.au/media/t/1_7qeif4ui>
+
 ## Repo Structure
 
 ```plaintext
