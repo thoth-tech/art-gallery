@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {
+    "net8.0": {
       "BCrypt.Net-Next/4.0.3": {
         "type": "package",
         "compile": {
@@ -18,10 +18,10 @@
       "DateOnlyTimeOnly.AspNet/2.0.0": {
         "type": "package",
         "compile": {
-          "lib/net6.0/DateOnlyTimeOnly.AspNet.dll": {}
+          "lib/net7.0/DateOnlyTimeOnly.AspNet.dll": {}
         },
         "runtime": {
-          "lib/net6.0/DateOnlyTimeOnly.AspNet.dll": {}
+          "lib/net7.0/DateOnlyTimeOnly.AspNet.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
@@ -34,10 +34,10 @@
           "Swashbuckle.AspNetCore.SwaggerGen": "6.2.3"
         },
         "compile": {
-          "lib/net6.0/DateOnlyTimeOnly.AspNet.Swashbuckle.dll": {}
+          "lib/net7.0/DateOnlyTimeOnly.AspNet.Swashbuckle.dll": {}
         },
         "runtime": {
-          "lib/net6.0/DateOnlyTimeOnly.AspNet.Swashbuckle.dll": {}
+          "lib/net7.0/DateOnlyTimeOnly.AspNet.Swashbuckle.dll": {}
         }
       },
       "FastMember/1.5.0": {
@@ -254,12 +254,12 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "compile": {
-          "lib/net6.0/Npgsql.dll": {
+          "lib/net7.0/Npgsql.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/Npgsql.dll": {
+          "lib/net7.0/Npgsql.dll": {
             "related": ".xml"
           }
         }
@@ -1452,7 +1452,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net6.0": [
+    "net8.0": [
       "BCrypt.Net-Next >= 4.0.3",
       "DateOnlyTimeOnly.AspNet >= 2.0.0",
       "DateOnlyTimeOnly.AspNet.Swashbuckle >= 2.0.0",
@@ -1470,25 +1470,25 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/chloehulme/Desktop/Art Gallery Backend/art-gallery-backend/art-gallery-backend/art-gallery-backend/art-gallery-backend.csproj",
+      "projectUniqueName": "/Users/chloehulme/Desktop/Capstone Repos/art-gallery/art-gallery-backend/art-gallery-backend/art-gallery-backend.csproj",
       "projectName": "art-gallery-backend",
-      "projectPath": "/Users/chloehulme/Desktop/Art Gallery Backend/art-gallery-backend/art-gallery-backend/art-gallery-backend/art-gallery-backend.csproj",
+      "projectPath": "/Users/chloehulme/Desktop/Capstone Repos/art-gallery/art-gallery-backend/art-gallery-backend/art-gallery-backend.csproj",
       "packagesPath": "/Users/chloehulme/.nuget/packages/",
-      "outputPath": "/Users/chloehulme/Desktop/Art Gallery Backend/art-gallery-backend/art-gallery-backend/art-gallery-backend/obj/",
+      "outputPath": "/Users/chloehulme/Desktop/Capstone Repos/art-gallery/art-gallery-backend/art-gallery-backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/chloehulme/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net8.0"
       ],
       "sources": {
         "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "projectReferences": {}
         }
       },
@@ -1496,11 +1496,14 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "default"
       }
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net8.0": {
+        "targetAlias": "net8.0",
         "dependencies": {
           "BCrypt.Net-Next": {
             "target": "Package",
@@ -1558,7 +1561,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.102/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.100-preview.6.23330.14/RuntimeIdentifierGraph.json"
       }
     }
   }

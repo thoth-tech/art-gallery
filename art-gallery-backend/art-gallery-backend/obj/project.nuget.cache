@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "idfYiiCoH39YXli2le9q3ZHJzyTcp12BISljdZNTx2mrNOQPfhOFgU2L8s2Cl4I44aameV2qQ4gdDFWtFimeJQ==",
+  "dgSpecHash": "dnGu8Tg744+EcJ9n5TrG58FoOcQA9bTssCicN0zavtFaJwZfroOALT5LA9liMA2WL2ei1BiK45nbzFsSzIx12Q==",
   "success": true,
-  "projectFilePath": "/Users/chloehulme/Desktop/Art Gallery Backend/art-gallery-backend/art-gallery-backend/art-gallery-backend/art-gallery-backend.csproj",
+  "projectFilePath": "/Users/chloehulme/Desktop/Capstone Repos/art-gallery/art-gallery-backend/art-gallery-backend/art-gallery-backend.csproj",
   "expectedPackageFiles": [
     "/Users/chloehulme/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/chloehulme/.nuget/packages/dateonlytimeonly.aspnet/2.0.0/dateonlytimeonly.aspnet.2.0.0.nupkg.sha512",
