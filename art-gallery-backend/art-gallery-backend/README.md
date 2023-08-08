@@ -75,9 +75,7 @@ This project uses Postgres v15.1. A full installation guide can be found at
 ### Setting up Visual Studio 2022
 
 Visual Studio 2022 is the recommended IDE for the project. The project was built using .NET6,
-however there is a newer version available. A full in-depth guide for installing .NET7 for a variety
-of platforms can be found at
-<https://learn.microsoft.com/en-us/dotnet/core/install/windows?tabs=net70>
+however it has since been upgrade to use .NET 8.1 stable preview.
 
 #### VS Installation Steps
 
