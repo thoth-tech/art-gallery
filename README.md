@@ -2,7 +2,7 @@
 
 The following guide provides instructions on installation using Docker.
 
-Project Specs: .NET 6 API with PostgreSQL v15.1 database and Vue v3.2.13 front end.
+Project Specs: .NET 8.1 (stable preview) API with PostgreSQL v15.1 database and Vue v3.2.13 front end.
 
 ## Prerequesites
 
