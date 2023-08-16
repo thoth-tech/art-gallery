@@ -110,18 +110,18 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
  */
 
 // Implementation 1 - ADO
-builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
-builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
-builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
-builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
-builder.Services.AddScoped<IUserDataAccess, UserADO>();
+// builder.Services.AddScoped<IArtistDataAccess, ArtistADO>();
+// builder.Services.AddScoped<IArtworkDataAccess, ArtworkADO>();
+// builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionADO>();
+// builder.Services.AddScoped<IMediaDataAccess, MediaADO>();
+// builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
-//builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
-//builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
-//builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
-//builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
-//builder.Services.AddScoped<IUserDataAccess, UserRepository>();
+builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
+builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
+builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
+builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
+builder.Services.AddScoped<IUserDataAccess, UserRepository>();
 
 // Implementation 3 - Active Record
 //builder.Services.AddScoped<IArtistDataAccess, Artist>();
@@ -608,7 +608,7 @@ app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkR
 app.MapDelete("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkRepo, int artworkId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
-        Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
+        return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
 
     var result = _artworkRepo.DeleteArtwork(artworkId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
@@ -685,7 +685,7 @@ app.MapGet("api/media/", (IMediaDataAccess _mediaRepo) => _mediaRepo.GetMediaTyp
 app.MapGet("api/media/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
-        Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
+        return Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
 
     var result = _mediaRepo.GetMediaTypeById(mediaId);
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
@@ -830,7 +830,7 @@ app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int 
 app.MapDelete("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId) =>
 {
     if (_mediaRepo.GetMediaTypeById(mediaId) == null)
-        Results.NotFound($"No media type can be found with a {nameof(mediaId)} of {mediaId}.");
+        return Results.NotFound($"No media type can be found with a {nameof(mediaId)} of {mediaId}.");
 
     var result = _mediaRepo.DeleteMediaType(mediaId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
@@ -1353,6 +1353,9 @@ app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
 /// <response code="400"> If there is an issues executing the query in the database. </response>
 app.MapDelete("api/users/{id}", [Authorize(Policy = "AdminOnly")](IUserDataAccess _accountRepo, int id) =>
 {
+    if (_accountRepo.GetUserById(id) == null)
+        return Results.NotFound($"No account can be found with an {nameof(id)} of {id}.");
+
     var result = _accountRepo.DeleteUser(id);
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
