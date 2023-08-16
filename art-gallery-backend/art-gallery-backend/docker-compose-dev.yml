@@ -11,7 +11,7 @@ services:
       - "dev_db"
     container_name: art-gallery-api-services
     ports:
-      - "7194:80"
+      - "7194:8080"
     build:
       context: .
       dockerfile: Dockerfile
@@ -19,7 +19,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=dev_db;User
         Id=postgres;Password=PostgreSQL;Port:5433;Database=art_gallery_db;IntegratedSecurity=true;Pooling=true;
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=http://+:8080
     networks:
       - dev
 
