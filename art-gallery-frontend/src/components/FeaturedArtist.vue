@@ -1,35 +1,41 @@
-<template v-if="dataLoaded">
-  <CardComponent
-    :subheading="artistOfDay.displayName"
-    :imageURL="artistOfDay.profileImageUrl"
-    :detail1="`Born: ` + artistOfDay.yearOfBirth + `, ` + artistOfDay.placeOfBirth"
-  />
+<template>
+  <div>
+    <div v-if="isArtistOfDayLoaded">
+      <LazyLoadingCardComponent :subheading="artistOfDay.displayName" :imageURL="artistOfDay.profileImageUrl" :detail1="birthInfo" />
+    </div>
+    <div v-else>Loading artist of the day...</div>
+  </div>
 </template>
 
 <script>
 import CardComponent from "./CardComponent.vue";
 import { getArtistOfTheDay } from "../services/ArtistService";
+import LazyLoadingCardComponent from "./LazyLoadingCardComponent.vue";
 
 export default {
   name: "FeaturedArtist",
-  components: { CardComponent },
+  components: { CardComponent, LazyLoadingCardComponent },
   data() {
     return {
-      artistOfDay: [],
-      dataLoaded: false,
+      artistOfDay: null,
+      isArtistOfDayLoaded: false,
     };
   },
-  methods: {
-    // Gets the data from endpoint and stores in an array.
-    async fetchArtistOfTheDay() {
-      await getArtistOfTheDay().then((data) => {
-        this.artistOfDay = data;
-        this.dataLoaded = true;
-      });
+  computed: {
+    birthInfo() {
+      if (this.artistOfDay) {
+        return `Born: ${this.artistOfDay.yearOfBirth}, ${this.artistOfDay.placeOfBirth}`;
+      }
+      return "";
     },
   },
-  mounted() {
-    this.fetchArtistOfTheDay();
+  async mounted() {
+    try {
+      this.artistOfDay = await getArtistOfTheDay();
+      this.isArtistOfDayLoaded = true;
+    } catch (error) {
+      console.error("Error fetching artist of the day:", error);
+    }
   },
 };
 </script>
