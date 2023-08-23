@@ -5,7 +5,11 @@
       <span>Hi {{ account.user.name }}!</span>
     </div>
     <div class="home-banner">
-      <img src="@/assets/img/the_dance_class_2014.79.710.jpg" alt="Front Splash Image" />
+      <picture>
+        <source srcset="@/assets/img/the_dance_class_2014.79.710.jpg" media="(min-width: 1200px)">
+        <source srcset="@/assets/img/the_dance_class_2014.79.710_medium.jpg" media="(min-width: 768px)">
+        <img src="@/assets/img/the_dance_class_2014.79.710_small.jpg" alt="Front Splash Image">
+      </picture>
     </div>
   </div>
 </template>
