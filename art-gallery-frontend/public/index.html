@@ -8,10 +8,63 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
+    <div id="app">
+      <!-- Navigation Bar Component -->
+      <nav-bar></nav-bar>
+
+      <!-- Featured Artwork Component -->
+      <featured-artwork
+        :artwork-image="'artwork-image-url.jpg'"
+        :artwork-title="'Featured Artwork'"
+        :artwork-description="'Description of the featured artwork.'"
+      ></featured-artwork>
+
+      <!-- Artwork List Component -->
+      <artwork-list :artworks="artworks"></artwork-list>
+
+      <!-- Exhibition Schedule Component -->
+      <exhibition-schedule :exhibitions="exhibitions"></exhibition-schedule>
+
+      <!-- Contact Form Component -->
+      <contact-form></contact-form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script>
+      // Import your Vue components here
+      Vue.component('nav-bar', {
+        // ... Navigation Bar Component
+      });
+
+      Vue.component('featured-artwork', {
+        // ... Featured Artwork Component
+      });
+
+      Vue.component('artwork-list', {
+        // ... Artwork List Component
+      });
+
+      Vue.component('exhibition-schedule', {
+        // ... Exhibition Schedule Component
+      });
+
+      Vue.component('contact-form', {
+        // ... Contact Form Component
+      });
+
+      new Vue({
+        el: '#app',
+        // Your Vue.js configuration goes here
+        data: {
+          artworks: [
+            // Artwork data objects
+          ],
+          exhibitions: [
+            // Exhibition data objects
+          ]
+        },
+        // Your methods, computed properties, etc.
+      });
+    </script>
   </body>
 </html>
