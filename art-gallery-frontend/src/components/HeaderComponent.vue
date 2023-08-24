@@ -7,7 +7,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" class="site-logo-svg" viewBox="0 0 320 80">
             <rect id="logo=bg" class="logo-bg" width="320" height="80" />
             <text id="logo-text" kerning="auto" x="16px" y="54px">
-              <tspan class="logo-text">DDGIT&#32;Gallery</tspan>
+              <tspan class="logo-text">Art&#32;Gallery&#32;Project</tspan>
             </text>
           </svg>
         </router-link>
@@ -41,7 +41,7 @@ export default {
 }
 
 .logo-text {
-  font-size: 44px;
+  font-size: 33px;
   font-family: var(--font--base);
   font-weight: var(--font--semibold);
   fill: var(--color--grey-light);

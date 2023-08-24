@@ -1,7 +1,6 @@
 <template>
   <div class="artworks">
     <HeadingComponent title="ARTWORKS" />
-    <HeadingComponent title="Basic HTML table" class="subheading" />
     <TableArtworks />
   </div>
 </template>
