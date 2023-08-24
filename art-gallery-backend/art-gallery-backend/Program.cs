@@ -1128,9 +1128,9 @@ app.MapGet("api/users/", [Authorize] (IUserDataAccess _accountRepo) => _accountR
 /// <returns> A user with the specified id. </returns>
 /// <response code="200"> Returns the user with the specified id. </response>
 /// <response code="404"> If no user with the specified id exitst. </response>
-app.MapGet("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int id) =>
+app.MapGet("api/users/{accountId}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int accountId) =>
 {
-    var result = _accountRepo.GetUserById(id);
+    var result = _accountRepo.GetUserById(accountId);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
@@ -1287,7 +1287,7 @@ app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, 
 /// <remarks>
 /// Sample request body:
 ///
-///     PUT /api/users/{id}
+///     PUT /api/users/{accountId}
 ///     {
 ///         "firstName": "John",
 ///         "lastName": "Smith",
@@ -1301,7 +1301,7 @@ app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, 
 /// <response code="404"> If the specified id is not associated with any user. </response>
 /// <response code="400"> If the request body contains any null values, or a role other than
 /// 'user' and 'admin' is assigned to the user.  </response>
-app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int accountId, UserInputDto user) =>
+app.MapPut("api/users/{accountId}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int accountId, UserInputDto user) =>
 {
     if (_accountRepo.GetUserById(accountId) == null)
         return Results.NotFound($"No user can be found with an {nameof(accountId)} of {accountId}");
@@ -1325,7 +1325,7 @@ app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
 /*
  * Without Reflection
  * 
-app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int accountId, UserInputDto user) =>
+app.MapPut("api/users/{accountId}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int accountId, UserInputDto user) =>
 {
     if (_accountRepo.GetUserById(accountId) == null)
         return Results.NotFound($"No user can be found with an {nameof(accountId)} of {accountId}");
@@ -1351,12 +1351,12 @@ app.MapPut("api/users/{id}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _
 /// <response code="204"> No content. </response>
 /// <response code="404"> If no user with the specified id exits. </response>
 /// <response code="400"> If there is an issues executing the query in the database. </response>
-app.MapDelete("api/users/{id}", [Authorize(Policy = "AdminOnly")](IUserDataAccess _accountRepo, int id) =>
+app.MapDelete("api/users/{accountId}", [Authorize(Policy = "AdminOnly")](IUserDataAccess _accountRepo, int accountId) =>
 {
-    if (_accountRepo.GetUserById(id) == null)
-        return Results.NotFound($"No account can be found with an {nameof(id)} of {id}.");
+    if (_accountRepo.GetUserById(accountId) == null)
+        return Results.NotFound($"No account can be found with an {nameof(accountId)} of {accountId}.");
 
-    var result = _accountRepo.DeleteUser(id);
+    var result = _accountRepo.DeleteUser(accountId);
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
 

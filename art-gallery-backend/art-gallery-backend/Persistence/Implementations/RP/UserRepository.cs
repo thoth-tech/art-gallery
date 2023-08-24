@@ -49,7 +49,7 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("lastName", textInfo.ToTitleCase(user.LastName)),
                 new("email", user.Email),
                 new("passwordHash", BC.EnhancedHashPassword(user.Password, hashType: HashType.SHA384)),
-                new("role", "User"),
+                new("role", textInfo.ToTitleCase(user.Role)),
                 new("activeAt", DateTime.UtcNow)
             };
 

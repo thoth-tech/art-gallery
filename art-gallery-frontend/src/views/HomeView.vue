@@ -1,23 +1,30 @@
 <template>
   <div class="home">
-    <HeadingComponent title="Welcome to DDGIT Gallery" />
     <div class="user-greeting" v-if="account.user">
       <span>Hi {{ account.user.name }}!</span>
     </div>
-    <div class="home-banner">
-      <img src="@/assets/img/the_dance_class_2014.79.710.jpg" alt="Front Splash Image" />
-    </div>
+    <HeadingComponent title="The Art Gallery Project" />
+    <HeadingComponent title="Artist of the Day" class="subheading" />
+    <FeaturedArtist />
+    <br />
+    <br />
+    <HeadingComponent title="Artwork of the Day" class="subheading" />
+    <FeaturedArtwork />
   </div>
 </template>
 
 <script>
 import HeadingComponent from "@/components/HeadingComponent.vue";
+import FeaturedArtist from "@/components/FeaturedArtist.vue";
+import FeaturedArtwork from "@/components/FeaturedArtwork.vue";
 import { mapState } from "vuex";
 
 export default {
   name: "HomeView",
   components: {
     HeadingComponent,
+    FeaturedArtist,
+    FeaturedArtwork,
   },
   computed: {
     ...mapState({
@@ -49,5 +56,11 @@ export default {
   text-align: center;
   font-size: 2em;
   font-weight: 600;
+}
+
+.subheading {
+  font-style: italic;
+  font-weight: normal;
+  color: var(--color--gray);
 }
 </style>

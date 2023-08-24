@@ -2,18 +2,11 @@
   <div class="exhibitions">
     <HeadingComponent title="EXHIBITIONS" />
     <HeadingComponent
-      title="Ant Design table using Vue's list and conditional rendering"
+      title="Current Exhibitions"
       class="subheading"
     />
     <TableAntDesign :exhibitions="this.exhibitions" v-on:updateData="updateData()" />
     <br />
-    <br />
-    <br />
-    <HeadingComponent
-      title="HTML table using Vue's list and conditional rendering"
-      class="subheading"
-    />
-    <TableExhibition :exhibitions="this.exhibitions" v-on:updateData="updateData()" />
     <br />
     <br />
   </div>
@@ -21,14 +14,12 @@
 
 <script>
 import { getExhibitions } from "../services/ExhibitionService";
-import TableExhibition from "../components/TableExhibition.vue";
 import HeadingComponent from "@/components/HeadingComponent.vue";
 import TableAntDesign from "@/components/TableAntDesign.vue";
 
 export default {
   name: "ExhibitionsView",
   components: {
-    TableExhibition,
     HeadingComponent,
     TableAntDesign,
   },
