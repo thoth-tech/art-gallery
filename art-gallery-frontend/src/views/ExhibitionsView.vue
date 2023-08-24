@@ -6,9 +6,6 @@
       class="subheading"
     />
     <TableAntDesign :exhibitions="this.exhibitions" v-on:updateData="updateData()" />
-    <br />
-    <br />
-    <br />
   </div>
 </template>
 
@@ -81,7 +78,7 @@ export default {
   width: 70%;
   margin-bottom: 50px;
   margin: auto;
-  margin-bottom: 110px;
+  margin-bottom: 20px;
 }
 
 .subheading {
