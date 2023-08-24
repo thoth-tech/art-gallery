@@ -122,6 +122,5 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
 
             return true;
         }
-
     }
 }
