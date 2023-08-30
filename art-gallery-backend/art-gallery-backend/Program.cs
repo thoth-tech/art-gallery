@@ -438,7 +438,8 @@ app.MapGet("api/artworks/of-the-day", ([FromServices] ArtworkOfTheDayMiddleware 
 ///         "primaryImageUrl": "https://www.sample.url/picture.jpg",
 ///         "secondaryImageUrl": "https://www.sample.url/picture.jpg",
 ///         "yearCreated": 2000,
-///         "mediaId": 1
+///         "mediaId": 1,
+///         "price": 100.00
 ///     }
 ///
 /// </remarks>
@@ -474,6 +475,9 @@ app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMedi
             if (property.Name.Contains(nameof(artwork.MediaId)) && (_mediaRepo.GetMediaTypeById((int)propertyValue) == null))
                 return Results.BadRequest($"No mediatype can be found with an {property.Name} of {propertyValue}");
         }
+
+        // if (property.Name.Contains(nameof(artwork.Price)) && property.PropertyType is not double)
+        //     return Results.BadRequest($"A decimal value {property.Name} is required.");
     }
     var result = _artworkRepo.InsertArtwork(artwork);
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
@@ -530,7 +534,8 @@ app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMedi
 ///         "primaryImageUrl": "https://www.sample.url/picture.jpg",
 ///         "secondaryImageUrl": "https://www.sample.url/picture.jpg",
 ///         "yearCreated": 2010,
-///         "mediaId": 2
+///         "mediaId": 2,
+///         "price": 100.00
 ///     }
 ///
 /// </remarks>
@@ -562,6 +567,9 @@ app.MapPut("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artworkR
             if (property.Name.Contains(nameof(artwork.MediaId)) && (_mediaRepo.GetMediaTypeById((int)propertyValue) == null))
                 return Results.NotFound($"No mediatype can be found with an {property.Name} of {propertyValue}");
         }
+
+        // if (property.Name.Contains(nameof(artwork.Price)) && property.PropertyType is not double)
+        //     return Results.BadRequest($"A decimal value {property.Name} is required.");
     }
 
     var result = _artworkRepo.UpdateArtwork(artworkId, artwork);

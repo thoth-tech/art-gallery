@@ -126,7 +126,7 @@ namespace Art_Gallery_Backend.Models.Database_Models
                     }
                 }
 
-                using NpgsqlCommand cmd2 = new("SELECT artwork_exhibition.exhibition_id, artwork_exhibition.artwork_id, artwork.title, artwork.description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, media.media_type " +
+                using NpgsqlCommand cmd2 = new("SELECT artwork_exhibition.exhibition_id, artwork_exhibition.artwork_id, artwork.title, artwork.description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, media.media_type, price " +
                                                    "FROM artwork " +
                                                    "INNER JOIN artwork_exhibition " +
                                                    "ON artwork_exhibition.artwork_id = artwork.artwork_id " +
@@ -150,6 +150,7 @@ namespace Art_Gallery_Backend.Models.Database_Models
                                 string mediaType = (string)dr["media_type"];
                                 DateTime modifiedAt = (DateTime)dr["modified_at"];
                                 DateTime createdAt = (DateTime)dr["created_at"];
+                                decimal price = (decimal)dr["price"];
 
                                 ILookup<int, string> lookup = allArtworkArtists.ToLookup(kvp => kvp.Key, kvp => kvp.Value);
                                 List<string> artworkArtists = new();
@@ -158,7 +159,7 @@ namespace Art_Gallery_Backend.Models.Database_Models
                                     artworkArtists.Add(artist);
                                 }
 
-                                artworks.Add(new ArtworkOutputDto(artworkId, title, description, primaryImageURL, secondaryImageURL, createdYear, mediaType, modifiedAt, createdAt, artworkArtists));
+                                artworks.Add(new ArtworkOutputDto(artworkId, title, description, primaryImageURL, secondaryImageURL, createdYear, mediaType, modifiedAt, createdAt, price, artworkArtists));
                             }
                         }
                     }
