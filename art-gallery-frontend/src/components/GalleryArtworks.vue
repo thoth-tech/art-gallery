@@ -15,6 +15,7 @@
           <p><span class="lightbox-header" >Media:</span> {{ selectedArtwork.mediaType }}</p>
           <p><span class="lightbox-header" >Year:</span> {{ selectedArtwork.yearCreated }}</p>
           <p><span class="lightbox-header" >Description:</span> {{ selectedArtwork.description }}</p>
+          <p><span class="lightbox-header" >Price:</span> ${{ selectedArtwork.price.toFixed(2) }}</p>
           <p><span class="lightbox-header" >Contributing Artist&#40;s&#41;:</span> {{ selectedArtwork.contributingArtists }}</p>
         </div>
         <button class="close-lightbox" @click="closeLightbox()">Close</button>
@@ -27,7 +28,7 @@
 import { getArtworks } from "../services/ArtworkService";
 
 export default {
-  name: "TableArtworks",
+  name: "GalleryArtworks",
   data() {
     return {
       artworks: [],
@@ -49,12 +50,12 @@ export default {
       });
     },
     openLightbox(artwork) {
-      console.log("lightbox open")
+      // console.log("lightbox open")
       this.selectedArtwork = artwork;
       this.lightbox = true;
     },
     closeLightbox() {
-      console.log("lightbox closed")
+      // console.log("lightbox closed")
       this.lightbox = false;
       this.selectedArtwork = null;
     },
