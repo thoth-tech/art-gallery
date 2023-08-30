@@ -61,6 +61,7 @@ CREATE TABLE artwork
     media_id integer,
     modified_at timestamp without time zone NOT NULL,
     created_at timestamp without time zone NOT NULL,
+    price numeric(8,2) NOT NULL,
     CONSTRAINT artwork_pkey PRIMARY KEY (artwork_id),
     CONSTRAINT fk_media FOREIGN KEY (media_id)
         REFERENCES media (media_id) MATCH SIMPLE
