@@ -42,7 +42,7 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
 
             var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id, artwork.title, " +
                 "artwork.description, primary_image_url, secondary_image_url, artwork.year_created, artwork.modified_at, " +
-                "artwork.created_at, media_type, media.description as media_description FROM artwork INNER JOIN media ON " +
+                "artwork.created_at, media_type, media.description as media_description, price FROM artwork INNER JOIN media ON " +
                 "media.media_id = artwork.media_id");
 
             foreach (ArtworkOutputDto artwork in artworksOutput)
@@ -73,7 +73,7 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
 
             var artworkOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id, artwork.title, " +
                 "artwork.description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, " +
-                "artwork.created_at, media.media_type as media_type FROM artwork INNER JOIN media " +
+                "artwork.created_at, media.media_type as media_type, price FROM artwork INNER JOIN media " +
                 $"ON media.media_id = artwork.media_id WHERE artwork_id = {id}")
                 .SingleOrDefault();
 
@@ -96,12 +96,13 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("mediaId", artwork.MediaId ?? (object)DBNull.Value),
                 new("primary_image_url", artwork.PrimaryImageUrl),
                 new("secondary_image_url", artwork.SecondaryImageUrl ?? (object)DBNull.Value),
-                new("year_created", artwork.YearCreated ?? (object)DBNull.Value)
+                new("year_created", artwork.YearCreated ?? (object)DBNull.Value),
+                new("price", artwork.Price)
             };
 
             var result = _repo.ExecuteReader<ArtworkInputDto>("INSERT INTO artwork VALUES (DEFAULT, " +
                 "@title, @description, @primary_image_url, @secondary_image_url, @year_created, @mediaId, " +
-                "current_timestamp, current_timestamp) RETURNING *", sqlParams)
+                "current_timestamp, current_timestamp, @price) RETURNING *", sqlParams)
                 .SingleOrDefault();
 
             return result;
@@ -117,12 +118,13 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("mediaId", artwork.MediaId ?? (object)DBNull.Value),
                 new("primaryImageURL", artwork.PrimaryImageUrl),
                 new("secondaryImageURL", artwork.SecondaryImageUrl ?? (object)DBNull.Value),
-                new("yearCreated", artwork.YearCreated ?? (object)DBNull.Value)
+                new("yearCreated", artwork.YearCreated ?? (object)DBNull.Value),
+                new("price", artwork.Price)
             };
 
             var result = _repo.ExecuteReader<ArtworkInputDto>("UPDATE artwork SET title = @title, description = @description, " +
-                "media = @mediaId, primary_image_url = @primaryImageURL, secondary_image_url = @secondaryImageURL, " +
-                "year_created = @yearCreated, modified_at = current_timestamp " +
+                "mediaId = @mediaId, primary_image_url = @primaryImageURL, secondary_image_url = @secondaryImageURL, " +
+                "year_created = @yearCreated, modified_at = current_timestamp, price = @price " +
                 "WHERE artwork_id = @artwork_id RETURNING *", sqlParams)
                 .SingleOrDefault();
 
