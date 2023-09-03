@@ -1,48 +1,52 @@
 <template>
   <div>
     <ul class="nav-menu-dropdown">
+      <!-- Artworks and Art & Culture links -->
       <li>
-        <router-link to="/artworks" class="nav-link nav-link-1">
+        <router-link to="/artworks" class="nav-link">
           <span>Artworks</span>
         </router-link>
       </li>
       <li>
-        <router-link to="/culture" class="nav-link nav-link-2">
+        <router-link to="/culture" class="nav-link">
           <span>Art & Culture</span>
         </router-link>
       </li>
-      <li>
-        <div class="nav-tools-login" v-if="!account.user">
-          <router-link to="/login" class="nav-link nav-link-3">
-            <span>Log In</span>
-          </router-link>
-        </div>
+
+      <!-- Conditional login/signup links -->
+      <li v-if="!account.user">
+        <router-link to="/login" class="nav-link">
+          <span>Log In</span>
+        </router-link>
       </li>
+      <li v-if="!account.user">
+        <router-link to="/signup" class="nav-link">
+          <span>Sign Up</span>
+        </router-link>
+      </li>
+
+      <!-- Artwork of the Day and Artist of the Day links -->
       <li>
-        <router-link to="/artworkofday" class="nav-sub nav-link-1">
+        <router-link to="/artworkofday" class="nav-link nav-sub">
           <span>Artwork of the Day</span>
         </router-link>
       </li>
       <li>
-        <router-link to="/artistofday" class="nav-sub nav-link-2">
+        <router-link to="/artistofday" class="nav-link nav-sub">
           <span>Artist of the Day</span>
         </router-link>
       </li>
+
+      <!-- Exhibitions link -->
       <li>
-        <div class="nav-tools-signup" v-if="!account.user">
-          <router-link to="/signup" class="nav-link nav-link-3">
-            <span>Sign Up</span>
-          </router-link>
-        </div>
-      </li>
-      <li>
-        <router-link to="/exhibition" class="nav-link nav-link-1">
+        <router-link to="/exhibition" class="nav-link">
           <span>Exhibitions</span>
         </router-link>
       </li>
     </ul>
   </div>
 </template>
+
 <script>
 import { mapState } from "vuex";
 
@@ -58,24 +62,20 @@ export default {
 
 <style scoped>
 .nav-menu-dropdown {
-  display: grid;
-  grid-template-columns: auto auto 100px;
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
 }
 
-:deep(.nav-link-1) {
-  grid-column-start: 1;
+.nav-link {
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
 }
 
-:deep(.nav-link-2) {
-  grid-column-start: 2;
-}
-
-:deep(.nav-link-3) {
-  grid-column-start: 3;
-  margin-left: 0;
-}
-
-:deep(.nav-sub) {
+.nav-link.nav-sub {
   font-weight: lighter;
   font-size: smaller;
   padding-left: 40px;
