@@ -8,6 +8,7 @@ export default {
   props: {
     title: {
       type: String,
+      default: "Default Title", // Set a default value for the title prop
     },
   },
 };
@@ -26,6 +27,6 @@ export default {
 @media only screen and (max-width: 600px) {
   .heading {
     font-size: 30px;
-  }
+  }
 }
 </style>
