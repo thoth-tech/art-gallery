@@ -1,33 +1,24 @@
 <template>
   <footer>
-    <br />
-    <br />
-    <br />
     <div class="footer-component">
       <div class="footer-links">
         <ul class="footer-nav">
           <li>
-            <router-link to="/about">About Us</router-link>
+            <router-link to="about">About Us</router-link>
           </li>
           <li>
-            <router-link to="/contact">Contact Us</router-link>
+            <router-link to="contact">Contact Us</router-link>
           </li>
         </ul>
-        <p>
-          Copyright © 2022 XYZ Gallery Pty Ltd.
-          <br />
-          <span>
-            Phone:
-            <a href="tel://(03) 9244 6333">(03) 9244 6333</a>
-          </span>
-          <span>
-            World:
-            <a href="tel://+61 3 9244 6333">+61 3 9244 6333</a>
-          </span>
-          <br />
-          <span>221 Burwood Highway, Burwood</span>
-          <span>VIC 3125 Australia</span>
-        </p>
+        <address>
+          <p>
+            &copy; 2022 XYZ Gallery Pty Ltd.<br />
+            <span>Phone: <a href="tel:(03) 9244 6333">(03) 9244 6333</a></span><br />
+            <span>World: <a href="tel:+61 3 9244 6333">+61 3 9244 6333</a></span><br />
+            <span>221 Burwood Highway, Burwood</span><br />
+            <span>VIC 3125 Australia</span>
+          </p>
+        </address>
       </div>
       <div class="footer-socials">
         <SocialsComponent />
@@ -37,117 +28,61 @@
 </template>
 
 <script>
-import SocialsComponent from "@/components/SocialsComponent.vue";
+import SocialsComponent from '@/components/SocialsComponent.vue';
+
 export default {
-  components: { SocialsComponent },
+  components: {
+    SocialsComponent
+  }
 };
 </script>
 
 <style scoped>
-:deep(.footer-socials ul) {
-  list-style: none;
-  text-align: right;
-  margin-top: 1em;
-}
-
-:deep(.social) {
-  margin-right: calc(2px + 2 * (100vw - 320px) / 1040);
-  display: inline-block;
-}
-
-:deep(.footer-socials .socials-svg) {
-  height: 34px;
-  width: 34px;
-  fill: var(--color--black);
-  fill-rule: evenodd;
-}
-
-a {
-  outline: none;
-  text-decoration: none;
-}
-
-.footer-component {
-  display: flex;
-  font-family: var(--font--base);
-  font-weight: var(--font--semibold);
-  font-size: 0.85em;
-  margin: 5px 5px 5px 15px;
-}
-
-.footer-links,
-.footer-socials {
-  width: 50%;
-}
-
-.footer-nav {
-  list-style: none;
-  display: inline-flex;
-  padding: 0;
-  transition: ease all 0.5s;
-}
-
-.footer-nav li {
-  padding-right: 20px;
-}
-
-.footer-links a,
-.footer-links a:visited {
-  color: var(--color--grey-charcoal);
-  font-weight: var(--font--normal);
-}
-.footer-links span,
-.footer-links p {
-  text-align: left;
-  color: var(--color--grey-dark);
-  line-height: 150%;
-}
-.footer-links span {
-  padding-right: 10px;
-}
-:deep(svg:hover),
-:deep(.footer-socials svg:hover) {
-  transition: 0.1s;
-  transition-delay: 0;
-}
-
-:deep(.facebook:hover) {
-  fill: var(--color--facebook);
-}
-
-:deep(.instagram:hover) {
-  fill: var(--color--instagram);
-}
-
-:deep(.twitter:hover) {
-  fill: var(--color--twitter);
-}
-
-:deep(.youtube:hover) {
-  fill: var(--color--youtube);
-}
-
-:deep(.linkedin:hover) {
-  fill: var(--color--linkedin);
-}
-
-@media only screen and (max-width: 600px) {
   .footer-component {
-    display: inline;
-    font-size: 0.9em;
+    display: flex;
+    font-family: var(--font--base);
+    font-weight: var(--font--semibold);
+    font-size: 0.85em;
+    margin: 1em;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
   }
+
+  .footer-links {
+    flex: 1;
+    padding-right: 1em;
+  }
+
+  .footer-socials {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .footer-nav {
-    display: block;
-    line-height: 180%;
+    list-style: none;
+    display: flex;
+    padding: 0;
+    transition: ease all 0.5s;
   }
-  .footer-links,
-  :deep(.footer-socials) {
-    padding-left: 10px;
-    width: 100%;
+
+  .footer-nav li {
+    margin-right: 20px;
   }
-  :deep(.footer-socials ul) {
-    text-align: left;
-    padding-left: 0;
+
+  /* Add your other styles here */
+
+  @media only screen and (max-width: 600px) {
+    .footer-component {
+      flex-direction: column;
+    }
+
+    .footer-links,
+    .footer-socials {
+      width: 100%;
+    }
+
+    /* Add your responsive styles here */
   }
-}
 </style>
