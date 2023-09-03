@@ -1,9 +1,9 @@
 <template>
-  <div class="card-div">
+  <div class="card-div" v-if="heading">
     <h1 class="card-heading">{{ heading }}</h1>
     <img class="card-img" :src="imageURL" />
     <h2 class="card-subheading">{{ subheading }}</h2>
-    <h4 class="detail">{{ detail1 }}, ${{ detail5 }}</h4>
+    <h4 class="detail">{{ detail1 }}</h4>
     <h4 class="detail">{{ detail2 }}</h4>
     <h4 class="detail">{{ detail3 }}</h4>
     <h4 class="detail-description">{{ detail4 }}</h4>
@@ -35,9 +35,6 @@ export default {
     detail4: {
       type: String,
     },
-    detail5: {
-      type: String,
-    },
   },
 };
 </script>
@@ -54,61 +51,10 @@ export default {
   font-family: var(--font--base);
   padding: 20px;
   padding-bottom: 40px;
+  transition: opacity 0.5s ease-in-out;
 }
 
-.card-img {
-  width: 90%;
-  max-height: 500px;
-  object-fit: cover;
-  padding-top: 10px;
-}
-
-.card-heading {
-  font-family: var(--font--base);
-  letter-spacing: 4px;
-  color: var(--color--charcoal);
-  padding-top: 20px;
-  font-weight: lighter;
-  font-size: 35px;
-}
-
-.card-subheading {
-  font-family: var(--font--base);
-  letter-spacing: 4px;
-  color: var(--color--charcoal);
-  padding-top: 20px;
-  font-size: 35px;
-}
-
-.detail,
-.detail-description {
-  font-family: var(--font--base);
-  letter-spacing: 0.5px;
-  color: var(--color--charcoal);
-  font-size: 18px;
-}
-
-.detail-description {
-  text-align: justify;
-  font-size: 15px;
-}
-
-@media only screen and (max-width: 800px) {
-  .card-div {
-    width: 90%;
-    padding: 0px;
-    padding-bottom: 10px;
-  }
-
-  .card-subheading {
-    font-size: 20px;
-    letter-spacing: 2px;
-  }
-
-  .detail,
-  .detail-description {
-    font-size: 16px;
-    letter-spacing: 0.5px;
-  }
+.card-div.hidden {
+  opacity: 0;
 }
 </style>
