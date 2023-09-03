@@ -7,11 +7,7 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/artworks" class="nav-link subnav">
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-          />
+        <div class="nav-link subnav">
           <span>Artworks <i class="fa fa-caret-down"></i></span>
           <div class="subnav-content">
             <router-link to="/artworkofday" class="nav-sub">
@@ -23,10 +19,10 @@
               <span>List of Artworks</span>
             </router-link>
           </div>
-        </router-link>
+        </div>
       </li>
       <li>
-        <router-link to="/culture" class="nav-link subnav">
+        <div class="nav-link subnav">
           <span>Art & Culture <i class="fa fa-caret-down"></i></span>
           <div class="subnav-content">
             <span class="nav-sub">Symbols</span>
@@ -39,7 +35,7 @@
             <br />
             <span class="nav-sub">Aboriginal Art Facts</span>
           </div>
-        </router-link>
+        </div>
       </li>
       <li>
         <router-link to="/exhibition" class="nav-link">
@@ -61,12 +57,10 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "DropdownMenuHTML",
+  name: "AppMenu",
   methods: {
     isAdmin() {
-      if (this.account.user) {
-        return this.account.user.role == "Admin";
-      }
+      return this.account.user && this.account.user.role === "Admin";
     },
   },
   computed: {
