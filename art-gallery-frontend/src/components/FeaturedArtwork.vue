@@ -6,7 +6,7 @@
     :detail2="String(artworkOfDay.yearCreated)"
     :detail3="contributingArtists"
     :detail4="artworkOfDay.description"
-    :detail5="artworkOfDay.price"
+    :detail5="`, $` + artworkOfDay.price"
   />
 </template>
 
