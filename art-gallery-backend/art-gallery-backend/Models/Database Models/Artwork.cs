@@ -21,8 +21,9 @@ namespace Art_Gallery_Backend.Models.Database_Models
         public int? MediaId { get; set; } = null;
         public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
+        public decimal Price { get; set; } = 0.00M;
 
-        public Artwork(int artworkId, string title, string description, string primaryImageURL, string? secondaryImageURL, int? yearCreated, int? mediaId, DateTime modifiedAt, DateTime createdAt)
+        public Artwork(int artworkId, string title, string description, string primaryImageURL, string? secondaryImageURL, int? yearCreated, int? mediaId, DateTime modifiedAt, DateTime createdAt, decimal price)
         {
             ArtworkId = artworkId;
             Title = title;
@@ -33,6 +34,7 @@ namespace Art_Gallery_Backend.Models.Database_Models
             MediaId = mediaId;
             ModifiedAt = modifiedAt;
             CreatedAt = createdAt;
+            Price = price;
         }
 
         // Active Record - Everything under line 36 is required for the active record implementation.
@@ -68,7 +70,7 @@ namespace Art_Gallery_Backend.Models.Database_Models
                 }
 
                 connection.Open();
-                using NpgsqlCommand cmd2 = new("SELECT artwork_id, artwork.title, artwork.description as artwork_description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, media_type, media.description as media_description " +
+                using NpgsqlCommand cmd2 = new("SELECT artwork_id, artwork.title, artwork.description as artwork_description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, media_type, media.description as media_description, price " +
                                                "FROM artwork INNER JOIN media ON media.media_id = artwork.media_id", connection);
                 {
                     using NpgsqlDataReader dr = cmd2.ExecuteReader();
@@ -86,6 +88,7 @@ namespace Art_Gallery_Backend.Models.Database_Models
                                 string? mediaType = (string)dr["media_type"];
                                 DateTime modifiedAt = (DateTime)dr["modified_at"];
                                 DateTime createdAt = (DateTime)dr["created_at"];
+                                decimal price = (decimal)dr["price"];
 
                                 ILookup<int, string> lookup = allArtworkArtists.ToLookup(kvp => kvp.Key, kvp => kvp.Value);
                                 List<string> artworkArtists = new();
@@ -94,7 +97,7 @@ namespace Art_Gallery_Backend.Models.Database_Models
                                     artworkArtists.Add(artist);
                                 }
 
-                                artworks.Add(new ArtworkOutputDto(artworkId, title, description, primaryImageURL, secondaryImageURL, createdYear, mediaType, modifiedAt, createdAt, artworkArtists));
+                                artworks.Add(new ArtworkOutputDto(artworkId, title, description, primaryImageURL, secondaryImageURL, createdYear, mediaType, modifiedAt, createdAt, price, artworkArtists));
                             }
                         }
                         return artworks;
@@ -128,7 +131,7 @@ namespace Art_Gallery_Backend.Models.Database_Models
                 }
 
                 connection.Open();
-                using NpgsqlCommand cmd2 = new("SELECT artwork_id, artwork.title, artwork.description as artwork_description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, media_type, media.description as media_description " +
+                using NpgsqlCommand cmd2 = new("SELECT artwork_id, artwork.title, artwork.description as artwork_description, primary_image_url, secondary_image_url, year_created, artwork.modified_at, artwork.created_at, media_type, media.description as media_description, price " +
                                                "FROM artwork INNER JOIN media ON media.media_id = artwork.media_id where artwork_id = @artwork_id", connection);
                 {
                     cmd2.Parameters.AddWithValue("@artwork_id", id);
@@ -147,8 +150,9 @@ namespace Art_Gallery_Backend.Models.Database_Models
                                 string? mediaType = (string)dr["media_type"];
                                 DateTime modifiedAt = (DateTime)dr["modified_at"];
                                 DateTime createdAt = (DateTime)dr["created_at"];
+                                decimal price = (decimal)dr["price"];
 
-                                return new ArtworkOutputDto(artworkId, title, description, primaryImageURL, secondaryImageURL, createdYear, mediaType, modifiedAt, createdAt, artworkArtists);
+                                return new ArtworkOutputDto(artworkId, title, description, primaryImageURL, secondaryImageURL, createdYear, mediaType, modifiedAt, createdAt, price, artworkArtists);
                             }
                         }
                         return null;
@@ -162,8 +166,8 @@ namespace Art_Gallery_Backend.Models.Database_Models
             using NpgsqlConnection connection = new(_connectionString);
             {
                 connection.Open();
-                using NpgsqlCommand cmd = new("INSERT INTO artwork(title, description, primary_image_url, secondary_image_url, year_created, media_id, modified_at, created_at) " +
-                                              "VALUES (@title, @description, @primaryImageURL, @secondaryImageURL, @yearCreated, @mediaId, current_timestamp, current_timestamp)", connection);
+                using NpgsqlCommand cmd = new("INSERT INTO artwork(title, description, primary_image_url, secondary_image_url, year_created, media_id, modified_at, created_at, price) " +
+                                              "VALUES (@title, @description, @primaryImageURL, @secondaryImageURL, @yearCreated, @mediaId, current_timestamp, current_timestamp, @price)", connection);
                 {
                     cmd.Parameters.AddWithValue("@title", textInfo.ToTitleCase(artwork.Title));
                     cmd.Parameters.AddWithValue("@description", artwork.Description);
@@ -171,6 +175,7 @@ namespace Art_Gallery_Backend.Models.Database_Models
                     cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
                     cmd.Parameters.AddWithNullableValue("@yearCreated", artwork.YearCreated);
                     cmd.Parameters.AddWithNullableValue("@mediaId", artwork.MediaId);
+                    cmd.Parameters.AddWithValue("@price", artwork.Price);
                     int result = cmd.ExecuteNonQuery();
 
                     return result is 1 ? artwork : null;
@@ -192,7 +197,8 @@ namespace Art_Gallery_Backend.Models.Database_Models
                                                        "secondary_image_url = @secondaryImageURL, " +
                                                        "year_created = @yearCreated, " +
                                                        "media_id = @mediaId, " +
-                                                       "modified_at=current_timestamp " +
+                                                       "modified_at=current_timestamp, " +
+                                                       "price = @price " +
                                                   "WHERE artwork_id = @artwork_id", connection);
                 {
                     cmd.Parameters.AddWithValue("@artwork_id", id);
@@ -202,6 +208,7 @@ namespace Art_Gallery_Backend.Models.Database_Models
                     cmd.Parameters.AddWithNullableValue("@secondaryImageURL", artwork.SecondaryImageUrl);
                     cmd.Parameters.AddWithNullableValue("@yearCreated", artwork.YearCreated);
                     cmd.Parameters.AddWithNullableValue("@mediaId", artwork.MediaId);
+                    cmd.Parameters.AddWithValue("@price", artwork.Price);
                     var result = cmd.ExecuteNonQuery();
                     return result is 1 ? artwork : null;
                 }

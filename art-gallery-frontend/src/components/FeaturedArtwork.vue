@@ -6,6 +6,7 @@
     :detail2="String(artworkOfDay.yearCreated)"
     :detail3="contributingArtists"
     :detail4="artworkOfDay.description"
+    :detail5="artworkOfDay.price"
   />
 </template>
 
@@ -28,6 +29,7 @@ export default {
     async fetchArtworkOfTheDay() {
       await getArtworkOfTheDay().then((data) => {
         this.artworkOfDay = data;
+        this.artworkOfDay.price = this.artworkOfDay.price.toFixed(2)
       });
       this.getContributingArtists();
       this.dataLoaded = true;

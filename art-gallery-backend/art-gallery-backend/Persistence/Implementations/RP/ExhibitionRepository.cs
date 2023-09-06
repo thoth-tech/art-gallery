@@ -67,7 +67,7 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
 
             var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_exhibition.artwork_id, " +
                 "artwork.title, artwork.description, primary_image_url, secondary_image_url, year_created, " +
-                "artwork.modified_at, artwork.created_at, media.media_type as media_type FROM artwork INNER JOIN " +
+                "artwork.modified_at, artwork.created_at, media.media_type as media_type, price FROM artwork INNER JOIN " +
                 "artwork_exhibition ON artwork_exhibition.artwork_id = artwork.artwork_id INNER JOIN media ON " +
                 "media.media_id = artwork.media_id WHERE exhibition_id = @exhibitionId", sqlParams);
 
