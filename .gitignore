@@ -6,6 +6,9 @@ npm-debug.log*
 **/appsettings.json
 bin/
 obj/
+<<<<<<< Updated upstream
 *.vs/
+=======
+>>>>>>> Stashed changes
 **/bin/
 *.vs/
