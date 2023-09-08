@@ -25,14 +25,6 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
         {
             var artists = await _repo.ExecuteReaderAsync<ArtistOutputDto>("SELECT * FROM artist");
             return artists;
-            // return Task.FromResult(artists); ???
-        }
-
-        // For ArtistOfTheDay Middleware
-        public List<ArtistOutputDto> GetArtists()
-        {
-            var artists = _repo.ExecuteReader<ArtistOutputDto>("SELECT * FROM artist");
-            return artists;
         }
 
         public async Task<ArtistOutputDto?> GetArtistByIdAsync(int id)
