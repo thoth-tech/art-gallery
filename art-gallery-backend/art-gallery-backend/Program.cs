@@ -117,7 +117,7 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
 // builder.Services.AddScoped<IUserDataAccess, UserADO>();
 
 // Implementation 2 - Repository Pattern
-builder.Services.AddScoped<IArtistDataAccess, ArtistRepository>();
+builder.Services.AddScoped<IArtistDataAccessAsync, ArtistRepository>();
 builder.Services.AddScoped<IArtworkDataAccess, ArtworkRepository>();
 builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
 builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
@@ -161,7 +161,7 @@ app.UseAuthorization();
 /// <returns> A list of all artists. </returns>
 /// <response code="200"> Returns a list of all artists, or an empty
 /// list if there are currently none stored. </response>
-app.MapGet("api/artists/", (IArtistDataAccess _artistRepo) => _artistRepo.GetArtists());
+app.MapGet("api/artists/", async (IArtistDataAccessAsync _artistRepo) => await _artistRepo.GetArtistsAsync());
 
 /// <summary>
 /// Gets an artist with the specified id.
@@ -171,13 +171,13 @@ app.MapGet("api/artists/", (IArtistDataAccess _artistRepo) => _artistRepo.GetArt
 /// <returns> An artist with the specified id. </returns>
 /// <response code="200"> Returns the artist with the specified id. </response>
 /// <response code="404"> If no artist with the specified id exitst. </response>
-app.MapGet("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistId) =>
+app.MapGet("api/artists/{artistId}", async (IArtistDataAccessAsync _artistRepo, int artistId) =>
 {
-    if (_artistRepo.GetArtistById(artistId) == null)
-        return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}");
+    var result = await _artistRepo.GetArtistByIdAsync(artistId);
 
-    var result = _artistRepo.GetArtistById(artistId);
-    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
+    if (result == null) return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}");
+
+    return Results.Ok(result);
 });
 
 /// <summary>
@@ -187,7 +187,8 @@ app.MapGet("api/artists/{artistId}", (IArtistDataAccess _artistRepo, int artistI
 /// <param name="_artistRepo"> The repository providing data access methods for the artist context. </param>
 /// <returns> The artist of the day. </returns>
 /// <response code="200"> Returns the artist of the day. </response>
-app.MapGet("api/artists/of-the-day", ([FromServices] ArtistOfTheDayMiddleware _showcase, IArtistDataAccess _artistRepo) => _showcase.GetArtistOfTheDay(_artistRepo.GetArtists()));
+app.MapGet("api/artists/of-the-day", async ([FromServices] ArtistOfTheDayMiddleware _showcase, IArtistDataAccessAsync _artistRepo) => 
+_showcase.GetArtistOfTheDay(await _artistRepo.GetArtistsAsync()));
 
 /// <summary>
 /// Adds a new artist.
@@ -213,7 +214,7 @@ app.MapGet("api/artists/of-the-day", ([FromServices] ArtistOfTheDayMiddleware _s
 /// <response code="200"> Returns the newly added artist. </response>
 /// <response code="400"> If the request body contains any null values, the ProfileImageUrl is not in the correct format,
 /// the birth or death date is greater than the current date, or if the death date is later than the birth date. </response>
-app.MapPost("api/artists/", [Authorize] (IArtistDataAccess _artistRepo, ArtistInputDto artist) =>
+app.MapPost("api/artists/", [Authorize] async (IArtistDataAccessAsync _artistRepo, ArtistInputDto artist) =>
 {
     PropertyInfo[] properties = artist.GetType().GetProperties();
     foreach (PropertyInfo property in properties)
@@ -242,7 +243,7 @@ app.MapPost("api/artists/", [Authorize] (IArtistDataAccess _artistRepo, ArtistIn
         }
     }
 
-    var result = _artistRepo.InsertArtist(artist);
+    var result = await _artistRepo.InsertArtistAsync(artist);
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
@@ -305,9 +306,9 @@ app.MapPost("api/artists/", [Authorize] (IArtistDataAccess _artistRepo, ArtistIn
 /// <response code="404"> If the specified id is not associated with any artist. </response>
 /// <response code="400"> If the request body contains any null values, the ProfileImageUrl is not in the correct format,
 /// the birth or death date is greater than the current date, or if the death date is later than the birth date.  </response>
-app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo, int artistId, ArtistInputDto artist) =>
+app.MapPut("api/artists/{artistId}", [Authorize] async (IArtistDataAccessAsync _artistRepo, int artistId, ArtistInputDto artist) =>
 {
-    if (_artistRepo.GetArtistById(artistId) == null)
+    if (await _artistRepo.GetArtistByIdAsync(artistId) == null)
         return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}");
 
     PropertyInfo[] properties = artist.GetType().GetProperties();
@@ -331,7 +332,7 @@ app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo,
         }
     }
 
-    var result = _artistRepo.UpdateArtist(artistId, artist);
+    var result = await _artistRepo.UpdateArtistAsync(artistId, artist);
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
@@ -373,12 +374,12 @@ app.MapPut("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo,
 /// <response code="204"> No content. </response>
 /// <response code="404"> If no artist with the specified id exits. </response>
 /// <response code="400"> If there is an issues executing the query in the database. </response>
-app.MapDelete("api/artists/{artistId}", [Authorize] (IArtistDataAccess _artistRepo, int artistId) =>
+app.MapDelete("api/artists/{artistId}", [Authorize] async (IArtistDataAccessAsync _artistRepo, int artistId) =>
 {
-    if (_artistRepo.GetArtistById(artistId) == null)
+    if (await _artistRepo.GetArtistByIdAsync(artistId) == null)
         return Results.NotFound($"No artist can be found with an ID of {artistId}");
 
-    var result = _artistRepo.DeleteArtist(artistId);
+    var result = await _artistRepo.DeleteArtistAsync(artistId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
@@ -635,11 +636,11 @@ app.MapDelete("api/artworks/{artworkId}", [Authorize] (IArtworkDataAccess _artwo
 /// <response code="200"> Returns the newly added artwork/artist pair. </response>
 /// <response code="404"> If no artist or artwork with the specified ids exist. </response>
 /// <response code="400"> If there is an issues executing the query in the database. </response>
-app.MapPost("api/artworks/{artworkId}/allocate/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
+app.MapPost("api/artworks/{artworkId}/allocate/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccessAsync _artistRepo, int artworkId, int artistId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
-    else if (_artistRepo.GetArtistById(artistId) == null)
+    else if (_artistRepo.GetArtistByIdAsync(artistId) == null)
         return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}.");
 
     var result = _artworkRepo.AllocateArtist(artistId, artworkId);
@@ -659,11 +660,11 @@ app.MapPost("api/artworks/{artworkId}/allocate/artist/{artistId}", [Authorize] (
 /// <response code="204"> No content. </response>
 /// <response code="404"> If no artist or artwork with the specified ids exist. </response>
 /// <response code="400"> If there is an issues executing the query in the database. </response>
-app.MapDelete("api/artworks/{artworkId}/deallocate/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccess _artistRepo, int artworkId, int artistId) =>
+app.MapDelete("api/artworks/{artworkId}/deallocate/artist/{artistId}", [Authorize] (IArtworkDataAccess _artworkRepo, IArtistDataAccessAsync _artistRepo, int artworkId, int artistId) =>
 {
     if (_artworkRepo.GetArtworkById(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}.");
-    else if (_artistRepo.GetArtistById(artistId) == null)
+    else if (_artistRepo.GetArtistByIdAsync(artistId) == null)
         return Results.NotFound($"No artist can be found with an {nameof(artistId)} of {artistId}.");
 
     var result = _artworkRepo.DeallocateArtist(artistId, artworkId);
