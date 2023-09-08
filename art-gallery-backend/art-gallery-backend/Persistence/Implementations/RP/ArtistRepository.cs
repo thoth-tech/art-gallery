@@ -122,9 +122,10 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("artistId", id)
             };
 
-            //TODO: add logic between 134 and 135 to check return value of of execute reader -> if 1 return true if 0 return false
-            await _repo.ExecuteReaderAsync<ArtistOutputDto>("DELETE FROM artist WHERE artist_id = @artistId", sqlParams);
-            return true;
+            var result = await _repo.ExecuteReaderAsync<ArtistOutputDto>("DELETE FROM artist WHERE artist_id = @artistId", sqlParams);
+
+            if (result is not null) return true;
+            else return false;
         }
     }
 }
