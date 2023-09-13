@@ -120,7 +120,7 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
 builder.Services.AddScoped<IArtistDataAccessAsync, ArtistRepository>();
 builder.Services.AddScoped<IArtworkDataAccessAsync, ArtworkRepository>();
 builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
-builder.Services.AddScoped<IMediaDataAccess, MediaRepository>();
+builder.Services.AddScoped<IMediaDataAccessAsync, MediaRepository>();
 builder.Services.AddScoped<IUserDataAccess, UserRepository>();
 
 // Implementation 3 - Active Record
@@ -445,7 +445,7 @@ _showcase.GetArtworkOfTheDay(await _artworkRepo.GetArtworksAsync()));
 /// <response code="200"> Returns the newly added artwork. </response>
 /// <response code="400"> If the request body contains any null values, the PrimaryImageUrl or SecondaryImageUrl are not in the correct format,
 /// the year created is greater than the current year, or if the associated media type does not exist. </response>
-app.MapPost("api/artworks/", [Authorize] async (IArtworkDataAccessAsync _artworkRepo, IMediaDataAccess _mediaRepo, ArtworkInputDto artwork) =>
+app.MapPost("api/artworks/", [Authorize] async (IArtworkDataAccessAsync _artworkRepo, IMediaDataAccessAsync _mediaRepo, ArtworkInputDto artwork) =>
 {
     PropertyInfo[] properties = artwork.GetType().GetProperties();
     foreach (PropertyInfo property in properties)
@@ -471,7 +471,7 @@ app.MapPost("api/artworks/", [Authorize] async (IArtworkDataAccessAsync _artwork
             if (property.Name.Contains(nameof(artwork.YearCreated)) && ((int)propertyValue > DateTime.Today.Year))
                 return Results.BadRequest($"{property.Name} can not be greater than {DateTime.Today.Year}.");
 
-            if (property.Name.Contains(nameof(artwork.MediaId)) && (_mediaRepo.GetMediaTypeById((int)propertyValue) == null))
+            if (property.Name.Contains(nameof(artwork.MediaId)) && (await _mediaRepo.GetMediaTypeByIdAsync((int)propertyValue) == null))
                 return Results.BadRequest($"No mediatype can be found with an {property.Name} of {propertyValue}");
         }
 
@@ -542,7 +542,7 @@ app.MapPost("api/artworks/", [Authorize] (IArtworkDataAccess _artworkRepo, IMedi
 /// <response code="404"> If the specified id is not associated with any artwork. </response>
 /// <response code="400"> If the request body contains any null values, the PrimaryImageUrl or SecondaryImageUrl are not in the correct format,
 /// the year created is greater than the current year, or if the associated media type does not exist. </response>
-app.MapPut("api/artworks/{artworkId}", [Authorize] async (IArtworkDataAccessAsync _artworkRepo, IMediaDataAccess _mediaRepo, int artworkId, ArtworkInputDto artwork) =>
+app.MapPut("api/artworks/{artworkId}", [Authorize] async (IArtworkDataAccessAsync _artworkRepo, IMediaDataAccessAsync _mediaRepo, int artworkId, ArtworkInputDto artwork) =>
 {
     if (await _artworkRepo.GetArtworkByIdAsync(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}");
@@ -563,7 +563,7 @@ app.MapPut("api/artworks/{artworkId}", [Authorize] async (IArtworkDataAccessAsyn
             if (property.Name.Contains(nameof(artwork.YearCreated)) && ((int)propertyValue > DateTime.Today.Year))
                 return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
 
-            if (property.Name.Contains(nameof(artwork.MediaId)) && (_mediaRepo.GetMediaTypeById((int)propertyValue) == null))
+            if (property.Name.Contains(nameof(artwork.MediaId)) && (await _mediaRepo.GetMediaTypeByIdAsync((int)propertyValue) == null))
                 return Results.NotFound($"No mediatype can be found with an {property.Name} of {propertyValue}");
         }
 
@@ -679,7 +679,7 @@ app.MapDelete("api/artworks/{artworkId}/deallocate/artist/{artistId}", [Authoriz
 /// <returns> A list of all media types. </returns>
 /// <response code="200"> Returns a list of all media types, or an empty
 /// list if there are currently none stored. </response>
-app.MapGet("api/media/", (IMediaDataAccess _mediaRepo) => _mediaRepo.GetMediaTypes());
+app.MapGet("api/media/", async (IMediaDataAccessAsync _mediaRepo) => await _mediaRepo.GetMediaTypesAsync());
 
 /// <summary>
 /// Gets a media type with the specified id.
@@ -689,13 +689,10 @@ app.MapGet("api/media/", (IMediaDataAccess _mediaRepo) => _mediaRepo.GetMediaTyp
 /// <returns> A media type with the specified id. </returns>
 /// <response code="200"> Returns the media type with the specified id. </response>
 /// <response code="404"> If no media type with the specified id exitst. </response>
-app.MapGet("api/media/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
+app.MapGet("api/media/{mediaId}", async (IMediaDataAccessAsync _mediaRepo, int mediaId) =>
 {
-    if (_mediaRepo.GetMediaTypeById(mediaId) == null)
-        return Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
-
-    var result = _mediaRepo.GetMediaTypeById(mediaId);
-    return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue accessing this database entry.");
+    var result = await _mediaRepo.GetMediaTypeByIdAsync(mediaId);
+    return result is not null ? Results.Ok(result) : Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
 });
 
 /// <summary>
@@ -717,10 +714,10 @@ app.MapGet("api/media/{mediaId}", (IMediaDataAccess _mediaRepo, int mediaId) =>
 /// <response code="200"> Returns the newly added media type. </response>
 /// <response code="400"> If the request body contains any null values. </response>
 /// <response code="409"> If the media type already exists. </response>
-app.MapPost("api/media/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDto media) =>
+app.MapPost("api/media/", [Authorize] async (IMediaDataAccessAsync _mediaRepo, MediaInputDto media) =>
 {
     PropertyInfo[] properties = media.GetType().GetProperties();
-    List<MediaOutputDto> mediaTypes = _mediaRepo.GetMediaTypes();
+    List<MediaOutputDto> mediaTypes = await _mediaRepo.GetMediaTypesAsync();
 
     foreach (PropertyInfo property in properties)
     {
@@ -731,12 +728,12 @@ app.MapPost("api/media/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDt
             if (propertyValue == null || propertyValue.Equals(""))
                 return Results.BadRequest($"A {property.Name} is required.");
 
-            if (property.Name.Contains(nameof(media.MediaType)) && (_mediaRepo.GetMediaTypes().Exists(x => x.MediaType == media.MediaType) == true))
+            if (property.Name.Contains(nameof(media.MediaType)) && (mediaTypes.Exists(x => x.MediaType == media.MediaType) == true))
                 return Results.Conflict($"A {nameof(media.MediaType)} matching this type already exists.");
         }
     }
 
-    var result = _mediaRepo.InsertMediaType(media);
+    var result = await _mediaRepo.InsertMediaTypeAsync(media);
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
@@ -781,13 +778,13 @@ app.MapPost("api/media/", [Authorize] (IMediaDataAccess _mediaRepo, MediaInputDt
 /// <response code="400"> If the request body contains any null values. </response>
 /// <response code="404"> If the specified id is not associated with any media type. </response>
 /// <response code="409"> If the media type already exists. </response>
-app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId, MediaInputDto media) =>
+app.MapPut("api/media/{mediaId}", [Authorize] async (IMediaDataAccessAsync _mediaRepo, int mediaId, MediaInputDto media) =>
 {
-    if (_mediaRepo.GetMediaTypeById(mediaId) is null)
+    if (await _mediaRepo.GetMediaTypeByIdAsync(mediaId) is null)
         return Results.NotFound($"No media type can be found with an {nameof(mediaId)} of {mediaId}.");
 
     PropertyInfo[] properties = media.GetType().GetProperties();
-    List<MediaOutputDto> mediaTypes = _mediaRepo.GetMediaTypes();
+    List<MediaOutputDto> mediaTypes = await _mediaRepo.GetMediaTypesAsync();
 
     foreach (PropertyInfo property in properties)
     {
@@ -795,11 +792,11 @@ app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int 
 
         if (property.PropertyType == typeof(string))
         {
-            if (property.Name.Contains(nameof(media.MediaType)) && (_mediaRepo.GetMediaTypes().Exists(x => x.MediaType == media.MediaType) == true))
+            if (property.Name.Contains(nameof(media.MediaType)) && (mediaTypes.Exists(x => x.MediaType == media.MediaType) == true))
                 return Results.Conflict($"A {nameof(media.MediaType)} matching this type already exists.");
         }
     }
-    var result = _mediaRepo.UpdateMediaType(mediaId, media);
+    var result = await _mediaRepo.UpdateMediaTypeAsync(mediaId, media);
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
@@ -834,12 +831,12 @@ app.MapPut("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int 
 /// <response code="204"> No content. </response>
 /// <response code="404"> If no media type with the specified id exits. </response>
 /// <response code="400"> If there is an issues executing the query in the database. </response>
-app.MapDelete("api/media/{mediaId}", [Authorize] (IMediaDataAccess _mediaRepo, int mediaId) =>
+app.MapDelete("api/media/{mediaId}", [Authorize] async (IMediaDataAccessAsync _mediaRepo, int mediaId) =>
 {
-    if (_mediaRepo.GetMediaTypeById(mediaId) == null)
+    if (await _mediaRepo.GetMediaTypeByIdAsync(mediaId) == null)
         return Results.NotFound($"No media type can be found with a {nameof(mediaId)} of {mediaId}.");
 
-    var result = _mediaRepo.DeleteMediaType(mediaId);
+    var result = await _mediaRepo.DeleteMediaTypeAsync(mediaId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
