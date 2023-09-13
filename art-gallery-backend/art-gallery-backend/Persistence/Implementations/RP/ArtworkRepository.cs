@@ -141,9 +141,10 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("artworkId", id)
             };
 
-            await _repo.ExecuteReaderAsync<ArtistOutputDto>("DELETE FROM artwork WHERE artwork_id = @artworkId", sqlParams);
+            var result = await _repo.ExecuteReaderAsync<ArtistOutputDto>("DELETE FROM artwork WHERE artwork_id = @artworkId", sqlParams);
 
-            return true;
+            if (result is not null) return true;
+            else return false;
         }
 
         public async Task<ArtistArtworkDto?> AllocateArtistAsync(int artistId, int artworkId)
@@ -171,41 +172,11 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("artworkId", artworkId)
             };
 
-            await _repo.ExecuteReaderAsync<ArtistArtworkDto>("DELETE FROM artist_artwork WHERE artist_id = @artistId " +
+            var result = await _repo.ExecuteReaderAsync<ArtistArtworkDto>("DELETE FROM artist_artwork WHERE artist_id = @artistId " +
                 "AND artwork_id = @artworkId", sqlParams);
 
-            return true;
-        }
-
-        public async Task<ArtworkExhibitionDto?> AssignExhibitionAsync(int artworkId, int exhibitionId)
-        {
-            var sqlParams = new NpgsqlParameter[]
-            {
-                new("artworkId", artworkId),
-                new("exhibitionId", exhibitionId)
-            };
-
-            var results = await _repo.ExecuteReaderAsync<ArtworkExhibitionDto>("INSERT INTO artwork_exhibition(artwork_id, exhibition_id, " +
-                "modified_at, created_at) VALUES (@artworkId, @exhibitionId, current_timestamp, current_timestamp) " +
-                "RETURNING *", sqlParams);
-
-            var result = results.SingleOrDefault();
-
-            return result;
-        }
-
-        public async Task<bool> DeassignExhibitionAsync(int artworkId, int exhibitionId)
-        {
-            var sqlParams = new NpgsqlParameter[]
-            {
-                new("artworkId", artworkId),
-                new("exhibitionId", exhibitionId)
-            };
-
-            await _repo.ExecuteReaderAsync<ArtworkExhibitionDto>("DELETE FROM artwork_exhibition WHERE artwork_id = @artworkId " +
-                "AND exhibition_id = @exhibitionId", sqlParams);
-
-            return true;
+            if (result is not null) return true;
+            else return false;
         }
     }
 }
