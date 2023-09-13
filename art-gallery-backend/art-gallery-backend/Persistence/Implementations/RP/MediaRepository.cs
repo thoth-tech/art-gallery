@@ -5,7 +5,7 @@ using Npgsql;
 
 namespace Art_Gallery_Backend.Persistence.Implementations.RP
 {
-    public class MediaRepository : IRepository, IMediaDataAccess
+    public class MediaRepository : IRepository, IMediaDataAccessAsync
     {
         private IRepository _repo => this;
 
@@ -16,26 +16,26 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
             _configuration = configuration;
         }
 
-        public List<MediaOutputDto> GetMediaTypes()
+        public async Task<List<MediaOutputDto>> GetMediaTypesAsync()
         {
-            var mediatypes = _repo.ExecuteReader<MediaOutputDto>("SELECT * FROM media");
+            var mediatypes = await _repo.ExecuteReaderAsync<MediaOutputDto>("SELECT * FROM media");
             return mediatypes;
         }
 
-        public MediaOutputDto? GetMediaTypeById(int id)
+        public async Task<MediaOutputDto?> GetMediaTypeByIdAsync(int id)
         {
             var sqlParams = new NpgsqlParameter[]
             {
                 new("mediaId", id)
             };
 
-            var media = _repo.ExecuteReader<MediaOutputDto>("SELECT * FROM media WHERE media_id = @mediaId", sqlParams)
-                .SingleOrDefault();
+            var mediatypes = await _repo.ExecuteReaderAsync<MediaOutputDto>("SELECT * FROM media WHERE media_id = @mediaId", sqlParams);
+            var media = mediatypes.SingleOrDefault();
 
             return media;
         }
 
-        public MediaInputDto? InsertMediaType(MediaInputDto media)
+        public async Task<MediaInputDto?> InsertMediaTypeAsync(MediaInputDto media)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -43,13 +43,13 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("description", media.Description)
             };
 
-            var result = _repo.ExecuteReader<MediaInputDto>("INSERT INTO media(media_type, description, modified_at, created_at) VALUES (@mediaType, @description, current_timestamp, current_timestamp) RETURNING *", sqlParams)
-                .SingleOrDefault();
+            var results = await _repo.ExecuteReaderAsync<MediaInputDto>("INSERT INTO media(media_type, description, modified_at, created_at) VALUES (@mediaType, @description, current_timestamp, current_timestamp) RETURNING *", sqlParams);
+            var result = results.SingleOrDefault();
 
             return result;
         }
 
-        public MediaInputDto? UpdateMediaType(int id, MediaInputDto media)
+        public async Task<MediaInputDto?> UpdateMediaTypeAsync(int id, MediaInputDto media)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -72,21 +72,23 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
 
             cmdString += "modified_at = current_timestamp WHERE media_id = @mediaId RETURNING *";
 
-            var result = _repo.ExecuteReader<MediaInputDto>(cmdString, sqlParams).SingleOrDefault();
+            var results = await _repo.ExecuteReaderAsync<MediaInputDto>(cmdString, sqlParams);
+            var result = results.SingleOrDefault();
 
             return result;
         }
 
-        public bool DeleteMediaType(int id)
+        public async Task<bool> DeleteMediaTypeAsync(int id)
         {
             var sqlParams = new NpgsqlParameter[]
             {
                 new("mediaId", id)
             };
 
-            _repo.ExecuteReader<MediaOutputDto>("DELETE FROM media WHERE media_id = @mediaId", sqlParams);
+            var result = await _repo.ExecuteReaderAsync<MediaOutputDto>("DELETE FROM media WHERE media_id = @mediaId", sqlParams);
 
-            return true;
+            if (result is not null) return true;
+            else return false;
         }
     }
 }
