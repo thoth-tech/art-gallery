@@ -6,11 +6,6 @@
       class="nav-menu"
       disabledOverflow="{true}"
     >
-      <a-menu-item key="home">
-        <router-link to="/" class="nav-link">
-          <span>Home</span>
-        </router-link>
-      </a-menu-item>
       <a-sub-menu>
         <template #title>
           <router-link to="/artworks" class="nav-link">
@@ -24,7 +19,7 @@
         </a-menu-item>
         <a-menu-item key="artworks-list">
           <router-link to="/artworks" class="nav-sub">
-            <span>List of Artworks</span>
+            <span>Gallery of Artworks</span>
           </router-link>
         </a-menu-item>
       </a-sub-menu>
@@ -43,7 +38,7 @@
           </router-link>
         </a-menu-item>
         <a-menu-item key="art-facts">
-          <span class="nav-sub">Aboriginal Art Facts</span>
+          <span class="nav-sub">Art & Culture Facts</span>
         </a-menu-item>
       </a-sub-menu>
       <a-sub-menu>
@@ -71,11 +66,17 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { Menu } from "ant-design-vue";
 import { ref } from "vue";
+import { mapState } from "vuex";
 
 export default {
   name: "DropdownMenuAntD",
+  components: {
+    AMenu: Menu,
+    ASubMenu: Menu.SubMenu,
+    AMenuItem: Menu.Item,
+  },
   methods: {
     isAdmin() {
       if (this.account.user) {

@@ -72,11 +72,17 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { Menu } from "ant-design-vue";
 import { watch } from "vue";
+import { mapState } from "vuex";
 
 export default {
   name: "CollapsibleMenuAntD",
+  components: {
+    AMenu: Menu,
+    ASubMenu: Menu.SubMenu,
+    AMenuItem: Menu.Item,
+  },
   setup() {
     const current = [];
     const openKeys = [];

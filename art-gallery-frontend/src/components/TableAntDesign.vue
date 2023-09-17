@@ -56,10 +56,15 @@
 
 <script>
 import { postExhibition } from "@/services/ExhibitionService";
+import { Button, Table } from "ant-design-vue";
 import { mapState } from "vuex";
 
 export default {
   name: "TableAntDesign",
+  components: {
+    ATable: Table,
+    AButton: Button,
+  },
   props: {
     exhibitions: {
       type: Array,
