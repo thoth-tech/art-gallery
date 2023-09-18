@@ -1,13 +1,7 @@
 <template v-if="dataLoaded">
-  <CardComponent
-    :subheading="artworkOfDay.title"
-    :imageURL="artworkOfDay.primaryImageUrl"
-    :detail1="artworkOfDay.mediaType"
-    :detail2="String(artworkOfDay.yearCreated)"
-    :detail3="contributingArtists"
-    :detail4="artworkOfDay.description"
-    :detail5="`, $` + artworkOfDay.price"
-  />
+  <CardComponent :subheading="artworkOfDay.title" :imageURL="artworkOfDay.primaryImageUrl"
+    :detail1="artworkOfDay.mediaType" :detail2="String(artworkOfDay.yearCreated)" :detail3="contributingArtists"
+    :detail4="artworkOfDay.description" :detail5="`, $` + artworkOfDay.price" />
 </template>
 
 <script>
