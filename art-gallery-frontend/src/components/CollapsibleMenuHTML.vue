@@ -5,35 +5,25 @@
         <router-link to="/artworks" class="nav-link nav-link-1">
           <span>Artworks</span>
         </router-link>
-      </li>
-      <li>
-        <router-link to="/culture" class="nav-link nav-link-2">
-          <span>Art & Culture</span>
-        </router-link>
-      </li>
-      <li>
-        <div class="nav-tools-login" v-if="!account.user">
-          <router-link to="/login" class="nav-link nav-link-3">
-            <span>Log In</span>
-          </router-link>
-        </div>
-      </li>
-      <li>
         <router-link to="/artworkofday" class="nav-sub nav-link-1">
           <span>Artwork of the Day</span>
         </router-link>
       </li>
       <li>
+        <router-link to="/culture" class="nav-link nav-link-2">
+          <span>Art & Culture</span>
+        </router-link>
         <router-link to="/artistofday" class="nav-sub nav-link-2">
           <span>Artist of the Day</span>
         </router-link>
       </li>
-      <li>
-        <div class="nav-tools-signup" v-if="!account.user">
-          <router-link to="/signup" class="nav-link nav-link-3">
-            <span>Sign Up</span>
-          </router-link>
-        </div>
+      <li v-if="!account.user">
+        <router-link to="/login" class="nav-link nav-link-3">
+          <span>Log In</span>
+        </router-link>
+        <router-link to="/signup" class="nav-link nav-link-3">
+          <span>Sign Up</span>
+        </router-link>
       </li>
       <li>
         <router-link to="/exhibition" class="nav-link nav-link-1">
@@ -81,3 +71,4 @@ export default {
   padding-left: 40px;
 }
 </style>
+
