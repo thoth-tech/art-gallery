@@ -1,9 +1,9 @@
 <template>
-  <header class="header-component">
+  <header class="header-component" role="banner">
     <div class="header flex-spread">
       <div class="header-logo">
-        <router-link class="site-logo" to="/" aria-label="Gallery Home Page">
-          <span class="screen-reader-only">Site Logo</span>
+        <router-link class="site-logo" to="/" aria-label="Gallery Home Page" focusable>
+          <span class="screen-reader-only" aria-hidden="true">Site Logo</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="site-logo-svg" viewBox="0 0 320 80">
             <rect id="logo=bg" class="logo-bg" width="320" height="80" />
             <text id="logo-text" kerning="auto" x="16px" y="54px">
