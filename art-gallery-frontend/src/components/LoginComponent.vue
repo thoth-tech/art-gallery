@@ -155,9 +155,22 @@ button {
 }
 
 button,
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.btn-primary {
+  color: white;
+  background-color: var(--color--primary);
+  border-color: var(--color--primary);
+}
+
 .btn-link {
-  color: var(--color--white);
+  color: var(--color--primary);
   text-decoration: none;
+}
+.btn-link:hover {
+  text-decoration: underline;
 }
 
 button:hover {
