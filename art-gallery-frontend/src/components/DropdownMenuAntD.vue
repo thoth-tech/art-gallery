@@ -6,57 +6,39 @@
       class="nav-menu"
       disabledOverflow="{true}"
     >
-      <a-sub-menu>
+      <a-sub-menu key="artworks">
         <template #title>
           <router-link to="/artworks" class="nav-link">
-            <span>Artworks</span>
+            Artworks
           </router-link>
         </template>
         <a-menu-item key="artwork-of-day" class="menu-item">
-          <router-link to="/artworkofday" class="nav-sub">
-            <span>Artwork of the Day</span>
-          </router-link>
+          <router-link to="/artworkofday" class="nav-sub">Artwork of the Day</router-link>
         </a-menu-item>
         <a-menu-item key="artworks-list">
-          <router-link to="/artworks" class="nav-sub">
-            <span>Gallery of Artworks</span>
-          </router-link>
+          <router-link to="/artworks" class="nav-sub">Gallery of Artworks</router-link>
         </a-menu-item>
       </a-sub-menu>
-      <a-sub-menu>
+      <a-sub-menu key="art-and-culture">
         <template #title>
-          <router-link to="/culture" class="nav-link">
-            <span>Art & Culture</span>
-          </router-link>
+          <router-link to="/culture" class="nav-link">Art & Culture</router-link>
         </template>
-        <a-menu-item key="symbols">
-          <span class="nav-sub">Symbols</span>
-        </a-menu-item>
+        <a-menu-item key="symbols">Symbols</a-menu-item>
         <a-menu-item key="artist-of-day">
-          <router-link to="/artistofday" class="nav-sub">
-            <span>Artist of the Day</span>
-          </router-link>
+          <router-link to="/artistofday" class="nav-sub">Artist of the Day</router-link>
         </a-menu-item>
-        <a-menu-item key="art-facts">
-          <span class="nav-sub">Art & Culture Facts</span>
-        </a-menu-item>
+        <a-menu-item key="art-facts">Art & Culture Facts</a-menu-item>
       </a-sub-menu>
-      <a-sub-menu>
+      <a-sub-menu key="exhibitions">
         <template #title>
-          <router-link to="/exhibition" class="nav-link">
-            <span>Exhibitions</span>
-          </router-link>
+          <router-link to="/exhibition" class="nav-link">Exhibitions</router-link>
         </template>
-        <a-menu-item key="exhibition-currnt">
-          <router-link to="/exhibition" class="nav-sub">
-            <span>Current Exhibitions</span>
-          </router-link>
+        <a-menu-item key="exhibition-current">
+          <router-link to="/exhibition" class="nav-sub">Current Exhibitions</router-link>
         </a-menu-item>
-        <a-menu-item key="exhibition-past">
-          <span class="nav-sub">Past Exhibitions</span>
-        </a-menu-item>
+        <a-menu-item key="exhibition-past">Past Exhibitions</a-menu-item>
       </a-sub-menu>
-      <a-sub-menu v-if="isAdmin()">
+      <a-sub-menu key="swagger" v-if="isAdmin()">
         <template #title>
           <a href="https://localhost:7194/swagger/index.html" class="nav-link">Swagger</a>
         </template>
