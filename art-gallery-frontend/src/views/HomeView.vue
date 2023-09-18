@@ -3,15 +3,6 @@
     <div class="user-greeting" v-if="account.user">
       <span>Hi {{ account.user.name }}!</span>
     </div>
-<<<<<<< HEAD
-    <div class="home-banner">
-      <picture>
-        <source srcset="@/assets/img/the_dance_class_2014.79.710.jpg" media="(min-width: 1200px)">
-        <source srcset="@/assets/img/the_dance_class_2014.79.710_medium.webp" media="(min-width: 768px)">
-        <img src="@/assets/img/the_dance_class_2014.79.710_small.webp" alt="Front Splash Image">
-      </picture>
-    </div>
-=======
     <HeadingComponent title="The Art Gallery Project" />
     <HeadingComponent title="Artist of the Day" class="subheading" />
     <FeaturedArtist />
@@ -19,7 +10,6 @@
     <br />
     <HeadingComponent title="Artwork of the Day" class="subheading" />
     <FeaturedArtwork />
->>>>>>> b5973031480f264c7563a32b1c171c6c35f23eec
   </div>
 </template>
 
