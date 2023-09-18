@@ -1,6 +1,5 @@
 <template v-if="dataLoaded">
   <CardComponent
-  v-for="artwork in artworks"
     :subheading="artworkOfDay.title"
     :imageURL="artworkOfDay.primaryImageUrl"
     :detail1="artworkOfDay.mediaType"
