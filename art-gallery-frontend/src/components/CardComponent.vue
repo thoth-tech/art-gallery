@@ -1,7 +1,7 @@
 <template>
   <div class="card-div">
     <h1 class="card-heading">{{ heading }}</h1>
-    <img class="card-img" :src="imageURL" />
+    <img class="card-img" :src="imageURL" v-if="imageURL"/>
     <h2 class="card-subheading">{{ subheading }}</h2>
     <h4 class="detail">{{ detail1 }}{{ detail5 }}</h4>
     <h4 class="detail">{{ detail2 }}</h4>
@@ -19,6 +19,7 @@ export default {
     },
     imageURL: {
       type: String,
+      default: "",
     },
     subheading: {
       type: String,
@@ -54,6 +55,7 @@ export default {
   font-family: var(--font--base);
   padding: 20px;
   padding-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .card-img {
