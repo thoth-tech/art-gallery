@@ -29,7 +29,11 @@ export default {
     },
   },
   mounted() {
-    this.fetchArtistOfTheDay();
-  },
+  async function fetchData() {
+    await this.fetchArtistOfTheDay();
+  }
+
+  fetchData();
+}
 };
 </script>
