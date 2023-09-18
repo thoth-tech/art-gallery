@@ -1,5 +1,6 @@
 <template v-if="dataLoaded">
   <CardComponent
+  v-for="artwork in artworks"
     :subheading="artworkOfDay.title"
     :imageURL="artworkOfDay.primaryImageUrl"
     :detail1="artworkOfDay.mediaType"
@@ -44,3 +45,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.card-component {
+  width: 300px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+</style>
