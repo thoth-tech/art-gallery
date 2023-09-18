@@ -73,26 +73,30 @@ a {
   font-weight: var(--font--semibold);
   font-size: 0.85em;
   margin: 5px 5px 5px 15px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .footer-links,
 .footer-socials {
   width: 50%;
+  flex-basis: 50%;
 }
 
 .footer-nav {
   list-style: none;
   display: inline-flex;
   padding: 0;
+  margin: 0;
   transition: ease all 0.5s;
 }
 
-.footer-nav li {
+.footer-nav list {
   padding-right: 20px;
 }
 
 .footer-links a,
-.footer-links a:visited {
+.footer-nav-link {
   color: var(--color--grey-charcoal);
   font-weight: var(--font--normal);
 }
