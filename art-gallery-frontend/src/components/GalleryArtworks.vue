@@ -7,9 +7,9 @@
     </div>
 
     <!-- Lightbox -->
-    <div class="lightbox" v-if="lightbox">
+    <div class="lightbox" v-bind:class="{ 'lightbox-open': lightbox }">
       <div class="lightbox-content">
-        <img :src="selectedArtwork.primaryImageUrl" alt="Artwork" />
+        <img :src="selectedArtwork.primaryImageUrl" alt="Artwork" ref="lightboxImage" />
         <div class="image-details">
           <p><span class="lightbox-header" >Title:</span> {{ selectedArtwork.title }}</p>
           <p><span class="lightbox-header" >Media:</span> {{ selectedArtwork.mediaType }}</p>
@@ -52,6 +52,7 @@ export default {
     openLightbox(artwork) {
       // console.log("lightbox open")
       this.selectedArtwork = artwork;
+      this.lightbox = true;
       this.lightbox = true;
     },
     closeLightbox() {
