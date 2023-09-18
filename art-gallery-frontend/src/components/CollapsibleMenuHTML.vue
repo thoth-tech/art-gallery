@@ -17,11 +17,11 @@
           <span>Artist of the Day</span>
         </router-link>
       </li>
-      <li v-if="!account.user">
-        <router-link to="/login" class="nav-link nav-link-3">
+      <li v-if="!account.user" class="nav-link nav-link-3">
+        <router-link to="/login">
           <span>Log In</span>
         </router-link>
-        <router-link to="/signup" class="nav-link nav-link-3">
+        <router-link to="/signup">
           <span>Sign Up</span>
         </router-link>
       </li>
@@ -33,6 +33,7 @@
     </ul>
   </div>
 </template>
+
 <script>
 import { mapState } from "vuex";
 
@@ -52,23 +53,22 @@ export default {
   grid-template-columns: auto auto 100px;
 }
 
-:deep(.nav-link-1) {
+.nav-link-1 {
   grid-column-start: 1;
 }
 
-:deep(.nav-link-2) {
+.nav-link-2 {
   grid-column-start: 2;
 }
 
-:deep(.nav-link-3) {
+.nav-link-3 {
   grid-column-start: 3;
   margin-left: 0;
 }
 
-:deep(.nav-sub) {
+.nav-sub {
   font-weight: lighter;
   font-size: smaller;
   padding-left: 40px;
 }
 </style>
-
