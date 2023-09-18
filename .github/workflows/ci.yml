@@ -11,6 +11,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Docker Compose Action
+        uses: isbang/compose-action@v1.5.1
+        with:
+          up-flags: "--build"
       - name: Linelint
         uses: fernandrone/linelint@master
       - name: Set up Node
