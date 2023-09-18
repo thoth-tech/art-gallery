@@ -3,7 +3,11 @@
     <li class="social" role="listitem">
       <a href="https://www.facebook.com/DeakinUniversity" target="_blank" rel="noopener noreferrer">
         <span class="screen-reader-only">Facebook</span>
-        <svg xmlns="http://www.w3.org/2000/svg" class="socials-svg facebook" viewBox="0 0 450 450">
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          class="socials-svg facebook" 
+          viewBox="0 0 450 450"
+          aria-hiddden="true">
           <path
             id="facebook"
             d="M225,0C349.264,0,450,100.736,450,225S349.264,450,225,450,0,349.264,0,225,100.736,0,225,0ZM325,92v56H292l-8.074,1.058-8.889,3.322-6.78,5.365-4.114,6.386-2.692,6.919s-1.152,6.338-1.727,9.507c0,0,.271,29.631.406,44.444-0.009-.029-0.017-0.058-0.025-0.087L322,225l-9,65H260V447l-6.8,1.218-8.508.791-9.98.446-8.94.23-8.507-.173-9.092-.5-8.482-.489-6.019-.806L188.717,447h0.025L189,290H132V225h57V163l1.059-4.217,1.974-11.842,2.566-8.29,2.96-6.71q1.679-3.552,3.355-7.105l3.853-6.193,5.181-6.171,5.79-5.235,6.425-5.264,6.857-4.215,7.771-3.682,9.244-2.46,9.27-2.488,9.523-1.036,17.93,0.014,15.009,0.633,11.047,1.251,14.171,2.071"
@@ -14,7 +18,11 @@
     <li class="social" role="listitem">
       <a href="https://instagram.com/deakinuniversity/" target="_blank" rel="noopener noreferrer">
         <span class="screen-reader-only">Instagram</span>
-        <svg xmlns="http://www.w3.org/2000/svg" class="socials-svg instagram" viewBox="0 0 450 450">
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          class="socials-svg instagram" 
+          viewBox="0 0 450 450"
+          aria-hidden="true">
           <path
             id="insta"
             d="M225,0C349.264,0,450,100.736,450,225S349.264,450,225,450,0,349.264,0,225,100.736,0,225,0Zm0.769,449.685M297,136a16,16,0,1,1-16,16A16,16,0,0,1,297,136Zm-72,19c38.66,0,70,30.892,70,69s-31.34,69-70,69-70-30.892-70-69S186.34,155,225,155Zm-1,24a45,45,0,1,1-45,45A45,45,0,0,1,224,179ZM168,90H282a77,77,0,0,1,77,77V281a77,77,0,0,1-77,77H168a77,77,0,0,1-77-77V167A77,77,0,0,1,168,90Zm2,24H280a56,56,0,0,1,56,56V277a56,56,0,0,1-56,56H170a56,56,0,0,1-56-56V170A56,56,0,0,1,170,114Z"
