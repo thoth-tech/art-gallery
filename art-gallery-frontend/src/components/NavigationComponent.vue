@@ -117,6 +117,7 @@ export default {
 <style scoped>
 .navigation-component {
   border-bottom: 1px solid var(--color--grey-med-light);
+  transition: border-bottom 0.1s;
 }
 
 .nav-tools,
@@ -126,6 +127,7 @@ export default {
   cursor: pointer;
   display: inline-flex;
   position: relative;
+  transition: color 0.1s;
 }
 
 .login-nav-button,
@@ -134,6 +136,7 @@ export default {
   cursor: pointer;
   text-transform: uppercase;
   font-weight: var(--font--semibold);
+  transition: color 0.1s;
 }
 
 .nav-home-icon,
