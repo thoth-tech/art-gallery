@@ -1,7 +1,13 @@
 <template v-if="dataLoaded">
-  <CardComponent :subheading="artworkOfDay.title" :imageURL="artworkOfDay.primaryImageUrl"
-    :detail1="artworkOfDay.mediaType" :detail2="String(artworkOfDay.yearCreated)" :detail3="contributingArtists"
-    :detail4="artworkOfDay.description" :detail5="`, $` + artworkOfDay.price" />
+  <CardComponent
+    :subheading="artworkOfDay.title"
+    :imageURL="artworkOfDay.primaryImageUrl"
+    :detail1="artworkOfDay.mediaType"
+    :detail2="String(artworkOfDay.yearCreated)"
+    :detail3="contributingArtists"
+    :detail4="artworkOfDay.description"
+    :detail5="`, $` + artworkOfDay.price"
+  />
 </template>
 
 <script>
@@ -38,12 +44,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.card-component {
-  width: 300px;
-  margin: 10px;
-  border: 1px solid #ccc;
-  padding: 10px;
-}
-</style>
