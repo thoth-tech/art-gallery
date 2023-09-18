@@ -117,6 +117,7 @@ export default {
 <style scoped>
 .navigation-component {
   border-bottom: 1px solid var(--color--grey-med-light);
+  border-radius: 2px;
 }
 
 .nav-tools,
@@ -126,6 +127,7 @@ export default {
   cursor: pointer;
   display: inline-flex;
   position: relative;
+  padding: 0 10px;
 }
 
 .login-nav-button,
@@ -134,12 +136,13 @@ export default {
   cursor: pointer;
   text-transform: uppercase;
   font-weight: var(--font--semibold);
+  font-size: 14px;
 }
 
 .nav-home-icon,
 .nav-tools-menu svg {
   max-width: 28px;
-  width: calc(24px + 6 * (100vw - 320px) / 1040);
+  width: calc(28px + 8 * (100vw - 320px) / 1040);
   margin-left: calc(10px + 2 * (100vw - 320px) / 1040);
   margin-right: 5px;
 }
@@ -159,6 +162,7 @@ export default {
 :deep(.nav-link.router-link-exact-active) {
   color: var(--color--turquoise-light);
   border-bottom: 2px solid;
+  background-color: rgba(236, 250, 248, 0.5);
 }
 
 :deep(.nav-sub.router-link-exact-active) {
