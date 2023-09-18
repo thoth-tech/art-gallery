@@ -66,11 +66,17 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { Menu } from "ant-design-vue";
 import { ref } from "vue";
+import { mapState } from "vuex";
 
 export default {
   name: "DropdownMenuAntD",
+  components: {
+    AMenu: Menu,
+    ASubMenu: Menu.SubMenu,
+    AMenuItem: Menu.Item,
+  },
   methods: {
     isAdmin() {
       if (this.account.user) {

@@ -11,4 +11,19 @@ module.exports = defineConfig({
       },
     },
   },
+
+
+  chainWebpack: (config) => {
+    config.optimization.minimize(true); // webpack to minify css and javascript code
+  },
+
+  css: {
+    loaderOptions: {
+      less: {
+        lessOptions: {
+          javascriptEnabled: true,
+        },
+      },
+    },
+  },
 });

@@ -55,13 +55,13 @@
 </template>
 
 <script>
-import LoginComponent from "@/components/LoginComponent.vue";
-import { mapState } from "vuex";
-import { userService } from "@/services/UserService";
+import CollapsibleMenuAntD from "@/components/CollapsibleMenuAntD.vue";
+import CollapsibleMenuHTML from "@/components/CollapsibleMenuHTML.vue";
 import DropdownMenuAntD from "@/components/DropdownMenuAntD.vue";
 import DropdownMenuHTML from "@/components/DropdownMenuHTML.vue";
-import CollapsibleMenuHTML from "@/components/CollapsibleMenuHTML.vue";
-import CollapsibleMenuAntD from "@/components/CollapsibleMenuAntD.vue";
+import LoginComponent from "@/components/LoginComponent.vue";
+import { userService } from "@/services/UserService";
+import { mapState } from "vuex";
 
 export default {
   data() {

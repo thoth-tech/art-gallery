@@ -1,15 +1,18 @@
-import { createRouter, createWebHistory } from "vue-router";
 import { userService } from "@/services/UserService";
-import HomeView from "@/views/HomeView.vue";
-import ArtworksView from "@/views/ArtworksView";
-import CultureView from "@/views/CultureView";
-import ExhibitionsView from "@/views/ExhibitionsView";
-import SignUpView from "@/views/SignUpView";
-import AboutView from "@/views/AboutView";
-import ContactView from "@/views/ContactView";
-import LoginView from "@/views/LoginView";
-import ArtistDayView from "@/views/ArtistDayView";
-import ArtworkDayView from "@/views/ArtworkDayView";
+import { createRouter, createWebHistory } from "vue-router";
+
+// implementing lazy loading (chunks)
+const HomeView = () => import(/* webpackChunkName: "home" */ "@/views/HomeView.vue");
+const ArtworksView = () => import(/* webpackChunkName: "artworks" */ "@/views/ArtworksView");
+const CultureView = () => import(/* webpackChunkName: "culture" */ "@/views/CultureView");
+const ExhibitionsView = () => import(/* webpackChunkName: "exhibitions" */ "@/views/ExhibitionsView");
+const SignUpView = () => import(/* webpackChunkName: "signup" */ "@/views/SignUpView");
+const AboutView = () => import(/* webpackChunkName: "about" */ "@/views/AboutView");
+const ContactView = () => import(/* webpackChunkName: "contact" */ "@/views/ContactView");
+const LoginView = () => import(/* webpackChunkName: "login" */ "@/views/LoginView");
+const ArtistDayView = () => import(/* webpackChunkName: "artistofday" */ "@/views/ArtistDayView");
+const ArtworkDayView = () => import(/* webpackChunkName: "artworkofday" */ "@/views/ArtworkDayView");
+
 import { Date } from "core-js";
 
 const routes = [
