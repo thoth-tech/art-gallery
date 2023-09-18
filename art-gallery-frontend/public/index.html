@@ -1,13 +1,53 @@
 <!DOCTYPE html>
 <html lang="">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <div id="app"></div>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title><%= htmlWebpackPlugin.options.title %></title>
+</head>
+<body>
+  <div id="app">
+    <!-- Vue App -->
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script>
+    // Import your Vue components here
+    Vue.component('nav-bar', {
+      // ... Navigation Bar Component
+    });
+
+    Vue.component('featured-artwork', {
+      // ... Featured Artwork Component
+    });
+
+    Vue.component('artwork-list', {
+      // ... Artwork List Component
+    });
+
+    Vue.component('exhibition-schedule', {
+      // ... Exhibition Schedule Component
+    });
+
+    Vue.component('contact-form', {
+      // ... Contact Form Component
+    });
+
+    new Vue({
+      el: '#app',
+      // Your Vue.js configuration goes here
+      data: {
+        artworks: [
+          // Artwork data objects
+        ],
+        exhibitions: [
+          // Exhibition data objects
+        ]
+      },
+      // Your methods, computed properties, etc.
+    });
+  </script>
+</body>
 </html>
