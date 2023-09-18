@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <div class="card">
-      <Form name="signup-form" @submit="handleSubmit">
+      <Form name="signup-form" @submit.prevent="handleSubmit">
         <p>Enter your details below to register a new account.</p>
         <hr />
 
         <label for="firstName"><b>First Name:</b></label>
-        <p class="error-message"><ErrorMessage name="firstName" /></p>
+        <p class="error-message" v-show="errors.has('firstName')"><ErrorMessage name="firstName" /></p>
         <Field
           v-model="user.firstName"
           type="text"
@@ -42,12 +42,12 @@
         <p class="error-message"><ErrorMessage name="password" /></p>
         <Field
           v-model="user.password"
-          type="text"
+          type="password"
           placeholder="Enter password"
           name="password"
           id="password"
-        />
-        <!-- rules="required|min:14|max:24"/> -->
+          rules="required|min:14|max:24"
+          />
 
         <label for="passwordConfirmation"><b>Confirm Password:</b></label>
         <p class="error-message"><ErrorMessage name="passwordConfirmation" /></p>
