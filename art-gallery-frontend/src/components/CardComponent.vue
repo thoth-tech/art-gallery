@@ -3,7 +3,7 @@
     <h1 class="card-heading">{{ heading }}</h1>
     <img class="card-img" :src="imageURL" />
     <h2 class="card-subheading">{{ subheading }}</h2>
-    <h4 class="detail">{{ detail1 }}</h4>
+    <h4 class="detail">{{ detail1 }}{{ detail5 }}</h4>
     <h4 class="detail">{{ detail2 }}</h4>
     <h4 class="detail">{{ detail3 }}</h4>
     <h4 class="detail-description">{{ detail4 }}</h4>
@@ -33,6 +33,9 @@ export default {
       type: String,
     },
     detail4: {
+      type: String,
+    },
+    detail5: {
       type: String,
     },
   },

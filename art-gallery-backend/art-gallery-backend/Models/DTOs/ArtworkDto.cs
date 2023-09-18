@@ -11,8 +11,9 @@
         public string? SecondaryImageUrl { get; set; } = null;
         public int? YearCreated { get; set; } = null;
         public int? MediaId { get; set; } = null;
+        public decimal Price { get; set; } = 0.00M;
 
-        public ArtworkInputDto(string title, string description, string primaryImageURL, string? secondaryImageURL, int? yearCreated, int? mediaId)
+        public ArtworkInputDto(string title, string description, string primaryImageURL, string? secondaryImageURL, int? yearCreated, int? mediaId, decimal price)
         {
             Title = title;
             Description = description;
@@ -20,6 +21,7 @@
             SecondaryImageUrl = secondaryImageURL;
             YearCreated = yearCreated;
             MediaId = mediaId;
+            Price = price;
         }
 
         public ArtworkInputDto() { }
@@ -39,9 +41,10 @@
         public string? MediaType { get; set; } = null;
         public DateTime ModifiedAt { get; set; } = new DateTime();
         public DateTime CreatedAt { get; set; } = new DateTime();
+        public decimal Price { get; set; } = 0.00M;
         public List<string> ContributingArtists { get; set; } = new List<string>();
 
-        public ArtworkOutputDto(int artworkId, string title, string description, string primaryImageURL, string? secondaryImageURL, int? yearCreated, string? mediaType, DateTime modifiedAt, DateTime createdAt, List<string> contributingArtists)
+        public ArtworkOutputDto(int artworkId, string title, string description, string primaryImageURL, string? secondaryImageURL, int? yearCreated, string? mediaType, DateTime modifiedAt, DateTime createdAt, decimal price, List<string> contributingArtists)
         {
             ArtworkId = artworkId;
             Title = title;
@@ -52,6 +55,7 @@
             MediaType = mediaType;
             ModifiedAt = modifiedAt;
             CreatedAt = createdAt;
+            Price = price;
             ContributingArtists = contributingArtists;
         }
 

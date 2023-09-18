@@ -3,10 +3,12 @@ using Art_Gallery_Backend.Persistence.Interfaces;
 using static Art_Gallery_Backend.Persistence.ExtensionMethods;
 using Npgsql;
 using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Art_Gallery_Backend.Persistence.Implementations.RP
 {
-    public class ArtistRepository : IRepository, IArtistDataAccess
+    public class ArtistRepository : IRepository, IArtistDataAccessAsync
     {
         private IRepository _repo => this;
 
@@ -19,26 +21,26 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
 
         readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
-        public List<ArtistOutputDto> GetArtists()
+        public async Task<List<ArtistOutputDto>> GetArtistsAsync()
         {
-            var artists = _repo.ExecuteReader<ArtistOutputDto>("SELECT * FROM artist");
+            var artists = await _repo.ExecuteReaderAsync<ArtistOutputDto>("SELECT * FROM artist");
             return artists;
         }
 
-        public ArtistOutputDto? GetArtistById(int id)
+        public async Task<ArtistOutputDto?> GetArtistByIdAsync(int id)
         {
             var sqlParams = new NpgsqlParameter[]
             {
                 new("artistId", id)
             };
 
-            var artist = _repo.ExecuteReader<ArtistOutputDto>("SELECT * FROM artist WHERE artist_id=@artistId", sqlParams)
-                .SingleOrDefault();
+            var artists = await _repo.ExecuteReaderAsync<ArtistOutputDto>("SELECT * FROM artist WHERE artist_id=@artistId", sqlParams);
+            var artist = artists.SingleOrDefault();
 
             return artist;
         }
 
-        public ArtistInputDto? InsertArtist(ArtistInputDto artist)
+        public async Task<ArtistInputDto?> InsertArtistAsync(ArtistInputDto artist)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -51,15 +53,16 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("yearOfDeath", artist.YearOfDeath ?? (object)DBNull.Value)
             };
 
-            var result = _repo.ExecuteReader<ArtistInputDto>("INSERT INTO artist " +
+            var results = await _repo.ExecuteReaderAsync<ArtistInputDto>("INSERT INTO artist " +
                 "VALUES (DEFAULT, @firstName, @lastName, @displayName, @profileImageURL, @placeOfBirth, " +
-                "@yearOfBirth, @yearOfDeath, current_timestamp, current_timestamp) RETURNING *", sqlParams)
-                .SingleOrDefault();
+                "@yearOfBirth, @yearOfDeath, current_timestamp, current_timestamp) RETURNING *", sqlParams);
+
+            var result = results.SingleOrDefault();
 
             return result;
         }
 
-        public ArtistInputDto? UpdateArtist(int id, ArtistInputDto artist)
+        public async Task<ArtistInputDto?> UpdateArtistAsync(int id, ArtistInputDto artist)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -106,22 +109,23 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
 
             cmdString += "modified_at = current_timestamp WHERE artist_id = @artistId RETURNING *";
 
-            var result = _repo.ExecuteReader<ArtistInputDto>(cmdString, sqlParams).SingleOrDefault();
+            var results = await _repo.ExecuteReaderAsync<ArtistInputDto>(cmdString, sqlParams);
+            var result = results.SingleOrDefault();
 
             return result;
         }
 
-        public bool DeleteArtist(int id)
+        public async Task<bool> DeleteArtistAsync(int id)
         {
             var sqlParams = new NpgsqlParameter[]
             {
                 new("artistId", id)
             };
 
-            _repo.ExecuteReader<ArtistOutputDto>("DELETE FROM artist WHERE artist_id = @artistId", sqlParams);
+            var result = await _repo.ExecuteReaderAsync<ArtistOutputDto>("DELETE FROM artist WHERE artist_id = @artistId", sqlParams);
 
-            return true;
+            if (result is not null) return true;
+            else return false;
         }
-
     }
 }

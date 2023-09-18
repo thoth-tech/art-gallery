@@ -1,19 +1,18 @@
 <template>
   <div class="artworks">
     <HeadingComponent title="ARTWORKS" />
-    <HeadingComponent title="Basic HTML table" class="subheading" />
-    <TableArtworks />
+    <GalleryArtworks />
   </div>
 </template>
 
 <script>
 import HeadingComponent from "@/components/HeadingComponent.vue";
-import TableArtworks from "../components/TableArtworks.vue";
+import GalleryArtworks from "../components/GalleryArtworks.vue";
 
 export default {
   name: "ArtworksView",
   components: {
-    TableArtworks,
+    GalleryArtworks,
     HeadingComponent,
   },
 };
