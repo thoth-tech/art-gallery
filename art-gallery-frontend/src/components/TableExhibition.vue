@@ -11,7 +11,7 @@
     </div>
     <input type="text" class="search-input" v-model="search" placeholder="Search..." />
     <div class="table-div">
-      <table class="table-exh" border="1">
+      <table class="table-exh" border="2">
         <thead>
           <tr>
             <th></th>
@@ -40,7 +40,7 @@
       </div>
       <div v-else>
         <h3 class="error-text">{{ this.postResult }}</h3>
-      </div>
+      </div>  
     </div>
 
     <div class="entry-div" v-if="addExhibitionClicked">
@@ -60,13 +60,13 @@
       />
       <!-- Added to match the new model - might be better as a special date input? -->
       <input
-        type="text"
+        type="date"
         v-model="startDate"
         class="table-input"
         placeholder="Enter start date as DD/MM/YYYY..."
       />
       <input
-        type="text"
+        type="date"
         v-model="endDate"
         class="table-input"
         placeholder="Enter end date as DD/MM/YYYY..."
@@ -176,7 +176,7 @@ export default {
   background-color: #aad6c7;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial,
     sans-serif;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .table-exh td,
@@ -214,7 +214,7 @@ th {
 }
 
 .search-input::placeholder {
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .search-icon {
