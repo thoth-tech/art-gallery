@@ -1,7 +1,7 @@
 <template>
   <div class="main-div">
     <div class="table-div">
-      <a-table class="ant-table" :columns="columns" :data-source="exhibitions" bordered> </a-table>
+      <a-table class="ant-table" :columns="columns" :data-source="exhibitions" bordered title="Exhibitions"> </a-table>
       <a-button
         type="primary"
         size="large"
@@ -48,6 +48,12 @@
         v-model="this.endDate"
         class="table-input"
         placeholder="Enter end date as DD/MM/YYYY..."
+      />
+      <input
+      type="text"
+      v-model="search"
+      class="search-input"
+      placeholder="Search exhibition..."
       />
       <a-button type="primary" size="large" v-on:click="addExhibition">Add exhibition</a-button>
     </div>
