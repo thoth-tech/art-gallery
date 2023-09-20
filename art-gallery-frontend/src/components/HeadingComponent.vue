@@ -1,5 +1,5 @@
 <template>
-  <h1 class="heading">{{ title }}</h1>
+  <h1 class="heading" data-testid="header-title">{{ title }}</h1>
 </template>
 
 <script>
@@ -8,6 +8,7 @@ export default {
   props: {
     title: {
       type: String,
+      default: "Default Title",
     },
   },
 };
