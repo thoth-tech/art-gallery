@@ -109,4 +109,12 @@ export default {
   transition-delay: 0;
   border-bottom: 2px solid;
 }
+
+.nav-site > :deep(.ant-menu .ant-menu-submenu::after) {
+  border-bottom: none;
+}
+
+.ant-menu-submenu::after {
+  border-bottom: none;
+}
 </style>
