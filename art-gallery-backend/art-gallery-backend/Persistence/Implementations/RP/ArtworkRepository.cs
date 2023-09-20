@@ -125,7 +125,7 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
             };
 
             var results = await _repo.ExecuteReaderAsync<ArtworkInputDto>("UPDATE artwork SET title = @title, description = @description, " +
-                "mediaId = @mediaId, primary_image_url = @primaryImageURL, secondary_image_url = @secondaryImageURL, " +
+                "media_id = @mediaId, primary_image_url = @primaryImageURL, secondary_image_url = @secondaryImageURL, " +
                 "year_created = @yearCreated, modified_at = current_timestamp, price = @price " +
                 "WHERE artwork_id = @artwork_id RETURNING *", sqlParams);
 

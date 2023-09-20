@@ -119,9 +119,9 @@ builder.Services.AddSingleton<ArtworkOfTheDayMiddleware>();
 // Implementation 2 - Repository Pattern
 builder.Services.AddScoped<IArtistDataAccessAsync, ArtistRepository>();
 builder.Services.AddScoped<IArtworkDataAccessAsync, ArtworkRepository>();
-builder.Services.AddScoped<IExhibitionDataAccess, ExhibitionRepository>();
+builder.Services.AddScoped<IExhibitionDataAccessAsync, ExhibitionRepository>();
 builder.Services.AddScoped<IMediaDataAccessAsync, MediaRepository>();
-builder.Services.AddScoped<IUserDataAccess, UserRepository>();
+builder.Services.AddScoped<IUserDataAccessAsync, UserRepository>();
 
 // Implementation 3 - Active Record
 //builder.Services.AddScoped<IArtistDataAccess, Artist>();
@@ -564,7 +564,7 @@ app.MapPut("api/artworks/{artworkId}", [Authorize] async (IArtworkDataAccessAsyn
                 return Results.BadRequest($"{property.Name} can not be greater then {DateTime.Today.Year}.");
 
             if (property.Name.Contains(nameof(artwork.MediaId)) && (await _mediaRepo.GetMediaTypeByIdAsync((int)propertyValue) == null))
-                return Results.NotFound($"No mediatype can be found with an {property.Name} of {propertyValue}");
+                return Results.NotFound($"No media type can be found with an {property.Name} of {propertyValue}");
         }
 
         // if (property.Name.Contains(nameof(artwork.Price)) && property.PropertyType is not double)
@@ -851,7 +851,7 @@ app.MapDelete("api/media/{mediaId}", [Authorize] async (IMediaDataAccessAsync _m
 /// <returns> A list of all exhibitions. </returns>
 /// <response code="200"> Returns a list of all exhibitions, or an empty
 /// list if there are currently none stored. </response>
-app.MapGet("api/exhibitions/", [AllowAnonymous] (IExhibitionDataAccess _exhibitionRepo) => _exhibitionRepo.GetExhibitions());
+app.MapGet("api/exhibitions/", [AllowAnonymous] async (IExhibitionDataAccessAsync _exhibitionRepo) => await _exhibitionRepo.GetExhibitionsAsync());
 
 /// <summary>
 /// Gets an exhibition with the specified id.
@@ -861,9 +861,9 @@ app.MapGet("api/exhibitions/", [AllowAnonymous] (IExhibitionDataAccess _exhibiti
 /// <returns> An exhibition with the specified id. </returns>
 /// <response code="200"> Returns the exhibition with the specified id. </response>
 /// <response code="404"> If no exhibition with the specified id exitst. </response>
-app.MapGet("api/exhibitions/{exhibitionId}", [Authorize] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
+app.MapGet("api/exhibitions/{exhibitionId}", [Authorize] async (IExhibitionDataAccessAsync _exhibitionRepo, int exhibitionId) =>
 {
-    var result = _exhibitionRepo.GetExhibitionById(exhibitionId);
+    var result = await _exhibitionRepo.GetExhibitionByIdAsync(exhibitionId);
     return result is not null ? Results.Ok(result) : Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}");
 });
 
@@ -875,9 +875,9 @@ app.MapGet("api/exhibitions/{exhibitionId}", [Authorize] (IExhibitionDataAccess 
 /// <returns> An exhibition, and it's associated artworks, with the specified id. </returns>
 /// <response code="200"> Returns the exhibition with the specified id. </response>
 /// <response code="404"> If no exhibition with the specified id exitst. </response>
-app.MapGet("api/exhibitions/{exhibitionId}/artworks", [AllowAnonymous] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
+app.MapGet("api/exhibitions/{exhibitionId}/artworks", [AllowAnonymous] async (IExhibitionDataAccessAsync _exhibitionRepo, int exhibitionId) =>
 {
-    var result = _exhibitionRepo.GetExhibitionArtworksById(exhibitionId);
+    var result = await _exhibitionRepo.GetExhibitionArtworksByIdAsync(exhibitionId);
     return result is not null ? Results.Ok(result) : Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}");
 });
 
@@ -903,7 +903,7 @@ app.MapGet("api/exhibitions/{exhibitionId}/artworks", [AllowAnonymous] (IExhibit
 /// <response code="200"> Returns the newly added exhibition. </response>
 /// <response code="400"> If the request body contains any null values, the BackgroundImageUrl is not in the correct format,
 /// or the end date is greater than the start date. </response>
-app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, ExhibitionInputDto exhibition) =>
+app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] async (IExhibitionDataAccessAsync _exhibitionRepo, ExhibitionInputDto exhibition) =>
 {
     PropertyInfo[] properties = exhibition.GetType().GetProperties();
     foreach (PropertyInfo property in properties)
@@ -929,7 +929,7 @@ app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDa
         }
     }
 
-    var result = _exhibitionRepo.InsertExhibition(exhibition);
+    var result = await _exhibitionRepo.InsertExhibitionAsync(exhibition);
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
@@ -986,9 +986,9 @@ app.MapPost("api/exhibitions/", [Authorize(Policy = "AdminOnly")] (IExhibitionDa
 /// <response code="400"> If the request body contains any null values, the BackgroundImageUrl is not in the correct format,
 /// or the end date is greater than the start date. </response>
 /// <response code="404"> If the specified id is not associated with any exhibition. </response>
-app.MapPut("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId, ExhibitionInputDto exhibition) =>
+app.MapPut("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] async (IExhibitionDataAccessAsync _exhibitionRepo, int exhibitionId, ExhibitionInputDto exhibition) =>
 {
-    if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
+    if (await _exhibitionRepo.GetExhibitionByIdAsync(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
 
     PropertyInfo[] properties = exhibition.GetType().GetProperties();
@@ -1009,7 +1009,7 @@ app.MapPut("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (
         }
     }
 
-    var result = _exhibitionRepo.UpdateExhibition(exhibitionId, exhibition);
+    var result = await _exhibitionRepo.UpdateExhibitionAsync(exhibitionId, exhibition);
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
@@ -1052,12 +1052,12 @@ app.MapPut("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (
 /// <response code="204"> No content. </response>
 /// <response code="404"> If no exhibition with the specified id exits. </response>
 /// <response code="400"> If there is an issues executing the query in the database. </response>
-app.MapDelete("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] (IExhibitionDataAccess _exhibitionRepo, int exhibitionId) =>
+app.MapDelete("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")] async (IExhibitionDataAccessAsync _exhibitionRepo, int exhibitionId) =>
 {
-    if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
+    if (await _exhibitionRepo.GetExhibitionByIdAsync(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
 
-    var result = _exhibitionRepo.DeleteExhibition(exhibitionId);
+    var result = await _exhibitionRepo.DeleteExhibitionAsync(exhibitionId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
@@ -1074,15 +1074,15 @@ app.MapDelete("api/exhibitions/{exhibitionId}", [Authorize(Policy = "AdminOnly")
 /// <response code="200"> Returns the newly added exhibition/artwork pair. </response>
 /// <response code="404"> If no exhibition or artwork with the specified ids exist. </response>
 /// <response code="400"> If there is an issues executing the query in the database. </response>
-app.MapPost("api/exhibitions/{exhibitionId}/allocate/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] async (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccessAsync _artworkRepo, int exhibitionId, int artworkId) =>
+app.MapPost("api/exhibitions/{exhibitionId}/allocate/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] async (IExhibitionDataAccessAsync _exhibitionRepo, IArtworkDataAccessAsync _artworkRepo, int exhibitionId, int artworkId) =>
 {
-    if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
+    if (await _exhibitionRepo.GetExhibitionByIdAsync(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
 
     if (await _artworkRepo.GetArtworkByIdAsync(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}");
 
-    var result = _exhibitionRepo.AllocateArtwork(artworkId, exhibitionId);
+    var result = await _exhibitionRepo.AllocateArtworkAsync(artworkId, exhibitionId);
     return result is not null ? Results.Ok(result) : Results.BadRequest("There was an issue creating this database entry.");
 });
 
@@ -1099,15 +1099,15 @@ app.MapPost("api/exhibitions/{exhibitionId}/allocate/artwork/{artworkId}", [Auth
 /// <response code="204"> No content. </response>
 /// <response code="404"> If no exhibition or artwork with the specified ids exist. </response>
 /// <response code="400"> If there is an issues executing the query in the database. </response>
-app.MapDelete("api/exhibitions/{exhibitionId}/deallocate/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] async (IExhibitionDataAccess _exhibitionRepo, IArtworkDataAccessAsync _artworkRepo, int exhibitionId, int artworkId) =>
+app.MapDelete("api/exhibitions/{exhibitionId}/deallocate/artwork/{artworkId}", [Authorize(Policy = "AdminOnly")] async (IExhibitionDataAccessAsync _exhibitionRepo, IArtworkDataAccessAsync _artworkRepo, int exhibitionId, int artworkId) =>
 {
-    if (_exhibitionRepo.GetExhibitionById(exhibitionId) == null)
+    if (await _exhibitionRepo.GetExhibitionByIdAsync(exhibitionId) == null)
         return Results.NotFound($"No exhibition can be found with an {nameof(exhibitionId)} of {exhibitionId}.");
 
     if (await _artworkRepo.GetArtworkByIdAsync(artworkId) == null)
         return Results.NotFound($"No artwork can be found with an {nameof(artworkId)} of {artworkId}");
 
-    var result = _exhibitionRepo.DeallocateArtwork(exhibitionId, artworkId);
+    var result = await _exhibitionRepo.DeallocateArtworkAsync(exhibitionId, artworkId);
     return result is true ? Results.NoContent() : Results.BadRequest("There was an issue deleting this database entry.");
 });
 
@@ -1122,7 +1122,7 @@ app.MapDelete("api/exhibitions/{exhibitionId}/deallocate/artwork/{artworkId}", [
 /// <returns> A list of all users. </returns>
 /// <response code="200"> Returns a list of all users, or an empty
 /// list if there are currently none stored. </response>
-app.MapGet("api/users/", [Authorize] (IUserDataAccess _accountRepo) => _accountRepo.GetUsers());
+app.MapGet("api/users/", [Authorize] async (IUserDataAccessAsync _accountRepo) => await _accountRepo.GetUsersAsync());
 
 /// <summary>
 /// Gets a user with the specified id.
@@ -1132,9 +1132,9 @@ app.MapGet("api/users/", [Authorize] (IUserDataAccess _accountRepo) => _accountR
 /// <returns> A user with the specified id. </returns>
 /// <response code="200"> Returns the user with the specified id. </response>
 /// <response code="404"> If no user with the specified id exitst. </response>
-app.MapGet("api/users/{accountId}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int accountId) =>
+app.MapGet("api/users/{accountId}", [Authorize(Policy = "UserOnly")] async (IUserDataAccessAsync _accountRepo, int accountId) =>
 {
-    var result = _accountRepo.GetUserById(accountId);
+    var result = await _accountRepo.GetUserByIdAsync(accountId);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
@@ -1159,8 +1159,10 @@ app.MapGet("api/users/{accountId}", [Authorize(Policy = "UserOnly")] (IUserDataA
 /// </remarks>
 /// <response code="200"> Returns the newly created user. </response>
 /// <response code="400"> If the request body contains any null values, or the email/passwprd are invalid. </response>
-app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo, UserInputDto user) =>
+app.MapPost("api/users/signup/", [AllowAnonymous] async (IUserDataAccessAsync _accountRepo, UserInputDto user) =>
 {
+    List<UserOutputDto> users = await _accountRepo.GetUsersAsync();
+
     PropertyInfo[] properties = user.GetType().GetProperties();
     foreach (PropertyInfo property in properties)
     {
@@ -1177,7 +1179,7 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
             }
             if (propertyValue != null)
             {
-                if (property.Name.Contains("Email") && (_accountRepo.GetUsers().Exists(x => x.Email == user.Email) == true))
+                if (property.Name.Contains("Email") && (users.Exists(x => x.Email == user.Email) == true))
                     return Results.Conflict($"An account with this email already exists.");
 
                 if (property.Name.Contains("Email") && propertyValue.ToString()!.IsValidEmail() == false)
@@ -1190,7 +1192,7 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
         }
     }
 
-    var result = _accountRepo.InsertUser(user);
+    var result = await _accountRepo.InsertUserAsync(user);
     return result is not null ? Results.Ok(result) : Results.BadRequest();
 });
 
@@ -1239,7 +1241,7 @@ app.MapPost("api/users/signup/", [AllowAnonymous] (IUserDataAccess _accountRepo,
 /// </remarks>
 /// <response code="200"> Returns the authentication token. </response>
 /// <response code="400"> If the request body contains any null values, or the user cannot be authenticated. </response>
-app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, LoginDto login) =>
+app.MapPost("api/users/login/", [AllowAnonymous] async (IUserDataAccessAsync _accountRepo, LoginDto login) =>
 {
     PropertyInfo[] properties = login.GetType().GetProperties();
 
@@ -1256,7 +1258,7 @@ app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, 
 
     try
     {
-        var result = _accountRepo.AuthenticateUser(login);
+        var result = await _accountRepo.AuthenticateUserAsync(login);
         return result is not null ? Results.Ok(result) : Results.BadRequest();
     } catch (Npgsql.PostgresException)
     {
@@ -1305,9 +1307,9 @@ app.MapPost("api/users/login/", [AllowAnonymous] (IUserDataAccess _accountRepo, 
 /// <response code="404"> If the specified id is not associated with any user. </response>
 /// <response code="400"> If the request body contains any null values, or a role other than
 /// 'user' and 'admin' is assigned to the user.  </response>
-app.MapPut("api/users/{accountId}", [Authorize(Policy = "UserOnly")] (IUserDataAccess _accountRepo, int accountId, UserInputDto user) =>
+app.MapPut("api/users/{accountId}", [Authorize(Policy = "UserOnly")] async (IUserDataAccessAsync _accountRepo, int accountId, UserInputDto user) =>
 {
-    if (_accountRepo.GetUserById(accountId) == null)
+    if (await _accountRepo.GetUserByIdAsync(accountId) == null)
         return Results.NotFound($"No user can be found with an {nameof(accountId)} of {accountId}");
 
     PropertyInfo[] properties = user.GetType().GetProperties();
@@ -1322,7 +1324,7 @@ app.MapPut("api/users/{accountId}", [Authorize(Policy = "UserOnly")] (IUserDataA
                 return Results.BadRequest($"A {property.Name} is required to be either User or Admin");
         }
     }
-    var result = _accountRepo.UpdateUser(accountId, user);
+    var result = await _accountRepo.UpdateUserAsync(accountId, user);
     return result is not null ? Results.NoContent() : Results.BadRequest("There was an issue updating this database entry.");
 });
 
@@ -1355,12 +1357,12 @@ app.MapPut("api/users/{accountId}", [Authorize(Policy = "UserOnly")] (IUserDataA
 /// <response code="204"> No content. </response>
 /// <response code="404"> If no user with the specified id exits. </response>
 /// <response code="400"> If there is an issues executing the query in the database. </response>
-app.MapDelete("api/users/{accountId}", [Authorize(Policy = "AdminOnly")](IUserDataAccess _accountRepo, int accountId) =>
+app.MapDelete("api/users/{accountId}", [Authorize(Policy = "AdminOnly")] async (IUserDataAccessAsync _accountRepo, int accountId) =>
 {
-    if (_accountRepo.GetUserById(accountId) == null)
+    if (await _accountRepo.GetUserByIdAsync(accountId) == null)
         return Results.NotFound($"No account can be found with an {nameof(accountId)} of {accountId}.");
 
-    var result = _accountRepo.DeleteUser(accountId);
+    var result = await _accountRepo.DeleteUserAsync(accountId);
     return result is true ? Results.NoContent() : Results.BadRequest();
 });
 
