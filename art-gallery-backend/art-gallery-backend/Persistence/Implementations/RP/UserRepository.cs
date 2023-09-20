@@ -9,7 +9,7 @@ using Art_Gallery_Backend.Models.Database_Models;
 
 namespace Art_Gallery_Backend.Persistence.Implementations.RP
 {
-    public class UserRepository : IRepository, IUserDataAccess
+    public class UserRepository : IRepository, IUserDataAccessAsync
     {
         private IRepository _repo => this;
 
@@ -22,26 +22,26 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
 
         readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
-        public List<UserOutputDto> GetUsers()
+        public async Task<List<UserOutputDto>> GetUsersAsync()
         {
-            var users = _repo.ExecuteReader<UserOutputDto>("SELECT * FROM account");
+            var users = await _repo.ExecuteReaderAsync<UserOutputDto>("SELECT * FROM account");
             return users;
         }
 
-        public UserOutputDto? GetUserById(int id)
+        public async Task<UserOutputDto?> GetUserByIdAsync(int id)
         {
             var sqlParams = new NpgsqlParameter[]
             {
                 new("accountId", id)
             };
 
-            var user = _repo.ExecuteReader<UserOutputDto>("SELECT * FROM account WHERE account_id = @accountId", sqlParams)
-                .SingleOrDefault();
+            var users = await _repo.ExecuteReaderAsync<UserOutputDto>("SELECT * FROM account WHERE account_id = @accountId", sqlParams);
+            var user = users.SingleOrDefault();
 
             return user;
         }
 
-        public UserInputDto? InsertUser(UserInputDto user)
+        public async Task<UserInputDto?> InsertUserAsync(UserInputDto user)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -53,15 +53,16 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("activeAt", DateTime.UtcNow)
             };
 
-            var result = _repo.ExecuteReader<UserInputDto>("INSERT INTO account VALUES (DEFAULT, @firstName, " +
+            var results = await _repo.ExecuteReaderAsync<UserInputDto>("INSERT INTO account VALUES (DEFAULT, @firstName, " +
                 "@lastName, @email, @passwordHash, @role, @activeAt, current_timestamp, current_timestamp) " +
-                "RETURNING *", sqlParams)
-                .SingleOrDefault();
+                "RETURNING *", sqlParams);
+
+            var result = results.SingleOrDefault();
 
             return result;
         }
 
-        public UserInputDto? UpdateUser(int id, UserInputDto user)
+        public async Task<UserInputDto?> UpdateUserAsync(int id, UserInputDto user)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -98,31 +99,34 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
 
             cmdString += "modified_at = current_timestamp WHERE account_id = @accountId RETURNING *";
 
-            var result = _repo.ExecuteReader<UserInputDto>(cmdString, sqlParams).SingleOrDefault();
+            var results = await _repo.ExecuteReaderAsync<UserInputDto>(cmdString, sqlParams);
+            var result = results.SingleOrDefault();
 
             return result;
         }
 
-        public bool DeleteUser(int id)
+        public async Task<bool> DeleteUserAsync(int id)
         {
             var sqlParams = new NpgsqlParameter[]
             {
                 new("accountId", id)
             };
 
-            _repo.ExecuteReader<UserOutputDto>("DELETE FROM account WHERE account_id = @accountId", sqlParams);
+            var result = await _repo.ExecuteReaderAsync<UserOutputDto>("DELETE FROM account WHERE account_id = @accountId", sqlParams);
 
-            return true;
+            if (result is not null) return true;
+            else return false;
         }
 
-        public string? AuthenticateUser(LoginDto login)
+        public async Task<string?> AuthenticateUserAsync(LoginDto login)
         {
            var sqlParams = new NpgsqlParameter[]
             {
                 new("email", login.Email)
             };
 
-            var user = _repo.ExecuteReader<UserOutputDto>("SELECT * FROM account WHERE email = @email", sqlParams).SingleOrDefault();
+            var users = await _repo.ExecuteReaderAsync<UserOutputDto>("SELECT * FROM account WHERE email = @email", sqlParams);
+            var user = users.SingleOrDefault();
 
             // Authenticate user with given login information and return an auth token if valid
             if (user != null)

@@ -7,7 +7,7 @@ using Art_Gallery_Backend.Models.Database_Models;
 
 namespace Art_Gallery_Backend.Persistence.Implementations.RP
 {
-    public class ExhibitionRepository : IRepository, IExhibitionDataAccess
+    public class ExhibitionRepository : IRepository, IExhibitionDataAccessAsync
     {
         private IRepository _repo => this;
 
@@ -20,35 +20,36 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
 
         readonly TextInfo textInfo = CultureInfo.InvariantCulture.TextInfo;
 
-        public List<ExhibitionOutputDto> GetExhibitions()
+        public async Task<List<ExhibitionOutputDto>> GetExhibitionsAsync()
         {
-            var exhibitions = _repo.ExecuteReader<ExhibitionOutputDto>("SELECT * FROM exhibition");
+            var exhibitions = await _repo.ExecuteReaderAsync<ExhibitionOutputDto>("SELECT * FROM exhibition");
             return exhibitions;
         }
 
-        public ExhibitionOutputDto? GetExhibitionById(int id)
+        public async Task<ExhibitionOutputDto?> GetExhibitionByIdAsync(int id)
         {
             var sqlParams = new NpgsqlParameter[]
             {
                 new("exhibitionId", id)
             };
 
-            var exhibition = _repo.ExecuteReader<ExhibitionOutputDto>("SELECT * FROM exhibition " +
-                "WHERE exhibition_id = @exhibitionId", sqlParams)
-                .SingleOrDefault();
+            var exhibitions = await _repo.ExecuteReaderAsync<ExhibitionOutputDto>("SELECT * FROM exhibition " +
+                "WHERE exhibition_id = @exhibitionId", sqlParams);
+                
+            var exhibition = exhibitions.SingleOrDefault();
 
             return exhibition;
         }
 
-        public ExhibitionArtworkOutputDto? GetExhibitionArtworksById(int id)
+        public async Task<ExhibitionArtworkOutputDto?> GetExhibitionArtworksByIdAsync(int id)
         {
             var allArtworks = new List<ArtworkOutputDto>();
             var allArtworkArtists = new List<KeyValuePair<int, String>>();
 
-            var artworks = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_id " +
+            var artworks = await _repo.ExecuteReaderAsync<ArtworkOutputDto>("SELECT artwork_id " +
                 "FROM artist_artwork INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id");
 
-            var artists = _repo.ExecuteReader<ArtistOutputDto>("SELECT display_name FROM artist_artwork " +
+            var artists = await _repo.ExecuteReaderAsync<ArtistOutputDto>("SELECT display_name FROM artist_artwork " +
                 "INNER JOIN artist ON artist_artwork.artist_id = artist.artist_id");
 
             int i = 0;
@@ -65,7 +66,7 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("exhibitionId", id)
             };
 
-            var artworksOutput = _repo.ExecuteReader<ArtworkOutputDto>("SELECT artwork_exhibition.artwork_id, " +
+            var artworksOutput = await _repo.ExecuteReaderAsync<ArtworkOutputDto>("SELECT artwork_exhibition.artwork_id, " +
                 "artwork.title, artwork.description, primary_image_url, secondary_image_url, year_created, " +
                 "artwork.modified_at, artwork.created_at, media.media_type as media_type, price FROM artwork INNER JOIN " +
                 "artwork_exhibition ON artwork_exhibition.artwork_id = artwork.artwork_id INNER JOIN media ON " +
@@ -82,16 +83,17 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 artwork.ContributingArtists = artworkArtists;
             }
 
-            var exhibition = _repo.ExecuteReader<ExhibitionArtworkOutputDto>("SELECT * FROM exhibition " +
-                $"WHERE exhibition_id = {id}")
-                .SingleOrDefault();
+            var exhibitions = await _repo.ExecuteReaderAsync<ExhibitionArtworkOutputDto>("SELECT * FROM exhibition " +
+                $"WHERE exhibition_id = {id}");
+                
+            var exhibition = exhibitions.SingleOrDefault();
 
             if (exhibition is not null) exhibition.ExhibitionArtworks = artworksOutput;
 
             return exhibition;
         }
 
-        public ExhibitionInputDto? InsertExhibition(ExhibitionInputDto exhibition)
+        public async Task<ExhibitionInputDto?> InsertExhibitionAsync(ExhibitionInputDto exhibition)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -102,15 +104,16 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("enddate", exhibition.EndDate)
             };
 
-            var result = _repo.ExecuteReader<ExhibitionInputDto>("INSERT INTO exhibition(name, description, " +
+            var results = await _repo.ExecuteReaderAsync<ExhibitionInputDto>("INSERT INTO exhibition(name, description, " +
                 "background_image_url, start_date, end_date, modified_at, created_at) VALUES (@name, @description, " +
-                "@backgroundImageUrl, @startdate, @enddate, current_timestamp, current_timestamp) RETURNING *;", sqlParams)
-                .SingleOrDefault();
+                "@backgroundImageUrl, @startdate, @enddate, current_timestamp, current_timestamp) RETURNING *;", sqlParams);
+
+            var result = results.SingleOrDefault();
 
             return result;
         }
 
-        public ExhibitionInputDto? UpdateExhibition(int id, ExhibitionInputDto exhibition)
+        public async Task<ExhibitionInputDto?> UpdateExhibitionAsync(int id, ExhibitionInputDto exhibition)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -122,28 +125,30 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("enddate", exhibition.EndDate)
             };
 
-            var result = _repo.ExecuteReader<ExhibitionInputDto>("UPDATE exhibition SET name = @name, " +
+            var results = await _repo.ExecuteReaderAsync<ExhibitionInputDto>("UPDATE exhibition SET name = @name, " +
                 "description = @description, background_image_url = @backgroundImageUrl, start_date = @startdate, " +
-                "end_date=@enddate, modified_at = current_timestamp WHERE exhibition_id = @exhibitionId RETURNING *", sqlParams)
-                .SingleOrDefault();
+                "end_date=@enddate, modified_at = current_timestamp WHERE exhibition_id = @exhibitionId RETURNING *", sqlParams);
+           
+            var result = results.SingleOrDefault();
 
             return result;
         }
 
-        public bool DeleteExhibition(int id)
+        public async Task<bool> DeleteExhibitionAsync(int id)
         {
             var sqlParams = new NpgsqlParameter[]
             {
                 new("exhibitionId", id)
             };
 
-            _repo.ExecuteReader<ExhibitionOutputDto>("DELETE FROM exhibition WHERE " +
+            var result = await _repo.ExecuteReaderAsync<ExhibitionOutputDto>("DELETE FROM exhibition WHERE " +
                 "exhibition_id = @exhibitionId", sqlParams);
 
-            return true;
+            if (result is not null) return true;
+            else return false;
         }
 
-        public ArtworkExhibitionDto? AllocateArtwork(int artworkId, int exhibitionId)
+        public async Task<ArtworkExhibitionDto?> AllocateArtworkAsync(int artworkId, int exhibitionId)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -151,15 +156,16 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("exhibitionId", exhibitionId)
             };
 
-            var result = _repo.ExecuteReader<ArtworkExhibitionDto>("INSERT INTO artwork_exhibition(artwork_id, " +
+            var results = await _repo.ExecuteReaderAsync<ArtworkExhibitionDto>("INSERT INTO artwork_exhibition(artwork_id, " +
                 "exhibition_id, modified_at, created_at) VALUES (@artworkId, @exhibitionId, " +
-                "current_timestamp, current_timestamp) RETURNING *", sqlParams)
-                .SingleOrDefault();
+                "current_timestamp, current_timestamp) RETURNING *", sqlParams);
+            
+            var result = results.SingleOrDefault();
 
             return result;
         }
 
-        public bool DeallocateArtwork(int artworkId, int exhibitionId)
+        public async Task<bool> DeallocateArtworkAsync(int artworkId, int exhibitionId)
         {
             var sqlParams = new NpgsqlParameter[]
             {
@@ -167,10 +173,11 @@ namespace Art_Gallery_Backend.Persistence.Implementations.RP
                 new("exhibitionId", exhibitionId)
             };
 
-            _repo.ExecuteReader<ArtworkExhibitionDto>("DELETE FROM artwork_exhibition " +
+            var result = await _repo.ExecuteReaderAsync<ArtworkExhibitionDto>("DELETE FROM artwork_exhibition " +
                 "WHERE artwork_id = @artworkId AND exhibition_id = @exhibitionId", sqlParams);
 
-            return true;
+            if (result is not null) return true;
+            else return false;
         }
     }
 }
