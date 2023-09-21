@@ -18,7 +18,7 @@ jobs:
       - name: Get Container IP Address
         run: |
           CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_id_or_name>)
-          postman update environment -e "Your Environment Name" --set "containerIP=$CONTAINER_IP"
+          postman update environment -e "22125528-a569d526-ef29-4672-93d2-e63cb678b112" --set "containerIP=$CONTAINER_IP"
         env:
           POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
       - name: Install Postman CLI
