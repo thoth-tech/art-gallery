@@ -15,6 +15,12 @@ jobs:
         uses: isbang/compose-action@v1.5.1
         with:
           up-flags: "--build"
+      - name: Get Container IP Address
+        run: |
+          CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_id_or_name>)
+          postman update environment -e "Your Environment Name" --set "containerIP=$CONTAINER_IP"
+        env:
+          POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
       - name: Install Postman CLI
         run: |
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
@@ -22,7 +28,7 @@ jobs:
         run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
       - name: Run API tests
         run: |
-          postman collection run "22125528-61345646-96f3-4686-969b-2af89f43c52a"
+          postman collection run "22125528-61345646-96f3-4686-969b-2af89f43c52a" -e "22125528-a569d526-ef29-4672-93d2-e63cb678b112"
           # Lint your API using Postman CLI
           postman api lint 6f35e490-3148-419f-9233-582ec046e080
       - name: Linelint
