@@ -31,3 +31,18 @@ jobs:
           sudo apt install snapd
           sudo snap install vale --edge
           npm run prose:check
+
+  automated-api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+      - name: Run API tests
+        run: |
+          postman collection run "22125528-61345646-96f3-4686-969b-2af89f43c52a"
+          # Lint your API using Postman CLI
+          postman api lint 6f35e490-3148-419f-9233-582ec046e080
