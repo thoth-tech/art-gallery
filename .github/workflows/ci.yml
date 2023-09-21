@@ -17,7 +17,7 @@ jobs:
           up-flags: "--build"
       - name: Get Container IP Address
         run: |
-          CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_id_or_name>)
+          CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' art-gallery-api-services)
           postman update environment -e "22125528-a569d526-ef29-4672-93d2-e63cb678b112" --set "containerIP=$CONTAINER_IP"
         env:
           POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
