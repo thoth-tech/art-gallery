@@ -26,6 +26,7 @@ jobs:
           echo "Backend IP addy is: $B_CONTAINER_IP"
           F_CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' art-gallery-web-service)
           echo "Frontend IP addy is: $F_CONTAINER_IP"
+          docker network ls
           postman collection run "22125528-61345646-96f3-4686-969b-2af89f43c52a" -e "22125528-a569d526-ef29-4672-93d2-e63cb678b112" --env-var "containerIP=$F_CONTAINER_IP"
           postman api lint 6f35e490-3148-419f-9233-582ec046e080
       - name: Linelint
