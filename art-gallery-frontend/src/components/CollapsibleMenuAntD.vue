@@ -1,79 +1,53 @@
 <template>
   <div>
     <a-menu
-      v-model:openKeys="openKeys"
       v-model:selectedKeys="current"
       class="nav-menu-dropdown"
       mode="inline"
       @click="handleClick"
     >
-      <div>
-        <a-sub-menu key="sub-artworks">
-          <template #title>
-            <span>artworks</span>
-          </template>
-          <a-menu-item key="artwork-of-day">
-            <router-link to="/artworkofday" class="nav-sub">
-              <span>Artwork of the Day</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="artworks-list">
-            <router-link to="/artworks" class="nav-sub">
-              <span>List of Artworks</span>
-            </router-link></a-menu-item
-          >
-        </a-sub-menu>
-        <a-sub-menu key="sub-culture">
-          <template #title>
-            <span>art & culture</span>
-          </template>
-          <a-menu-item key="symbols"><span class="nav-sub">Symbols</span></a-menu-item>
-          <a-menu-item key="artist-of-day">
-            <router-link to="/artistofday" class="nav-sub">
-              <span>Artist of the Day</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="art-facts"
-            ><span class="nav-sub">Aboriginal Art Facts</span></a-menu-item
-          >
-        </a-sub-menu>
-        <a-sub-menu key="sub-exhibitions">
-          <template #title>
-            <span>exhibitions</span>
-          </template>
-          <a-menu-item key="exhibition-current">
-            <router-link to="/exhibition" class="nav-sub">
-              <span>Current Exhibitions</span>
-            </router-link>
-          </a-menu-item>
-          <a-menu-item key="exhibition-past"
-            ><span class="nav-sub">Past Exhibitions</span></a-menu-item
-          >
-        </a-sub-menu>
-      </div>
-      <div>
-        <a-menu-item key="login">
-          <div class="nav-tools-login" v-if="!account.user">
-            <router-link to="/login" class="nav-link">
-              <span>Log In</span>
-            </router-link>
-          </div>
+      <a-sub-menu key="sub-artworks" title="Artworks">
+        <a-menu-item key="artwork-of-day">
+          <router-link to="/artworkofday" class="nav-sub">
+            Artwork of the Day
+          </router-link>
         </a-menu-item>
-        <a-menu-item key="signup">
-          <div class="nav-tools-signup" v-if="!account.user">
-            <router-link to="/signup" class="nav-link">
-              <span>Sign Up</span>
-            </router-link>
-          </div>
+        <a-menu-item key="artworks-list">
+          <router-link to="/artworks" class="nav-sub">
+            List of Artworks
+          </router-link>
         </a-menu-item>
-      </div>
+      </a-sub-menu>
+      <a-sub-menu key="sub-culture" title="Art & Culture">
+        <a-menu-item key="symbols">Symbols</a-menu-item>
+        <a-menu-item key="artist-of-day">
+          <router-link to="/artistofday" class="nav-sub">
+            Artist of the Day
+          </router-link>
+        </a-menu-item>
+        <a-menu-item key="art-facts">Aboriginal Art Facts</a-menu-item>
+      </a-sub-menu>
+      <a-sub-menu key="sub-exhibitions" title="Exhibitions">
+        <a-menu-item key="exhibition-current">
+          <router-link to="/exhibition" class="nav-sub">
+            Current Exhibitions
+          </router-link>
+        </a-menu-item>
+        <a-menu-item key="exhibition-past">Past Exhibitions</a-menu-item>
+      </a-sub-menu>
+      <a-menu-item key="login" v-if="!account.user">
+        <router-link to="/login" class="nav-link">Log In</router-link>
+      </a-menu-item>
+      <a-menu-item key="signup" v-if="!account.user">
+        <router-link to="/signup" class="nav-link">Sign Up</router-link>
+      </a-menu-item>
     </a-menu>
   </div>
 </template>
 
 <script>
 import { Menu } from "ant-design-vue";
-import { watch } from "vue";
+import { ref, watch } from "vue";
 import { mapState } from "vuex";
 
 export default {
@@ -84,25 +58,18 @@ export default {
     AMenuItem: Menu.Item,
   },
   setup() {
-    const current = [];
-    const openKeys = [];
+    const current = ref([]);
     const handleClick = (e) => {
       console.log("click", e);
     };
-    const titleClick = (e) => {
-      console.log("titleClick", e);
-    };
-    watch(
-      () => openKeys,
-      (val) => {
-        console.log("openKeys", val);
-      }
-    );
+
+    watch(current, (val) => {
+      console.log("current", val);
+    });
+
     return {
       current,
-      openKeys,
       handleClick,
-      titleClick,
     };
   },
   computed: {
@@ -123,11 +90,5 @@ export default {
 .nav-menu-dropdown {
   display: grid;
   grid-template-columns: max-content auto;
-}
-.nav-sub {
-  font-size: calc(12px + 2 * (100vw - 320px) / 1040);
-}
-.ant-menu::before {
-  content: none;
 }
 </style>
