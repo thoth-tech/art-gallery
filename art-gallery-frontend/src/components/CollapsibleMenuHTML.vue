@@ -3,31 +3,31 @@
     <ul class="nav-menu-dropdown">
       <li>
         <router-link to="/artworks" class="nav-link nav-link-1">
-          <span>Artworks</span>
+          <span class="nav-text">Artworks</span>
         </router-link>
         <router-link to="/artworkofday" class="nav-sub nav-link-1">
-          <span>Artwork of the Day</span>
+          <span class="nav-text">Artwork of the Day</span>
         </router-link>
       </li>
       <li>
         <router-link to="/culture" class="nav-link nav-link-2">
-          <span>Art & Culture</span>
+          <span class="nav-text">Art & Culture</span>
         </router-link>
         <router-link to="/artistofday" class="nav-sub nav-link-2">
-          <span>Artist of the Day</span>
+          <span class="nav-text">Artist of the Day</span>
         </router-link>
       </li>
       <li v-if="!account.user" class="nav-link nav-link-3">
         <router-link to="/login">
-          <span>Log In</span>
+          <span class="nav-text">Log In</span>
         </router-link>
         <router-link to="/signup">
-          <span>Sign Up</span>
+          <span class="nav-text">Sign Up</span>
         </router-link>
       </li>
       <li>
         <router-link to="/exhibition" class="nav-link nav-link-1">
-          <span>Exhibitions</span>
+          <span class="nav-text">Exhibitions</span>
         </router-link>
       </li>
     </ul>
@@ -48,9 +48,16 @@ export default {
 </script>
 
 <style scoped>
+/* Add classes to style individual elements */
 .nav-menu-dropdown {
   display: grid;
   grid-template-columns: auto auto 100px;
+}
+
+.nav-text {
+  font-weight: lighter;
+  font-size: smaller;
+  padding-left: 40px;
 }
 
 .nav-link-1 {
