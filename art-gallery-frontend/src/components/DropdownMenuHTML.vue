@@ -2,58 +2,51 @@
   <div class="nav-site">
     <ul class="nav-menu">
       <li>
-        <router-link to="/" class="nav-link">
-          <span>Home</span>
-        </router-link>
+        <router-link to="/" class="nav-link">Home</router-link>
       </li>
-      <li>
-        <router-link to="/artworks" class="nav-link subnav">
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-          />
-          <span>Artworks <i class="fa fa-caret-down"></i></span>
-          <div class="subnav-content">
-            <router-link to="/artworkofday" class="nav-sub">
-              <span>Artwork of the Day</span>
-            </router-link>
-            <br />
-            <br />
-            <router-link to="/artworks" class="nav-sub">
-              <span>List of Artworks</span>
-            </router-link>
-          </div>
+      <li class="subnav">
+        <router-link to="/artworks" class="nav-link">
+          <i class="fa fa-caret-down"></i>
+          Artworks
         </router-link>
+        <ul class="subnav-content">
+          <li>
+            <router-link to="/artworkofday" class="nav-sub">Artwork of the Day</router-link>
+          </li>
+          <br /><br />
+          <li>
+            <router-link to="/artworks" class="nav-sub">List of Artworks</router-link>
+          </li>
+        </ul>
       </li>
-      <li>
-        <router-link to="/culture" class="nav-link subnav">
-          <span>Art & Culture <i class="fa fa-caret-down"></i></span>
-          <div class="subnav-content">
+      <li class="subnav">
+        <router-link to="/culture" class="nav-link">
+          <i class="fa fa-caret-down"></i>
+          Art & Culture
+        </router-link>
+        <ul class="subnav-content">
+          <li>
             <span class="nav-sub">Symbols</span>
-            <br />
-            <br />
-            <router-link to="/artistofday" class="nav-sub">
-              <span>Artist of the Day</span>
-            </router-link>
-            <br />
-            <br />
+          </li>
+          <br /><br />
+          <li>
+            <router-link to="/artistofday" class="nav-sub">Artist of the Day</router-link>
+          </li>
+          <br /><br />
+          <li>
             <span class="nav-sub">Aboriginal Art Facts</span>
-          </div>
-        </router-link>
+          </li>
+        </ul>
       </li>
       <li>
-        <router-link to="/exhibition" class="nav-link">
-          <span>Exhibitions</span>
-        </router-link>
+        <router-link to="/exhibition" class="nav-link">Exhibitions</router-link>
       </li>
     </ul>
-    <div v-if="isAdmin()">
-      <ul class="nav-menu">
-        <li>
-          <a href="https://localhost:7194/swagger/index.html" class="nav-link">Swagger</a>
-        </li>
-      </ul>
-    </div>
+    <ul class="nav-menu" v-if="isAdmin()">
+      <li>
+        <a href="https://localhost:7194/swagger/index.html" class="nav-link">Swagger</a>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -61,25 +54,21 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "DropdownMenuHTML",
+  name: "DropdownMenu",
+  computed: {
+    ...mapState(["account"]),
+  },
   methods: {
     isAdmin() {
-      if (this.account.user) {
-        return this.account.user.role == "Admin";
-      }
+      return this.account?.user?.role === "Admin";
     },
-  },
-  computed: {
-    ...mapState({
-      account: (state) => state.account,
-    }),
   },
 };
 </script>
 
 <style scoped>
 .subnav {
-  overflow: hidden;
+  position: relative;
 }
 
 .subnav-content {
@@ -89,10 +78,6 @@ export default {
   background-color: white;
   font-size: smaller;
   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.205);
-}
-
-.subnav:hover .subnav-content {
-  display: block;
   margin-left: 15px;
   padding: 10px;
   color: black;
@@ -102,9 +87,10 @@ export default {
   font-size: 16px;
   padding-left: 0;
 }
+
 .nav-sub:hover {
   color: var(--color--turquoise-light-hover);
-  transition: 0.1s;
+  transition: color 0.1s;
   transition-delay: 0;
   border-bottom: 2px solid;
 }
